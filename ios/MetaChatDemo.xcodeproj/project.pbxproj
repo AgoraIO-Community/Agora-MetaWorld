@@ -69,8 +69,6 @@
 
 /* Begin PBXFileReference section */
 		1D2CD6BE20920FDEA8DE9A9A /* Pods_MetaChatDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetaChatDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		576084569604507E24E09011 /* Pods-MetaChatDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.debug.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.debug.xcconfig"; sourceTree = "<group>"; };
-		ADCB2E72A3067B3618927F6E /* Pods-MetaChatDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.release.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.release.xcconfig"; sourceTree = "<group>"; };
 		F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnlineUserTableviewCell.xib; sourceTree = "<group>"; };
 		F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChatSceneViewController.swift; sourceTree = "<group>"; };
 		F348D1572811637A00039743 /* MetaChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -261,21 +259,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		5E1534206D68C5D976943D63 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				576084569604507E24E09011 /* Pods-MetaChatDemo.debug.xcconfig */,
-				ADCB2E72A3067B3618927F6E /* Pods-MetaChatDemo.release.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		F348D14E2811637A00039743 = {
 			isa = PBXGroup;
 			children = (
 				F348D1592811637A00039743 /* MetaChatDemo */,
 				F348D1582811637A00039743 /* Products */,
-				5E1534206D68C5D976943D63 /* Pods */,
 				53A74D4EB082C93C34FE745F /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -475,7 +463,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F348D16B2811637B00039743 /* Build configuration list for PBXNativeTarget "MetaChatDemo" */;
 			buildPhases = (
-				56BC1AB300B1AC88213E0599 /* [CP] Check Pods Manifest.lock */,
 				F348D1532811637A00039743 /* Sources */,
 				F348D1542811637A00039743 /* Frameworks */,
 				F348D1552811637A00039743 /* Resources */,
@@ -538,31 +525,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		56BC1AB300B1AC88213E0599 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-MetaChatDemo-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F348D1532811637A00039743 /* Sources */ = {
@@ -717,7 +679,6 @@
 		};
 		F348D16C2811637B00039743 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 576084569604507E24E09011 /* Pods-MetaChatDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -763,7 +724,6 @@
 		};
 		F348D16D2811637B00039743 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = ADCB2E72A3067B3618927F6E /* Pods-MetaChatDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
