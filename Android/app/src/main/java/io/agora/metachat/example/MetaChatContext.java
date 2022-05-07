@@ -83,6 +83,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                         mRtcEngine = rtcEngine;
                     }};
                     ret += spatialAudioEngine.initialize(config);
+                    // ILocalSpatialAudioEngine统一管理audio的mute状态
+                    spatialAudioEngine.muteLocalAudioStream(false);
+                    spatialAudioEngine.muteAllRemoteAudioStreams(false);
                 }
 
                 {
@@ -93,7 +96,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                         mToken = KeyCenter.RTM_TOKEN;
                         mLocalDownloadPath = context.getExternalCacheDir().getPath();
                         mUserInfo = new MetachatUserInfo() {{
-                            mUserId = String.valueOf(KeyCenter.USER_ID);
+                            mUserId = KeyCenter.RTM_UID;
                             mUserName = nickname == null ? mUserId : nickname;
                             mUserIconUrl = avatar == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : avatar;
                         }};
@@ -222,12 +225,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void onEnterSceneResult(int errorCode) {
         if (errorCode == 0) {
             rtcEngine.joinChannel(
-                    KeyCenter.RTC_TOKEN, roomName, KeyCenter.USER_ID,
+                    KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
                     new ChannelMediaOptions() {{
                         publishAudioTrack = true;
                         autoSubscribeAudio = true;
                         clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
                     }});
+            // audio的mute状态交给ILocalSpatialAudioEngine统一管理
+            rtcEngine.muteAllRemoteAudioStreams(true);
         }
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
@@ -251,16 +256,20 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     @Override
     public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
         Log.d(TAG, String.format("onUserPositionChanged %s", uid));
-        int userId = Integer.parseInt(uid);
-        if (KeyCenter.USER_ID == userId) {
-            spatialAudioEngine.updateSelfPosition(
-                    posInfo.mPosition, posInfo.mForward, posInfo.mRight, posInfo.mUp
-            );
-        } else {
-            spatialAudioEngine.updateRemotePosition(userId, new RemoteVoicePositionInfo() {{
-                position = posInfo.mPosition;
-                forward = posInfo.mForward;
-            }});
+        try {
+            int userId = Integer.parseInt(uid);
+            if (KeyCenter.RTC_UID == userId) {
+                spatialAudioEngine.updateSelfPosition(
+                        posInfo.mPosition, posInfo.mForward, posInfo.mRight, posInfo.mUp
+                );
+            } else {
+                spatialAudioEngine.updateRemotePosition(userId, new RemoteVoicePositionInfo() {{
+                    position = posInfo.mPosition;
+                    forward = posInfo.mForward;
+                }});
+            }
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
         }
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onUserPositionChanged(uid, posInfo);
