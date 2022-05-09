@@ -246,7 +246,13 @@ extension MetaChatLoginViewController: SelAvatarAlertDelegate {
 
 extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
     func onConnectionStateChanged(_ state: AgoraMetachatConnectionStateType, reason: AgoraMetachatConnectionChangedReasonType) {
-        
+        if state == .disconnected {
+            DispatchQueue.main.async {
+                self.indicatorView?.stopAnimating()
+                self.indicatorView?.removeFromSuperview()
+                self.indicatorView = nil
+            }
+        }
     }
     
     func onRequestToken() {
@@ -279,7 +285,7 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         
         let metachatKit = MetaChatEngine.sharedEngine.metachatKit
         if metachatKit?.isSceneDownloaded(firstScene.sceneId) != 1 {
-            let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载350M数据包", preferredStyle:.alert)
+            let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载50M数据包", preferredStyle:.alert)
             
             alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction.init(title: "立即下载", style: .default, handler: { UIAlertAction in
