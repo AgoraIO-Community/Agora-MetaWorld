@@ -73,7 +73,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
                     @Override
                     public void onUserOffline(int uid, int reason) {
-                        Log.d(TAG, String.format("onUserOffline %d %d ", uid, reason));
+                        Log.i(TAG, "onUserOffline: uid " + uid + ", reason " + reason);
                         spatialAudioEngine.removeRemotePosition(uid);
                     }
 
@@ -199,6 +199,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         Log.d(TAG, "leaveAndReleaseScene");
         int ret = Constants.ERR_OK;
         if (metaChatScene != null) {
+            Log.i(TAG, "leaveAndReleaseScene: ");
+            stopPushVideo();
             ret += rtcEngine.leaveChannel();
             ret += metaChatScene.leaveScene();
             ret += metaChatScene.release();
@@ -213,6 +215,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onConnectionStateChanged(int state, int reason) {
+        Log.i(TAG, "onConnectionStateChanged: state " + state + ", reason " + reason);
         for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
             handler.onConnectionStateChanged(state, reason);
         }
@@ -241,8 +244,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onEnterSceneResult(int errorCode) {
-        Log.d(TAG, String.format("onEnterSceneResult %d", errorCode));
+        Log.i(TAG, "onEnterSceneResult: " + errorCode);
         if (errorCode == 0) {
+            startPushVideo();
             rtcEngine.joinChannel(
                     KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
                     new ChannelMediaOptions() {{
@@ -280,7 +284,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-        Log.d(TAG, String.format("onLeaveSceneResult %d", errorCode));
+        Log.i(TAG, "onLeaveSceneResult: " + errorCode);
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onLeaveSceneResult(errorCode);
         }
@@ -299,10 +303,12 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         try {
             int userId = Integer.parseInt(uid);
             if (KeyCenter.RTC_UID == userId) {
+                //Log.i(TAG, "onUserPositionChanged: update self position uid " + uid);
                 spatialAudioEngine.updateSelfPosition(
                         posInfo.mPosition, posInfo.mForward, posInfo.mRight, posInfo.mUp
                 );
             } else if (mJoinedRtc) {
+                //Log.i(TAG, "onUserPositionChanged: update remote position uid " + uid);
                 spatialAudioEngine.updateRemotePosition(userId, new RemoteVoicePositionInfo() {{
                     position = posInfo.mPosition;
                     forward = posInfo.mForward;
