@@ -1,10 +1,13 @@
 package io.agora.metachat.example;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.metachat.IMetachatEventHandler;
@@ -20,6 +23,7 @@ import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.AgoraVideoFrame;
 import io.agora.spatialaudio.ILocalSpatialAudioEngine;
 import io.agora.spatialaudio.LocalSpatialAudioConfig;
 import io.agora.spatialaudio.RemoteVoicePositionInfo;
@@ -38,6 +42,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private String roomName;
     private final ConcurrentHashMap<IMetachatEventHandler, Integer> metaChatEventHandlerMap;
     private final ConcurrentHashMap<IMetachatSceneEventHandler, Integer> metaChatSceneEventHandlerMap;
+    private boolean mJoinedRtc = false;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
@@ -63,6 +68,13 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     @Override
                     public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                         Log.d(TAG, String.format("onJoinChannelSuccess %s %d", channel, uid));
+                        mJoinedRtc = true;
+                    }
+
+                    @Override
+                    public void onUserOffline(int uid, int reason) {
+                        Log.d(TAG, String.format("onUserOffline %d %d ", uid, reason));
+                        spatialAudioEngine.removeRemotePosition(uid);
                     }
 
                     @Override
@@ -76,17 +88,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 rtcEngine.setAudioProfile(
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
                 );
-
-                {
-                    spatialAudioEngine = ILocalSpatialAudioEngine.create();
-                    LocalSpatialAudioConfig config = new LocalSpatialAudioConfig() {{
-                        mRtcEngine = rtcEngine;
-                    }};
-                    ret += spatialAudioEngine.initialize(config);
-                    // ILocalSpatialAudioEngine统一管理audio的mute状态
-                    spatialAudioEngine.muteLocalAudioStream(false);
-                    spatialAudioEngine.muteAllRemoteAudioStreams(false);
-                }
 
                 {
                     metaChatService = IMetachatService.create();
@@ -115,8 +116,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void destroy() {
         IMetachatService.destroy();
         metaChatService = null;
-        ILocalSpatialAudioEngine.destroy();
-        spatialAudioEngine = null;
         RtcEngine.destroy();
         rtcEngine = null;
     }
@@ -155,10 +154,23 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public boolean createAndEnterScene(String roomName) {
+        Log.d(TAG, String.format("createAndEnterScene %s", roomName));
         this.roomName = roomName;
+
+        if (spatialAudioEngine == null) {
+            spatialAudioEngine = ILocalSpatialAudioEngine.create();
+            LocalSpatialAudioConfig config = new LocalSpatialAudioConfig() {{
+                mRtcEngine = rtcEngine;
+            }};
+            spatialAudioEngine.initialize(config);
+            spatialAudioEngine.muteLocalAudioStream(false);
+            spatialAudioEngine.muteAllRemoteAudioStreams(false);
+        }
+
         if (metaChatScene == null) {
             metaChatScene = metaChatService.createScene(this.roomName, this);
         }
+        mJoinedRtc = false;
         return metaChatScene.enterScene(sceneInfo, avatarConfig) == Constants.ERR_OK;
     }
 
@@ -183,12 +195,17 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public boolean leaveAndReleaseScene() {
+        Log.d(TAG, "leaveAndReleaseScene");
         int ret = Constants.ERR_OK;
         if (metaChatScene != null) {
             ret += rtcEngine.leaveChannel();
             ret += metaChatScene.leaveScene();
             ret += metaChatScene.release();
             metaChatScene = null;
+        }
+        if (spatialAudioEngine != null) {
+            ILocalSpatialAudioEngine.destroy();
+            spatialAudioEngine = null;
         }
         return ret == Constants.ERR_OK;
     }
@@ -223,6 +240,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onEnterSceneResult(int errorCode) {
+        Log.d(TAG, String.format("onEnterSceneResult %d", errorCode));
         if (errorCode == 0) {
             rtcEngine.joinChannel(
                     KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
@@ -233,14 +251,35 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     }});
             // audio的mute状态交给ILocalSpatialAudioEngine统一管理
             rtcEngine.muteAllRemoteAudioStreams(true);
+
+            pushVideoFrameToDisplay();
         }
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
         }
     }
 
+    // Just for test
+    private void pushVideoFrameToDisplay() {
+        metaChatScene.enableVideoDisplay(0, true);
+        metaChatScene.pushVideoFrameToDisplay(0, new AgoraVideoFrame() {{
+            format = AgoraVideoFrame.FORMAT_RGBA;
+            stride = 496;
+            height = 498;
+            buf = new byte[stride * 4 * height];
+            try {
+                AssetManager assetManager = MainApplication.instance.getAssets();
+                InputStream stream = assetManager.open("test.rgba", AssetManager.ACCESS_BUFFER);
+                stream.read(buf);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }});
+    }
+
     @Override
     public void onLeaveSceneResult(int errorCode) {
+        Log.d(TAG, String.format("onLeaveSceneResult %d", errorCode));
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onLeaveSceneResult(errorCode);
         }
@@ -262,7 +301,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 spatialAudioEngine.updateSelfPosition(
                         posInfo.mPosition, posInfo.mForward, posInfo.mRight, posInfo.mUp
                 );
-            } else {
+            } else if (mJoinedRtc) {
                 spatialAudioEngine.updateRemotePosition(userId, new RemoteVoicePositionInfo() {{
                     position = posInfo.mPosition;
                     forward = posInfo.mForward;
