@@ -64,7 +64,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         int ret = Constants.ERR_OK;
         if (rtcEngine == null) {
             try {
-                rtcEngine = RtcEngine.create(context, KeyCenter.RTC_APP_ID, new IRtcEngineEventHandler() {
+                rtcEngine = RtcEngine.create(context, KeyCenter.APP_ID, new IRtcEngineEventHandler() {
                     @Override
                     public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                         Log.d(TAG, String.format("onJoinChannelSuccess %s %d", channel, uid));
@@ -93,7 +93,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     metaChatService = IMetachatService.create();
                     MetachatConfig config = new MetachatConfig() {{
                         mRtcEngine = rtcEngine;
-                        mAppId = KeyCenter.RTM_APP_ID;
+                        mAppId = KeyCenter.APP_ID;
                         mToken = KeyCenter.RTM_TOKEN;
                         mLocalDownloadPath = context.getExternalCacheDir().getPath();
                         mUserInfo = new MetachatUserInfo() {{
