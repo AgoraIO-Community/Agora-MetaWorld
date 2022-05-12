@@ -20,7 +20,6 @@ class MetaChatEngine: NSObject {
         rtcEngineConfig.appId = KeyCenter.rtcAppId
         rtcEngineConfig.areaCode = .global
         rtcEngine = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
-
     }
     
     var metachatKit: AgoraMetachatKit?
@@ -97,21 +96,20 @@ class MetaChatEngine: NSObject {
 
         rtcEngine?.disableVideo()
 
-        rtcEngine?.setAudioProfile(.default, scenario: .gameStreaming)
-
+        rtcEngine?.setAudioProfile(.speechStandard, scenario: .gameStreaming)
+        rtcEngine?.enableAudio()
+        
+        let localSpatialConfig = AgoraLocalSpatialAudioConfig()
+        localSpatialConfig.rtcEngine = self.rtcEngine
+        localSpatial = AgoraLocalSpatialAudioKit.sharedLocalSpatialAudio(with: localSpatialConfig)
+        localSpatial?.muteLocalAudioStream(false)
+        localSpatial?.muteAllRemoteAudioStreams(false)
+        localSpatial?.setAudioRecvRange(50)
+        localSpatial?.setDistanceUnit(1)
+        
         rtcEngine?.joinChannel(byToken: nil, channelId: "MetaChatTest", info: nil, uid: UInt(userId)!, joinSuccess: { String, UInt, Int in
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
-            
-            
-            let localSpatialConfig = AgoraLocalSpatialAudioConfig()
-            localSpatialConfig.rtcEngine = self.rtcEngine
-            self.localSpatial = AgoraLocalSpatialAudioKit.sharedLocalSpatialAudio(with: localSpatialConfig)
-            self.localSpatial?.muteLocalAudioStream(false)
-            self.localSpatial?.muteAllRemoteAudioStreams(false)
-            self.localSpatial?.setAudioRecvRange(50)
-            self.localSpatial?.setDistanceUnit(1)
         })
-        
     }
     
     func leaveRtcChannel() {

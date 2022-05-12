@@ -157,6 +157,7 @@ class MetaChatLoginViewController: UIViewController {
         selSexAlert.isHidden = false
         
         selSexIcon.image = UIImage.init(named: "arrow-up")
+        view.endEditing(true)
     }
     
     @IBAction func selectedAvatarAction(sender: UIButton) {

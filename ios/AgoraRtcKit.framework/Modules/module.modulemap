@@ -1,0 +1,4 @@
+framework module AgoraRtcKit {
+  umbrella header "AgoraRtcKit.h"
+  export *
+}

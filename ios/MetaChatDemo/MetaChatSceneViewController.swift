@@ -70,8 +70,8 @@ class MetaChatSceneViewController: AgoraMetaViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setUI()
-        
         perform(#selector(initUnity), with: nil, afterDelay: 0)
+        
     }
         
     override func viewDidAppear(_ animated: Bool) {
