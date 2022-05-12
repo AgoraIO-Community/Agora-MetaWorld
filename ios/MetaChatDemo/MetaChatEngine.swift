@@ -26,7 +26,8 @@ class MetaChatEngine: NSObject {
 
     var playerName: String?
     
-    var userId: String = "0"
+    var userId: String = "007"
+    var joinedRtc: Bool = false
     
     func createMetachatKit(userName: String, avatarUrl: String, delegate: AgoraMetachatEventDelegate?) {
         playerName = userName
@@ -65,6 +66,7 @@ class MetaChatEngine: NSObject {
         guard let sceneInfo = currentSceneInfo else {
             return
         }
+        joinedRtc = false
         
         let avatarConfig = AgoraMetachatUserAvatarConfig.init()
         avatarConfig.avatarCode = sceneInfo.avatars[0].avatarCode;
@@ -167,7 +169,6 @@ extension MetaChatEngine: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
-
     }
     
     /// callback when a remote user is joinning the channel, note audience in live broadcast mode will NOT trigger this event

@@ -173,7 +173,7 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
         
         if (uid.compare(MetaChatEngine.sharedEngine.userId) == .orderedSame) || (uid.compare("") == .orderedSame) {
             MetaChatEngine.sharedEngine.localSpatial?.updateSelfPosition(posInfo.position as! [NSNumber], axisForward: posInfo.forward as! [NSNumber], axisRight: posInfo.right as! [NSNumber], axisUp: posInfo.right as! [NSNumber])
-        }else {
+        } else if (MetaChatEngine.sharedEngine.joinedRtc) {
             let remotePositionInfo = AgoraRemoteVoicePositionInfo.init()
             remotePositionInfo.position = posInfo.position as! [NSNumber]
             remotePositionInfo.forward = posInfo.forward as? [NSNumber]
