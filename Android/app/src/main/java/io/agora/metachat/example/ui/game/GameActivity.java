@@ -131,7 +131,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                MetaChatContext.getInstance().leaveAndReleaseScene();
+                MetaChatContext.getInstance().destroy();
                 unloadUnity();
                 break;
             case R.id.mode:

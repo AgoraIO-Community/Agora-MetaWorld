@@ -114,6 +114,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void destroy() {
+        leaveAndReleaseScene();
         IMetachatService.destroy();
         metaChatService = null;
         RtcEngine.destroy();
