@@ -182,7 +182,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             autoSubscribeAudio = true;
             clientRoleType = role;
         }});
-        avatarConfig.mLocalVisible = role == Constants.CLIENT_ROLE_BROADCASTER;
+        boolean isPlayer = role == Constants.CLIENT_ROLE_BROADCASTER;
+        avatarConfig.mLocalVisible = true;
+        avatarConfig.mSyncPosition = isPlayer;
+        avatarConfig.mRemoteVisible = isPlayer;
         ret += metaChatScene.updateLocalAvatarConfig(avatarConfig);
         return ret == Constants.ERR_OK;
     }
@@ -200,7 +203,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         int ret = Constants.ERR_OK;
         if (metaChatScene != null) {
             Log.i(TAG, "leaveAndReleaseScene: ");
-            stopPushVideo();
             ret += rtcEngine.leaveChannel();
             ret += metaChatScene.leaveScene();
             ret += metaChatScene.release();
@@ -246,7 +248,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void onEnterSceneResult(int errorCode) {
         Log.i(TAG, "onEnterSceneResult: " + errorCode);
         if (errorCode == 0) {
-            startPushVideo();
             rtcEngine.joinChannel(
                     KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
                     new ChannelMediaOptions() {{
