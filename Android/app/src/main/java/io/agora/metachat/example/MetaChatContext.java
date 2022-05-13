@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.metachat.IMetachatEventHandler;
@@ -32,6 +33,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     private final static String TAG = MetaChatContext.class.getName();
     private volatile static MetaChatContext instance = null;
+    private final static boolean enableSpatialAudio = false;
 
     private RtcEngine rtcEngine;
     private ILocalSpatialAudioEngine spatialAudioEngine;
@@ -74,7 +76,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     @Override
                     public void onUserOffline(int uid, int reason) {
                         Log.d(TAG, String.format("onUserOffline %d %d ", uid, reason));
-                        spatialAudioEngine.removeRemotePosition(uid);
+                        if (spatialAudioEngine != null)
+                            spatialAudioEngine.removeRemotePosition(uid);
                     }
 
                     @Override
@@ -158,7 +161,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         Log.d(TAG, String.format("createAndEnterScene %s", roomName));
         this.roomName = roomName;
 
-        if (spatialAudioEngine == null) {
+        if (spatialAudioEngine == null && enableSpatialAudio) {
             spatialAudioEngine = ILocalSpatialAudioEngine.create();
             LocalSpatialAudioConfig config = new LocalSpatialAudioConfig() {{
                 mRtcEngine = rtcEngine;
@@ -182,7 +185,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             autoSubscribeAudio = true;
             clientRoleType = role;
         }});
-        avatarConfig.mLocalVisible = role == Constants.CLIENT_ROLE_BROADCASTER;
+        boolean isPlayer = role == Constants.CLIENT_ROLE_BROADCASTER;
+        avatarConfig.mLocalVisible = true;
+        avatarConfig.mSyncPosition = isPlayer;
+        avatarConfig.mRemoteVisible = isPlayer;
         ret += metaChatScene.updateLocalAvatarConfig(avatarConfig);
         return ret == Constants.ERR_OK;
     }
@@ -250,8 +256,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                         autoSubscribeAudio = true;
                         clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
                     }});
-            // audio的mute状态交给ILocalSpatialAudioEngine统一管理
-            rtcEngine.muteAllRemoteAudioStreams(true);
+            if (spatialAudioEngine != null) {
+                // audio的mute状态交给ILocalSpatialAudioEngine统一管理
+                rtcEngine.muteAllRemoteAudioStreams(true);
+            }
 
             pushVideoFrameToDisplay();
         }
@@ -288,6 +296,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onRecvMessageFromScene(byte[] message) {
+        Log.d(TAG, String.format("onRecvMessageFromScene %s", new String(message)));
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onRecvMessageFromScene(message);
         }
@@ -295,22 +304,31 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
-        Log.d(TAG, String.format("onUserPositionChanged %s", uid));
-        try {
-            int userId = Integer.parseInt(uid);
-            if (KeyCenter.RTC_UID == userId) {
-                spatialAudioEngine.updateSelfPosition(
-                        posInfo.mPosition, posInfo.mForward, posInfo.mRight, posInfo.mUp
-                );
-            } else if (mJoinedRtc) {
-                spatialAudioEngine.updateRemotePosition(userId, new RemoteVoicePositionInfo() {{
-                    position = posInfo.mPosition;
-                    forward = posInfo.mForward;
-                }});
+        Log.d(TAG, String.format("onUserPositionChanged %s %s %s %s %s", uid,
+                Arrays.toString(posInfo.mPosition),
+                Arrays.toString(posInfo.mForward),
+                Arrays.toString(posInfo.mRight),
+                Arrays.toString(posInfo.mUp)
+        ));
+
+        if (spatialAudioEngine != null) {
+            try {
+                int userId = Integer.parseInt(uid);
+                if (KeyCenter.RTC_UID == userId) {
+                    spatialAudioEngine.updateSelfPosition(
+                            posInfo.mPosition, posInfo.mForward, posInfo.mRight, posInfo.mUp
+                    );
+                } else if (mJoinedRtc) {
+                    spatialAudioEngine.updateRemotePosition(userId, new RemoteVoicePositionInfo() {{
+                        position = posInfo.mPosition;
+                        forward = posInfo.mForward;
+                    }});
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
             }
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
         }
+
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onUserPositionChanged(uid, posInfo);
         }

@@ -9,22 +9,24 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 
+import java.util.Locale;
+
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
 import io.agora.meta.AgoraMetaActivity;
 import io.agora.meta.AgoraMetaView;
+import io.agora.metachat.IMetachatSceneEventHandler;
+import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.example.MainActivity;
 import io.agora.metachat.example.MetaChatContext;
 import io.agora.metachat.example.R;
-import io.agora.metachat.example.databinding.CardViewBinding;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.rtc2.Constants;
 
-public class GameActivity extends AgoraMetaActivity implements View.OnClickListener {
+public class GameActivity extends AgoraMetaActivity implements View.OnClickListener, IMetachatSceneEventHandler {
 
-    private GameActivityBinding binding1;
-    private CardViewBinding binding2;
+    private GameActivityBinding binding;
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
     private final ObservableBoolean enableSpeaker = new ObservableBoolean(true);
     private final ObservableBoolean isBroadcaster = new ObservableBoolean(true);
@@ -36,7 +38,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                         if (!MetaChatContext.getInstance().enableLocalAudio(enableMic.get())) {
                             return;
                         }
-                        binding1.mic.setImageDrawable(
+                        binding.mic.setImageDrawable(
                                 ResourcesCompat.getDrawable(
                                         getResources(),
                                         enableMic.get() ? R.mipmap.microphone_on : R.mipmap.microphone_off,
@@ -47,7 +49,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                         if (!MetaChatContext.getInstance().setDefaultAudioRoutetoSpeakerphone(enableSpeaker.get())) {
                             return;
                         }
-                        binding1.speaker.setImageDrawable(
+                        binding.speaker.setImageDrawable(
                                 ResourcesCompat.getDrawable(
                                         getResources(),
                                         enableSpeaker.get() ? R.mipmap.voice_on : R.mipmap.voice_off,
@@ -55,9 +57,9 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                                 )
                         );
                     } else if (sender == isBroadcaster) {
-                        binding2.mode.setText(isBroadcaster.get() ? "语聊模式" : "游客模式");
-                        binding2.tips.setVisibility(isBroadcaster.get() ? View.GONE : View.VISIBLE);
-                        binding2.role.setImageDrawable(
+                        binding.card.mode.setText(isBroadcaster.get() ? "语聊模式" : "游客模式");
+                        binding.card.tips.setVisibility(isBroadcaster.get() ? View.GONE : View.VISIBLE);
+                        binding.card.role.setImageDrawable(
                                 ResourcesCompat.getDrawable(
                                         getResources(),
                                         isBroadcaster.get() ? R.mipmap.offbtn : R.mipmap.onbtn,
@@ -71,20 +73,20 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding1 = GameActivityBinding.inflate(getLayoutInflater());
-        binding2 = CardViewBinding.bind(binding1.getRoot());
-        setContentView(binding1.getRoot());
+        binding = GameActivityBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        binding1.back.setOnClickListener(this);
-        binding2.mode.setOnClickListener(this);
-        binding2.role.setOnClickListener(this);
-        binding1.users.setOnClickListener(this);
-        binding1.mic.setOnClickListener(this);
-        binding1.speaker.setOnClickListener(this);
+        binding.back.setOnClickListener(this);
+        binding.card.mode.setOnClickListener(this);
+        binding.card.role.setOnClickListener(this);
+        binding.users.setOnClickListener(this);
+        binding.mic.setOnClickListener(this);
+        binding.speaker.setOnClickListener(this);
 
         enableMic.addOnPropertyChangedCallback(callback);
         enableSpeaker.addOnPropertyChangedCallback(callback);
         isBroadcaster.addOnPropertyChangedCallback(callback);
+        MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
 
         initUnity();
 
@@ -103,19 +105,20 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
         enableMic.removeOnPropertyChangedCallback(callback);
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
+        MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
     }
 
     private void refreshByIntent(Intent intent) {
         String nickname = intent.getStringExtra("nickname");
         if (nickname != null) {
-            binding2.nickname.setText(nickname);
+            binding.card.nickname.setText(nickname);
         }
 
         String avatar = intent.getStringExtra("avatar");
         if (avatar != null) {
             ImageRequest request = new ImageRequest.Builder(this)
                     .data(avatar)
-                    .target(binding2.avatar)
+                    .target(binding.card.avatar)
                     .build();
             ImageLoaders.create(this)
                     .enqueue(request);
@@ -159,11 +162,14 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
 
     @Override
     public void onUnityPlayerLoaded(AgoraMetaView view) {
-        binding1.unity.addView(view);
+        binding.unity.addView(view);
     }
 
     @Override
     public void onUnityPlayerUnloaded() {
+        binding.back.setVisibility(View.GONE);
+        binding.card.getRoot().setVisibility(View.GONE);
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
@@ -173,4 +179,33 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     public void onUnityPlayerQuitted() {
     }
 
+    @Override
+    public void onEnterSceneResult(int errorCode) {
+        runOnUiThread(() -> {
+            if (errorCode != 0) {
+                Toast.makeText(this, String.format(Locale.getDefault(), "EnterSceneFailed %d", errorCode), Toast.LENGTH_LONG).show();
+                return;
+            }
+            binding.back.setVisibility(View.VISIBLE);
+            binding.card.getRoot().setVisibility(View.VISIBLE);
+            binding.users.setVisibility(View.VISIBLE);
+            binding.mic.setVisibility(View.VISIBLE);
+            binding.speaker.setVisibility(View.VISIBLE);
+        });
+    }
+
+    @Override
+    public void onLeaveSceneResult(int errorCode) {
+
+    }
+
+    @Override
+    public void onRecvMessageFromScene(byte[] message) {
+
+    }
+
+    @Override
+    public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
+
+    }
 }
