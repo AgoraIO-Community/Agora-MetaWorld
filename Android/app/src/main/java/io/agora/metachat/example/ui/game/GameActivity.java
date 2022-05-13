@@ -169,6 +169,9 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     public void onUnityPlayerUnloaded() {
         binding.back.setVisibility(View.GONE);
         binding.card.getRoot().setVisibility(View.GONE);
+        binding.users.setVisibility(View.GONE);
+        binding.mic.setVisibility(View.GONE);
+        binding.speaker.setVisibility(View.GONE);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
