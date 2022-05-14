@@ -33,7 +33,7 @@ class MetaChatEngine: NSObject {
         playerName = userName
         
         let currentTime = UInt(CFAbsoluteTimeGetCurrent())
-        userId = "\(currentTime)"
+        userId = "\(currentTime&0x3fffffff)"
         
         let userInfo = AgoraMetachatUserInfo.init()
         userInfo.userId = userId
@@ -111,6 +111,7 @@ class MetaChatEngine: NSObject {
         
         rtcEngine?.joinChannel(byToken: nil, channelId: "MetaChatTest", info: nil, uid: UInt(userId)!, joinSuccess: { String, UInt, Int in
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
+            self.joinedRtc = true
         })
     }
     
@@ -183,7 +184,7 @@ extension MetaChatEngine: AgoraRtcEngineDelegate {
     /// @param reason reason why this user left, note this event may be triggered when the remote user
     /// become an audience in live broadcasting profile
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
-        
+        self.localSpatial?.removeRemotePosition(uid)
     }
     
     /// Reports which users are speaking, the speakers' volumes, and whether the local user is speaking.
