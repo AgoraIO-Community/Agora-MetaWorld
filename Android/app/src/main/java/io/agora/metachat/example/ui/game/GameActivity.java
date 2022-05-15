@@ -46,7 +46,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                                 )
                         );
                     } else if (sender == enableSpeaker) {
-                        if (!MetaChatContext.getInstance().setDefaultAudioRoutetoSpeakerphone(enableSpeaker.get())) {
+                        if (!MetaChatContext.getInstance().muteAllRemoteAudioStreams(!enableSpeaker.get())) {
                             return;
                         }
                         binding.speaker.setImageDrawable(
@@ -66,6 +66,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                                         getTheme()
                                 )
                         );
+                        binding.mic.setVisibility(isBroadcaster.get() ? View.VISIBLE : View.GONE);
                     }
                 }
             };
@@ -134,7 +135,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                MetaChatContext.getInstance().destroy();
+                MetaChatContext.getInstance().leaveAndReleaseScene();
                 unloadUnity();
                 break;
             case R.id.mode:
@@ -172,6 +173,9 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
         binding.users.setVisibility(View.GONE);
         binding.mic.setVisibility(View.GONE);
         binding.speaker.setVisibility(View.GONE);
+
+        // 必须在onUnityPlayerUnloaded里调用
+        MetaChatContext.getInstance().destroy();
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);

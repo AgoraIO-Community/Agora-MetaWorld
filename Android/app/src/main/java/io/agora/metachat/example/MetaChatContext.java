@@ -117,7 +117,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void destroy() {
-        leaveAndReleaseScene();
         IMetachatService.destroy();
         metaChatService = null;
         RtcEngine.destroy();
@@ -201,8 +200,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return rtcEngine.enableLocalAudio(enabled) == Constants.ERR_OK;
     }
 
-    public boolean setDefaultAudioRoutetoSpeakerphone(boolean enabled) {
-        return rtcEngine.setDefaultAudioRoutetoSpeakerphone(enabled) == Constants.ERR_OK;
+    public boolean muteAllRemoteAudioStreams(boolean mute) {
+        if (spatialAudioEngine != null) {
+            return spatialAudioEngine.muteAllRemoteAudioStreams(mute) == Constants.ERR_OK;
+        }
+        return rtcEngine.muteAllRemoteAudioStreams(mute) == Constants.ERR_OK;
     }
 
     public boolean leaveAndReleaseScene() {
