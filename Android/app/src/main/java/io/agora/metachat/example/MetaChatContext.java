@@ -33,7 +33,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     private final static String TAG = MetaChatContext.class.getName();
     private volatile static MetaChatContext instance = null;
-    private final static boolean enableSpatialAudio = false;
+    private final static boolean enableSpatialAudio = true;
 
     private RtcEngine rtcEngine;
     private ILocalSpatialAudioEngine spatialAudioEngine;
@@ -150,6 +150,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     public boolean downloadScene(MetachatSceneInfo sceneInfo) {
         return metaChatService.downloadScene(sceneInfo.mSceneId) == Constants.ERR_OK;
+    }
+
+    public boolean cancelDownloadScene(MetachatSceneInfo sceneInfo) {
+        return metaChatService.cancelDownloadScene(sceneInfo.mSceneId) == Constants.ERR_OK;
     }
 
     public void prepareScene(MetachatSceneInfo sceneInfo, MetachatUserAvatarConfig avatarConfig) {

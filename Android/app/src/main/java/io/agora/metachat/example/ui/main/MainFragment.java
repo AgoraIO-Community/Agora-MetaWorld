@@ -131,7 +131,15 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         });
         mViewModel.getDownloadingProgress().observe(owner, integer -> {
             if (progressDialog == null) {
-                progressDialog = CustomDialog.showDownloadingProgress(context, null);
+                progressDialog = CustomDialog.showDownloadingProgress(context, materialDialog -> {
+                    mViewModel.cancelDownloadScene(mViewModel.getSceneList().getValue().get(0));
+                    return null;
+                });
+            }
+            else if(integer < 0){
+                progressDialog.dismiss();
+                progressDialog = null;
+                return;
             }
 
             ConstraintLayout constraintLayout = CustomDialog.getCustomView(progressDialog);

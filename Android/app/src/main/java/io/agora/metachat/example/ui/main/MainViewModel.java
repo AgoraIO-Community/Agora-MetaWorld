@@ -104,6 +104,10 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         MetaChatContext.getInstance().downloadScene(sceneInfo);
     }
 
+    public void cancelDownloadScene(MetachatSceneInfo sceneInfo) {
+        MetaChatContext.getInstance().cancelDownloadScene(sceneInfo);
+    }
+
     @Override
     public void onConnectionStateChanged(int state, int reason) {
 
@@ -122,6 +126,10 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
     @Override
     public void onDownloadSceneProgress(MetachatSceneInfo sceneInfo, int progress, int state) {
         Log.d("progress", String.valueOf(progress));
+        if(state == 3){
+            downloadingProgress.postValue(-1);
+            return;
+        }
         downloadingProgress.postValue(progress);
         if (state == 2) {
             selectScene.postValue(sceneInfo);
