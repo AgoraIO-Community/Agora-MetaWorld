@@ -183,15 +183,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     public boolean updateRole(int role) {
         int ret = Constants.ERR_OK;
+        boolean isBroadcaster = role == Constants.CLIENT_ROLE_BROADCASTER;
         ret += rtcEngine.updateChannelMediaOptions(new ChannelMediaOptions() {{
-            publishAudioTrack = true;
-            autoSubscribeAudio = true;
+            publishAudioTrack = isBroadcaster;
             clientRoleType = role;
         }});
-        boolean isPlayer = role == Constants.CLIENT_ROLE_BROADCASTER;
         avatarConfig.mLocalVisible = true;
-        avatarConfig.mSyncPosition = isPlayer;
-        avatarConfig.mRemoteVisible = isPlayer;
+        avatarConfig.mSyncPosition = isBroadcaster;
+        avatarConfig.mRemoteVisible = isBroadcaster;
         ret += metaChatScene.updateLocalAvatarConfig(avatarConfig);
         return ret == Constants.ERR_OK;
     }

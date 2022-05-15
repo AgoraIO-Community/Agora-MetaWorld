@@ -64,6 +64,10 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                                 )
                         );
                     } else if (sender == isBroadcaster) {
+                        if (!MetaChatContext.getInstance().updateRole(isBroadcaster.get() ?
+                                Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE)) {
+                            return;
+                        }
                         binding.card.mode.setText(isBroadcaster.get() ? "语聊模式" : "游客模式");
                         binding.card.tips.setVisibility(isBroadcaster.get() ? View.GONE : View.VISIBLE);
                         binding.card.role.setImageDrawable(
@@ -74,6 +78,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                                 )
                         );
                         binding.mic.setVisibility(isBroadcaster.get() ? View.VISIBLE : View.GONE);
+                        if (isBroadcaster.get()) enableMic.set(true);
                     }
                 }
             };
@@ -148,8 +153,6 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                 }
                 break;
             case R.id.role:
-                MetaChatContext.getInstance().updateRole(isBroadcaster.get() ?
-                        Constants.CLIENT_ROLE_AUDIENCE : Constants.CLIENT_ROLE_BROADCASTER);
                 isBroadcaster.set(!isBroadcaster.get());
                 break;
             case R.id.users:
