@@ -27,6 +27,7 @@ import io.agora.rtc2.Constants;
 public class GameActivity extends AgoraMetaActivity implements View.OnClickListener, IMetachatSceneEventHandler {
 
     private GameActivityBinding binding;
+    private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
     private final ObservableBoolean enableSpeaker = new ObservableBoolean(true);
     private final ObservableBoolean isBroadcaster = new ObservableBoolean(true);
@@ -34,7 +35,13 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
             new Observable.OnPropertyChangedCallback() {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
-                    if (sender == enableMic) {
+                    if (sender == isEnterScene) {
+                        binding.back.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        binding.card.getRoot().setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        binding.users.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        binding.mic.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        binding.speaker.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                    } else if (sender == enableMic) {
                         if (!MetaChatContext.getInstance().enableLocalAudio(enableMic.get())) {
                             return;
                         }
@@ -77,13 +84,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
         binding = GameActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.back.setOnClickListener(this);
-        binding.card.mode.setOnClickListener(this);
-        binding.card.role.setOnClickListener(this);
-        binding.users.setOnClickListener(this);
-        binding.mic.setOnClickListener(this);
-        binding.speaker.setOnClickListener(this);
-
+        isEnterScene.addOnPropertyChangedCallback(callback);
         enableMic.addOnPropertyChangedCallback(callback);
         enableSpeaker.addOnPropertyChangedCallback(callback);
         isBroadcaster.addOnPropertyChangedCallback(callback);
@@ -103,6 +104,8 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        isEnterScene.removeOnPropertyChangedCallback(callback);
         enableMic.removeOnPropertyChangedCallback(callback);
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
@@ -139,6 +142,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                 unloadUnity();
                 break;
             case R.id.mode:
+            case R.id.tips:
                 if (!isBroadcaster.get()) {
                     CustomDialog.showTips(this);
                 }
@@ -168,14 +172,10 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
 
     @Override
     public void onUnityPlayerUnloaded() {
-        binding.back.setVisibility(View.GONE);
-        binding.card.getRoot().setVisibility(View.GONE);
-        binding.users.setVisibility(View.GONE);
-        binding.mic.setVisibility(View.GONE);
-        binding.speaker.setVisibility(View.GONE);
-
         // 必须在onUnityPlayerUnloaded里调用
         MetaChatContext.getInstance().destroy();
+
+        isEnterScene.set(false);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -193,11 +193,10 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
                 Toast.makeText(this, String.format(Locale.getDefault(), "EnterSceneFailed %d", errorCode), Toast.LENGTH_LONG).show();
                 return;
             }
-            binding.back.setVisibility(View.VISIBLE);
-            binding.card.getRoot().setVisibility(View.VISIBLE);
-            binding.users.setVisibility(View.VISIBLE);
-            binding.mic.setVisibility(View.VISIBLE);
-            binding.speaker.setVisibility(View.VISIBLE);
+            isEnterScene.set(true);
+            enableMic.set(true);
+            enableSpeaker.set(true);
+            isBroadcaster.set(true);
         });
     }
 
