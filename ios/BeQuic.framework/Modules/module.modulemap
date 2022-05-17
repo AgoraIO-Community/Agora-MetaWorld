@@ -1,6 +1,0 @@
-framework module BeQuic {
-  umbrella header "BeQuic.h"
-
-  export *
-  module * { export * }
-}

@@ -1,7 +1,0 @@
-framework module UnityFramework {
-  umbrella header "UnityFramework.h"
-  header "AgoraMetaViewController.h"
-
-  export *
-  module * { export * }
-}

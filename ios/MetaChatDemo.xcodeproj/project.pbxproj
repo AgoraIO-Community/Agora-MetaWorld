@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		937D797EC8ECFE42424EC388 /* Pods_MetaChatDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */; };
 		E7E263DE282ABD08002FE8DB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E7E2636A282ABD07002FE8DB /* LICENSE */; };
 		E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DA282ABD08002FE8DB /* libcrypto.a */; };
 		E7E263E0282ABD08002FE8DB /* libssl-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DB282ABD08002FE8DB /* libssl-tvOS.a */; };
@@ -67,6 +68,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.release.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.release.xcconfig"; sourceTree = "<group>"; };
+		B10E144C72931B74232CB8D9 /* Pods-MetaChatDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.debug.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetaChatDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7E262D9282ABADC002FE8DB /* AgoraRtcKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcKit.framework; sourceTree = "<group>"; };
 		E7E262DA282ABADC002FE8DB /* AgoraDav1dExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraDav1dExtension.framework; sourceTree = "<group>"; };
 		E7E262DB282ABADC002FE8DB /* msgbridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = msgbridge.framework; sourceTree = "<group>"; };
@@ -232,6 +236,7 @@
 				E7E26456282ABF6E002FE8DB /* AgoraRtcKit.framework in Frameworks */,
 				E7E26450282ABF51002FE8DB /* msgbridge.framework in Frameworks */,
 				E7E2645E282ABF75002FE8DB /* scenesync.framework in Frameworks */,
+				937D797EC8ECFE42424EC388 /* Pods_MetaChatDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,6 +256,7 @@
 				E7E262DB282ABADC002FE8DB /* msgbridge.framework */,
 				E7E262DC282ABADC002FE8DB /* scenesync.framework */,
 				E7E262DD282ABADD002FE8DB /* UnityFramework.framework */,
+				DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -401,6 +407,16 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
+		EEB67B4AD8DDB9FB9337FA1E /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B10E144C72931B74232CB8D9 /* Pods-MetaChatDemo.debug.xcconfig */,
+				4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		F348D14E2811637A00039743 = {
 			isa = PBXGroup;
 			children = (
@@ -408,6 +424,7 @@
 				F348D1592811637A00039743 /* MetaChatDemo */,
 				F348D1582811637A00039743 /* Products */,
 				53A74D4EB082C93C34FE745F /* Frameworks */,
+				EEB67B4AD8DDB9FB9337FA1E /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -459,11 +476,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F348D16B2811637B00039743 /* Build configuration list for PBXNativeTarget "MetaChatDemo" */;
 			buildPhases = (
+				4157B932D739E6E18650D9D2 /* [CP] Check Pods Manifest.lock */,
 				F348D1532811637A00039743 /* Sources */,
 				F348D1542811637A00039743 /* Frameworks */,
 				F348D1552811637A00039743 /* Resources */,
 				F3BA5F1A2818F0B500821E23 /* Embed Frameworks */,
 				2639A71E282E2A4D0037E056 /* ShellScript */,
+				9A5E90FC34F32E570FD93226 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -540,6 +559,45 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#!/bin/sh\n\n# Strip invalid architectures\n\nstrip_invalid_archs() {\nbinary=\"$1\"\necho \"current binary ${binary}\"\n# Get architectures for current file\narchs=\"$(lipo -info \"$binary\" | rev | cut -d ':' -f1 | rev)\"\nstripped=\"\"\nfor arch in $archs; do\nif ! [[ \"${ARCHS}\" == *\"$arch\"* ]]; then\nif [ -f \"$binary\" ]; then\n# Strip non-valid architectures in-place\nlipo -remove \"$arch\" -output \"$binary\" \"$binary\" || exit 1\nstripped=\"$stripped $arch\"\nfi\nfi\ndone\nif [[ \"$stripped\" ]]; then\necho \"Stripped $binary of architectures:$stripped\"\nfi\n}\n\nAPP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\n# This script loops through the frameworks embedded in the application and\n# removes unused architectures.\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\n\nstrip_invalid_archs \"$FRAMEWORK_EXECUTABLE_PATH\"\ndone\n";
+		};
+		4157B932D739E6E18650D9D2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-MetaChatDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9A5E90FC34F32E570FD93226 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -696,6 +754,7 @@
 		};
 		F348D16C2811637B00039743 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B10E144C72931B74232CB8D9 /* Pods-MetaChatDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -743,6 +802,7 @@
 		};
 		F348D16D2811637B00039743 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
