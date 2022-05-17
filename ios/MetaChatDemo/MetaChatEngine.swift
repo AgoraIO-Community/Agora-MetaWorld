@@ -17,7 +17,7 @@ class MetaChatEngine: NSObject {
         super.init()
         
         let rtcEngineConfig = AgoraRtcEngineConfig()
-        rtcEngineConfig.appId = KeyCenter.rtcAppId
+        rtcEngineConfig.appId = KeyCenter.RTC_TOKEN
         rtcEngineConfig.areaCode = .global
         rtcEngine = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
     }
@@ -25,23 +25,18 @@ class MetaChatEngine: NSObject {
     var metachatKit: AgoraMetachatKit?
 
     var playerName: String?
-    
-    var userId: String = "0"
-    
+        
     func createMetachatKit(userName: String, avatarUrl: String, delegate: AgoraMetachatEventDelegate?) {
         playerName = userName
-        
-        let currentTime = UInt(CFAbsoluteTimeGetCurrent())
-        userId = "\(currentTime)"
-        
+                
         let userInfo = AgoraMetachatUserInfo.init()
-        userInfo.userId = userId
+        userInfo.userId = KeyCenter.RTM_UID
         userInfo.userName = userName
         userInfo.userIconUrl = avatarUrl
         
         let metaChatconfig = AgoraMetachatConfig.init()
-        metaChatconfig.appId = KeyCenter.AppId
-        metaChatconfig.token = MetaChatTokenCreater.createRTMToken(withAppid: KeyCenter.AppId, certificate: KeyCenter.certificate, userid: userId)
+        metaChatconfig.appId = KeyCenter.APP_ID
+        metaChatconfig.token = KeyCenter.RTM_TOKEN ?? ""
         metaChatconfig.userInfo = userInfo
         metaChatconfig.delegate = delegate
         
@@ -57,7 +52,7 @@ class MetaChatEngine: NSObject {
     func createScene(_ sceneInfo: AgoraMetachatSceneInfo, delegate: AgoraMetachatSceneEventDelegate) {
         currentSceneInfo = sceneInfo
         
-        metachatScene = metachatKit?.createScene("MetaChatTest", delegate: delegate)
+        metachatScene = metachatKit?.createScene(KeyCenter.CHANNEL_ID, delegate: delegate)
     }
     
     
@@ -91,7 +86,7 @@ class MetaChatEngine: NSObject {
     
     var localSpatial: AgoraLocalSpatialAudioKit?
     
-    func joinRtcChannel() {
+    func joinRtcChannel(success: @escaping () -> Void) {
         rtcEngine?.setClientRole(.audience)
 
         rtcEngine?.disableVideo()
@@ -107,8 +102,9 @@ class MetaChatEngine: NSObject {
         localSpatial?.setAudioRecvRange(50)
         localSpatial?.setDistanceUnit(1)
         
-        rtcEngine?.joinChannel(byToken: nil, channelId: "MetaChatTest", info: nil, uid: UInt(userId)!, joinSuccess: { String, UInt, Int in
+        rtcEngine?.joinChannel(byToken: nil, channelId: KeyCenter.CHANNEL_ID, info: nil, uid: KeyCenter.RTC_UID, joinSuccess: { String, UInt, Int in
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
+            success()
         })
     }
     
@@ -144,10 +140,12 @@ class MetaChatEngine: NSObject {
     
     func muteMic(isMute: Bool) {
         localSpatial?.muteLocalAudioStream(isMute)
+//        rtcEngine?.muteLocalAudioStream(isMute)
     }
     
     func muteSpeaker(isMute: Bool) {
         localSpatial?.muteAllRemoteAudioStreams(isMute)
+//        rtcEngine?.muteAllRemoteAudioStreams(isMute)
     }
 }
 
@@ -182,7 +180,7 @@ extension MetaChatEngine: AgoraRtcEngineDelegate {
     /// @param reason reason why this user left, note this event may be triggered when the remote user
     /// become an audience in live broadcasting profile
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
-        
+        localSpatial?.removeRemotePosition(uid)
     }
     
     /// Reports which users are speaking, the speakers' volumes, and whether the local user is speaking.

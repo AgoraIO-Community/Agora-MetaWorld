@@ -725,6 +725,14 @@
                                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ft8-XN-txw">
                                                 <rect key="frame" x="8" y="150" width="284" height="4"/>
                                             </progressView>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXU-JS-fz0">
+                                                <rect key="frame" x="237" y="30" width="53" height="31"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="取消"/>
+                                                <connections>
+                                                    <action selector="cancelDownloadHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="WgE-zM-ssg"/>
+                                                </connections>
+                                            </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
@@ -733,8 +741,10 @@
                                             <constraint firstAttribute="width" constant="300" id="9XO-MP-l6t"/>
                                             <constraint firstItem="Ft8-XN-txw" firstAttribute="leading" secondItem="e1X-Ay-Wax" secondAttribute="leadingMargin" id="PjA-NJ-JI9"/>
                                             <constraint firstAttribute="height" constant="200" id="Zea-eX-6L3"/>
+                                            <constraint firstItem="hXU-JS-fz0" firstAttribute="top" secondItem="e1X-Ay-Wax" secondAttribute="top" constant="30" id="bKr-ip-hpD"/>
                                             <constraint firstItem="Ft8-XN-txw" firstAttribute="centerX" secondItem="Jwg-wJ-Bgm" secondAttribute="centerX" id="oFh-BH-evf"/>
                                             <constraint firstItem="Jwg-wJ-Bgm" firstAttribute="centerX" secondItem="e1X-Ay-Wax" secondAttribute="centerX" id="pvZ-nV-dgI"/>
+                                            <constraint firstAttribute="trailing" secondItem="hXU-JS-fz0" secondAttribute="trailing" constant="10" id="w8a-bt-FOf"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -793,6 +803,7 @@
                     </view>
                     <connections>
                         <outlet property="avatarImageView" destination="nqL-GN-R0e" id="EKS-7m-904"/>
+                        <outlet property="cancelDownloadButton" destination="hXU-JS-fz0" id="1hP-Fl-IDW"/>
                         <outlet property="downloadingBack" destination="HJj-19-UHC" id="ciw-rt-chv"/>
                         <outlet property="downloadingProgress" destination="Ft8-XN-txw" id="abh-fW-R98"/>
                         <outlet property="errorLabel" destination="ZYK-FG-tML" id="a7L-HV-16o"/>

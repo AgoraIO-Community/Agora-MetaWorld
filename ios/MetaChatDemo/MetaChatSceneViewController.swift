@@ -156,7 +156,9 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
     func metachatScene(_ scene: AgoraMetachatScene, onEnterSceneResult errorCode: Int) {
         DispatchQueue.main.async {
             self.showUI()
-            MetaChatEngine.sharedEngine.joinRtcChannel()
+            MetaChatEngine.sharedEngine.joinRtcChannel {
+                self.openMicAction(sender: self.openMicB)
+            }
         }
     }
     
@@ -171,8 +173,8 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
     
     func metachatScene(_ scene: AgoraMetachatScene, onUserPositionChanged uid: String, posInfo: AgoraMetachatPositionInfo) {
         
-        if (uid.compare(MetaChatEngine.sharedEngine.userId) == .orderedSame) || (uid.compare("") == .orderedSame) {
-            MetaChatEngine.sharedEngine.localSpatial?.updateSelfPosition(posInfo.position as! [NSNumber], axisForward: posInfo.forward as! [NSNumber], axisRight: posInfo.right as! [NSNumber], axisUp: posInfo.right as! [NSNumber])
+        if (uid.compare(KeyCenter.RTM_UID) == .orderedSame) || (uid.compare("") == .orderedSame) {
+            MetaChatEngine.sharedEngine.localSpatial?.updateSelfPosition(posInfo.position as! [NSNumber], axisForward: posInfo.forward as! [NSNumber], axisRight: posInfo.right as! [NSNumber], axisUp: posInfo.up as! [NSNumber])
         }else {
             let remotePositionInfo = AgoraRemoteVoicePositionInfo.init()
             remotePositionInfo.position = posInfo.position as! [NSNumber]

@@ -122,6 +122,10 @@ class MetaChatLoginViewController: UIViewController {
     @IBOutlet weak var downloadingBack: UIView!
     @IBOutlet weak var downloadingProgress: UIProgressView!
     
+    @IBOutlet weak var cancelDownloadButton: UIButton!
+    
+    private var currentSceneId: Int = 0
+    
     var selSex: Int = 0    //0未选择，1男，2女
     
     var selAvatarIndex: Int = 0
@@ -164,6 +168,10 @@ class MetaChatLoginViewController: UIViewController {
         selAvatarAlert.isHidden = false
     }
     
+    @IBAction func cancelDownloadHandler(_ sender: Any) {
+        downloadingBack.isHidden = true
+        MetaChatEngine.sharedEngine.metachatKit?.cancelDownloadScene(currentSceneId)
+    }
     
     func checkValid() -> Bool {
         let nameCount = userNameTF.text?.count ?? 0
@@ -283,9 +291,9 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         }
         
         let firstScene = scenes.firstObject as! AgoraMetachatSceneInfo
-        
+        currentSceneId = firstScene.sceneId
         let metachatKit = MetaChatEngine.sharedEngine.metachatKit
-        if metachatKit?.isSceneDownloaded(firstScene.sceneId) != 1 {
+        if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
             let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载50M数据包", preferredStyle:.alert)
             
             alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
@@ -311,5 +319,4 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
             onSceneReady(sceneInfo!)
         }
     }
-
 }

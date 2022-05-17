@@ -7,15 +7,10 @@
 //
 
 struct KeyCenter {
-    static let AppId: String = "695752b975654e44bea00137d084c71c"
-    
-    static let rtcAppId: String = "695752b975654e44bea00137d084c71c"
-
-    static let certificate: String = "a82ea1f27ed64704b31629a7f19e1b37"
-    
-    // assign token to nil if you have not enabled app certificate
-//    static var Token: String = <#Temp Access Token#>
-    
-//    static var rtcToken: String = <#Temp Access Token#>
-
+    static let CHANNEL_ID: String = <#ChannelID#>
+    static let APP_ID: String = <#APPID#>
+    static let RTC_UID: UInt = 0 // 请修改uid 不要设置成0
+    static let RTC_TOKEN: String = <#RTC_TOKEN#>
+    static let RTM_UID: String = "\(RTC_UID)"
+    static var RTM_TOKEN: String? = <#RTM_TOKEN#>
 }

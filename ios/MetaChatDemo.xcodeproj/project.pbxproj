@@ -425,8 +425,8 @@
 				F3BA5F3F28191B1D00821E23 /* KeyCenter.swift */,
 				F348D15A2811637A00039743 /* AppDelegate.swift */,
 				F348D15C2811637A00039743 /* SceneDelegate.swift */,
-				F348D15E2811637A00039743 /* MetaChatLoginViewController.swift */,
 				F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */,
+				F348D15E2811637A00039743 /* MetaChatLoginViewController.swift */,
 				F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */,
 				F355AAAF28237F9F00656A67 /* TokenBuilder */,
 				F348D1602811637A00039743 /* Main.storyboard */,
@@ -463,6 +463,7 @@
 				F348D1542811637A00039743 /* Frameworks */,
 				F348D1552811637A00039743 /* Resources */,
 				F3BA5F1A2818F0B500821E23 /* Embed Frameworks */,
+				2639A71E282E2A4D0037E056 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -521,6 +522,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2639A71E282E2A4D0037E056 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#!/bin/sh\n\n# Strip invalid architectures\n\nstrip_invalid_archs() {\nbinary=\"$1\"\necho \"current binary ${binary}\"\n# Get architectures for current file\narchs=\"$(lipo -info \"$binary\" | rev | cut -d ':' -f1 | rev)\"\nstripped=\"\"\nfor arch in $archs; do\nif ! [[ \"${ARCHS}\" == *\"$arch\"* ]]; then\nif [ -f \"$binary\" ]; then\n# Strip non-valid architectures in-place\nlipo -remove \"$arch\" -output \"$binary\" \"$binary\" || exit 1\nstripped=\"$stripped $arch\"\nfi\nfi\ndone\nif [[ \"$stripped\" ]]; then\necho \"Stripped $binary of architectures:$stripped\"\nfi\n}\n\nAPP_PATH=\"${TARGET_BUILD_DIR}/${WRAPPER_NAME}\"\n\n# This script loops through the frameworks embedded in the application and\n# removes unused architectures.\nfind \"$APP_PATH\" -name '*.framework' -type d | while read -r FRAMEWORK\ndo\nFRAMEWORK_EXECUTABLE_NAME=$(defaults read \"$FRAMEWORK/Info.plist\" CFBundleExecutable)\nFRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\necho \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\n\nstrip_invalid_archs \"$FRAMEWORK_EXECUTABLE_PATH\"\ndone\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F348D1532811637A00039743 /* Sources */ = {
@@ -680,7 +701,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -727,7 +748,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 9;
+				CURRENT_PROJECT_VERSION = 15;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

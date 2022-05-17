@@ -79,4 +79,5 @@ AGORA_API GLTexureID AGORA_CALL Render_genTextureID(const char *key, int width,
 AGORA_API int AGORA_CALL Render_renderVideoFrame(const char *key, int &width,
                                                  int &height);
 
+AGORA_API int AGORA_CALL Render_getVideoFrame(const char *key, ImageFrame *frame);
 #endif
