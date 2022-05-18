@@ -17,7 +17,7 @@ class MetaChatEngine: NSObject {
         super.init()
         
         let rtcEngineConfig = AgoraRtcEngineConfig()
-        rtcEngineConfig.appId = KeyCenter.RTC_TOKEN
+        rtcEngineConfig.appId = KeyCenter.APP_ID
         rtcEngineConfig.areaCode = .global
         rtcEngine = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
     }
@@ -102,7 +102,7 @@ class MetaChatEngine: NSObject {
         localSpatial?.setAudioRecvRange(50)
         localSpatial?.setDistanceUnit(1)
         
-        rtcEngine?.joinChannel(byToken: nil, channelId: KeyCenter.CHANNEL_ID, info: nil, uid: KeyCenter.RTC_UID, joinSuccess: { String, UInt, Int in
+        rtcEngine?.joinChannel(byToken: KeyCenter.RTC_TOKEN, channelId: KeyCenter.CHANNEL_ID, info: nil, uid: KeyCenter.RTC_UID, joinSuccess: { String, UInt, Int in
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
             success()
         })

@@ -205,7 +205,6 @@ class MetaChatLoginViewController: UIViewController {
         MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
                         
         MetaChatEngine.sharedEngine.metachatKit?.getScenes()
-        
     }
     
     func onSceneReady(_ sceneInfo: AgoraMetachatSceneInfo) {
