@@ -206,14 +206,12 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return rtcEngine.muteAllRemoteAudioStreams(mute) == Constants.ERR_OK;
     }
 
-    public boolean leaveAndReleaseScene() {
-        Log.d(TAG, "leaveAndReleaseScene");
+    public boolean leaveScene() {
+        Log.d(TAG, "leaveScene");
         int ret = Constants.ERR_OK;
         if (metaChatScene != null) {
             ret += rtcEngine.leaveChannel();
             ret += metaChatScene.leaveScene();
-            ret += metaChatScene.release();
-            metaChatScene = null;
         }
         if (spatialAudioEngine != null) {
             ILocalSpatialAudioEngine.destroy();
@@ -294,6 +292,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     @Override
     public void onLeaveSceneResult(int errorCode) {
         Log.d(TAG, String.format("onLeaveSceneResult %d", errorCode));
+        if (errorCode == 0) {
+            metaChatScene.release();
+            metaChatScene = null;
+        }
+
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onLeaveSceneResult(errorCode);
         }
