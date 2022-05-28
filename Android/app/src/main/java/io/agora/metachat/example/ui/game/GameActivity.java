@@ -143,8 +143,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
-                MetaChatContext.getInstance().leaveAndReleaseScene();
-                unloadUnity();
+                MetaChatContext.getInstance().leaveScene();
                 break;
             case R.id.mode:
             case R.id.tips:
@@ -205,7 +204,9 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-
+        if (errorCode == 0) {
+            unloadUnity();
+        }
     }
 
     @Override
