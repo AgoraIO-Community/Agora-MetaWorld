@@ -20,6 +20,7 @@ class MetaChatEngine: NSObject {
         rtcEngineConfig.appId = KeyCenter.APP_ID
         rtcEngineConfig.areaCode = .global
         rtcEngine = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
+        rtcEngine?.setParameters("{\"rtc.audio.force_bluetooth_a2dp\": true}")
     }
     
     var metachatKit: AgoraMetachatKit?
@@ -34,7 +35,7 @@ class MetaChatEngine: NSObject {
         userInfo.userName = userName
         userInfo.userIconUrl = avatarUrl
         
-        let metaChatconfig = AgoraMetachatConfig.init()
+        let metaChatconfig = AgoraMetachatConfig()
         metaChatconfig.appId = KeyCenter.APP_ID
         metaChatconfig.token = KeyCenter.RTM_TOKEN ?? ""
         metaChatconfig.userInfo = userInfo

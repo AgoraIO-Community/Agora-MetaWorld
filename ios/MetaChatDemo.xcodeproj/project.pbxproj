@@ -13,24 +13,7 @@
 		E7E263E0282ABD08002FE8DB /* libssl-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DB282ABD08002FE8DB /* libssl-tvOS.a */; };
 		E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DC282ABD08002FE8DB /* libssl.a */; };
 		E7E263E2282ABD08002FE8DB /* libcrypto-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DD282ABD08002FE8DB /* libcrypto-tvOS.a */; };
-		E7E26450282ABF51002FE8DB /* msgbridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DB282ABADC002FE8DB /* msgbridge.framework */; platformFilter = ios; };
-		E7E26451282ABF51002FE8DB /* msgbridge.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DB282ABADC002FE8DB /* msgbridge.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E26452282ABF6C002FE8DB /* AgoraDav1dExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DA282ABADC002FE8DB /* AgoraDav1dExtension.framework */; platformFilter = ios; };
-		E7E26453282ABF6C002FE8DB /* AgoraDav1dExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DA282ABADC002FE8DB /* AgoraDav1dExtension.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E26454282ABF6D002FE8DB /* Agoraffmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DF282ABADF002FE8DB /* Agoraffmpeg.framework */; platformFilter = ios; };
-		E7E26455282ABF6D002FE8DB /* Agoraffmpeg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DF282ABADF002FE8DB /* Agoraffmpeg.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E26456282ABF6E002FE8DB /* AgoraRtcKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262D9282ABADC002FE8DB /* AgoraRtcKit.framework */; platformFilter = ios; };
-		E7E26457282ABF6E002FE8DB /* AgoraRtcKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262D9282ABADC002FE8DB /* AgoraRtcKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E26458282ABF70002FE8DB /* AgoraRtmKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262E1282ABADF002FE8DB /* AgoraRtmKit.framework */; platformFilter = ios; };
-		E7E26459282ABF70002FE8DB /* AgoraRtmKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262E1282ABADF002FE8DB /* AgoraRtmKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E2645A282ABF71002FE8DB /* AgoraRtmLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262E0282ABADF002FE8DB /* AgoraRtmLoader.framework */; platformFilter = ios; };
-		E7E2645B282ABF71002FE8DB /* AgoraRtmLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262E0282ABADF002FE8DB /* AgoraRtmLoader.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E2645C282ABF73002FE8DB /* BeQuic.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DE282ABADE002FE8DB /* BeQuic.framework */; platformFilter = ios; };
-		E7E2645D282ABF73002FE8DB /* BeQuic.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DE282ABADE002FE8DB /* BeQuic.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E2645E282ABF75002FE8DB /* scenesync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DC282ABADC002FE8DB /* scenesync.framework */; platformFilter = ios; };
-		E7E2645F282ABF75002FE8DB /* scenesync.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DC282ABADC002FE8DB /* scenesync.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E7E26460282ABF77002FE8DB /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DD282ABADD002FE8DB /* UnityFramework.framework */; platformFilter = ios; };
-		E7E26461282ABF77002FE8DB /* UnityFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E7E262DD282ABADD002FE8DB /* UnityFramework.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E7FAFB89283528AF00F25821 /* 3.zip in Resources */ = {isa = PBXBuildFile; fileRef = E7FAFB88283528AF00F25821 /* 3.zip */; };
 		F303917B2817E58B004A6A40 /* OnlineUserTableviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */; };
 		F348D15B2811637A00039743 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348D15A2811637A00039743 /* AppDelegate.swift */; };
 		F348D15D2811637A00039743 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348D15C2811637A00039743 /* SceneDelegate.swift */; };
@@ -44,28 +27,6 @@
 		F3BA5F4228194F2200821E23 /* MetaChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */; };
 		F3D54E992819788C00C5F41A /* MetaChatSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		F3BA5F1A2818F0B500821E23 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				E7E26457282ABF6E002FE8DB /* AgoraRtcKit.framework in Embed Frameworks */,
-				E7E2645D282ABF73002FE8DB /* BeQuic.framework in Embed Frameworks */,
-				E7E26461282ABF77002FE8DB /* UnityFramework.framework in Embed Frameworks */,
-				E7E2645F282ABF75002FE8DB /* scenesync.framework in Embed Frameworks */,
-				E7E26459282ABF70002FE8DB /* AgoraRtmKit.framework in Embed Frameworks */,
-				E7E2645B282ABF71002FE8DB /* AgoraRtmLoader.framework in Embed Frameworks */,
-				E7E26453282ABF6C002FE8DB /* AgoraDav1dExtension.framework in Embed Frameworks */,
-				E7E26455282ABF6D002FE8DB /* Agoraffmpeg.framework in Embed Frameworks */,
-				E7E26451282ABF51002FE8DB /* msgbridge.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.release.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.release.xcconfig"; sourceTree = "<group>"; };
@@ -195,6 +156,7 @@
 		E7E263DB282ABD08002FE8DB /* libssl-tvOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libssl-tvOS.a"; sourceTree = "<group>"; };
 		E7E263DC282ABD08002FE8DB /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
 		E7E263DD282ABD08002FE8DB /* libcrypto-tvOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libcrypto-tvOS.a"; sourceTree = "<group>"; };
+		E7FAFB88283528AF00F25821 /* 3.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = 3.zip; sourceTree = "<group>"; };
 		F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnlineUserTableviewCell.xib; sourceTree = "<group>"; };
 		F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChatSceneViewController.swift; sourceTree = "<group>"; };
 		F348D1572811637A00039743 /* MetaChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -222,20 +184,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E7E26454282ABF6D002FE8DB /* Agoraffmpeg.framework in Frameworks */,
-				E7E2645C282ABF73002FE8DB /* BeQuic.framework in Frameworks */,
 				E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */,
-				E7E26458282ABF70002FE8DB /* AgoraRtmKit.framework in Frameworks */,
 				E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */,
 				E7E263E2282ABD08002FE8DB /* libcrypto-tvOS.a in Frameworks */,
-				E7E26452282ABF6C002FE8DB /* AgoraDav1dExtension.framework in Frameworks */,
-				E7E26460282ABF77002FE8DB /* UnityFramework.framework in Frameworks */,
-				E7E2645A282ABF71002FE8DB /* AgoraRtmLoader.framework in Frameworks */,
 				F355AB372823B98400656A67 /* libz.tbd in Frameworks */,
 				E7E263E0282ABD08002FE8DB /* libssl-tvOS.a in Frameworks */,
-				E7E26456282ABF6E002FE8DB /* AgoraRtcKit.framework in Frameworks */,
-				E7E26450282ABF51002FE8DB /* msgbridge.framework in Frameworks */,
-				E7E2645E282ABF75002FE8DB /* scenesync.framework in Frameworks */,
 				937D797EC8ECFE42424EC388 /* Pods_MetaChatDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -413,7 +366,6 @@
 				B10E144C72931B74232CB8D9 /* Pods-MetaChatDemo.debug.xcconfig */,
 				4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -449,6 +401,7 @@
 				F348D1602811637A00039743 /* Main.storyboard */,
 				F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */,
 				F348D1632811637B00039743 /* Assets.xcassets */,
+				E7FAFB88283528AF00F25821 /* 3.zip */,
 				F348D1652811637B00039743 /* LaunchScreen.storyboard */,
 				F348D1682811637B00039743 /* Info.plist */,
 				F3D54E932819732F00C5F41A /* MetaChatDemo-Bridging-Header.h */,
@@ -480,7 +433,6 @@
 				F348D1532811637A00039743 /* Sources */,
 				F348D1542811637A00039743 /* Frameworks */,
 				F348D1552811637A00039743 /* Resources */,
-				F3BA5F1A2818F0B500821E23 /* Embed Frameworks */,
 				2639A71E282E2A4D0037E056 /* ShellScript */,
 				9A5E90FC34F32E570FD93226 /* [CP] Embed Pods Frameworks */,
 			);
@@ -535,6 +487,7 @@
 				F348D1672811637B00039743 /* LaunchScreen.storyboard in Resources */,
 				F348D1642811637B00039743 /* Assets.xcassets in Resources */,
 				F348D1622811637A00039743 /* Main.storyboard in Resources */,
+				E7FAFB89283528AF00F25821 /* 3.zip in Resources */,
 				F303917B2817E58B004A6A40 /* OnlineUserTableviewCell.xib in Resources */,
 				E7E263DE282ABD08002FE8DB /* LICENSE in Resources */,
 			);
@@ -760,7 +713,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -775,6 +728,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -808,7 +762,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 21;
 				DEVELOPMENT_TEAM = YS397FG5PA;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -823,6 +777,7 @@
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";

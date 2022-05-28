@@ -7,6 +7,7 @@
 
 import UIKit
 import AgoraRtcKit
+import Zip
 
 class SelSexCell: UIView {
     @IBOutlet weak var selectedBack: UIView!
@@ -124,7 +125,9 @@ class MetaChatLoginViewController: UIViewController {
     
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
-    private var currentSceneId: Int = 0
+    private var currentSceneId: Int = 3
+    
+    private let libraryPath = NSHomeDirectory() + "/Library/Caches/"
     
     var selSex: Int = 0    //0未选择，1男，2女
     
@@ -134,7 +137,7 @@ class MetaChatLoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         userNameTF.attributedPlaceholder = NSAttributedString.init(string: "请输入2-10个字符", attributes: [NSAttributedString.Key.foregroundColor : UIColor.init(red: 161.0/255.0, green: 139.0/255.0, blue: 176/255.0, alpha: 1.0)])
         
         selSexAlert.delegate = self
@@ -143,8 +146,25 @@ class MetaChatLoginViewController: UIViewController {
         selAvatarAlert.delegate = self
         
         view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(hideKeyboard)))
+        
+        DispatchQueue.global().async {
+            self.moveFileHandler()
+        }
     }
 
+    private func moveFileHandler() {
+        if FileManager.default.fileExists(atPath: libraryPath + "3", isDirectory: nil) {
+            return
+        }
+        FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
+        let path = Bundle.main.path(forResource: "3", ofType: "zip")
+        try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: libraryPath), overwrite: true, password: nil) { progress in
+            print("zip progress = \(progress)")
+        } fileOutputHandler: { unzippedFile in
+            print(unzippedFile.path)
+        }
+    }
+    
     override var shouldAutorotate: Bool {
         return false
     }
@@ -152,7 +172,11 @@ class MetaChatLoginViewController: UIViewController {
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .portrait
     }
-        
+    
+    override var prefersStatusBarHidden: Bool {
+        false
+    }
+
     @objc func hideKeyboard() {
         view.endEditing(true)
     }
@@ -260,6 +284,10 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
                 self.indicatorView?.removeFromSuperview()
                 self.indicatorView = nil
             }
+        } else if state == .reconnecting || state == .aborted {
+            MetaChatEngine.sharedEngine.leaveRtcChannel()
+            MetaChatEngine.sharedEngine.leaveScene()
+            dismiss(animated: true, completion: nil)
         }
     }
     
@@ -289,15 +317,16 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
             return
         }
         
-        let firstScene = scenes.firstObject as! AgoraMetachatSceneInfo
-        currentSceneId = firstScene.sceneId
+        guard let firstScene = scenes.compactMap({ $0 as? AgoraMetachatSceneInfo }).first(where: { $0.sceneId == currentSceneId }) else {
+            return
+        }
         let metachatKit = MetaChatEngine.sharedEngine.metachatKit
         if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
             let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载50M数据包", preferredStyle:.alert)
             
             alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction.init(title: "立即下载", style: .default, handler: { UIAlertAction in
-                metachatKit?.downloadScene(firstScene.sceneId)
+                metachatKit?.downloadScene(self.currentSceneId)
                 self.downloadingBack.isHidden = false
             }))
             
