@@ -287,7 +287,9 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         } else if state == .reconnecting || state == .aborted {
             MetaChatEngine.sharedEngine.leaveRtcChannel()
             MetaChatEngine.sharedEngine.leaveScene()
-            dismiss(animated: true, completion: nil)
+            DispatchQueue.main.async {
+                self.dismiss(animated: true, completion: nil)
+            }
         }
     }
     
