@@ -125,7 +125,7 @@ class MetaChatLoginViewController: UIViewController {
     
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
-    private var currentSceneId: Int = 3
+    private var currentSceneId: Int = 1
     
     private let libraryPath = NSHomeDirectory() + "/Library/Caches/"
     
@@ -148,7 +148,7 @@ class MetaChatLoginViewController: UIViewController {
         view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(hideKeyboard)))
         
         DispatchQueue.global().async {
-            self.moveFileHandler()
+//            self.moveFileHandler()
         }
     }
 
