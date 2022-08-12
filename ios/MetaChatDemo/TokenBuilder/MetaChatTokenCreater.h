@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSString *)createRTMTokenWithAppid:(NSString *)appid certificate:(NSString *)certificate userid:(NSString *)userid;
 
++ (NSString *)createRTCTokenWithAppid:(NSString *)appid certificate:(NSString *)certificate channelid:(NSString *)cid userid:(uint32_t)userid;
+
 @end
 
 NS_ASSUME_NONNULL_END

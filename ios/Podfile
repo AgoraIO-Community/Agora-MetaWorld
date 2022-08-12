@@ -6,7 +6,14 @@ target 'MetaChatDemo' do
   use_frameworks!
   pod 'AgoraSDK', :path => 'sdk'
   pod 'Zip'
-
+  pod 'SnapKit'
+  pod 'Masonry'
+  pod 'JXSegmentedView'
+  pod 'SDWebImage'
+#  pod 'IQKeyboardManager'
+  pod 'AFNetworking'
+  pod 'MJExtension'
   # Pods for MetaChatDemo
+#  pod 'libyuv-iOS', '~> 1.0.2'
 
 end

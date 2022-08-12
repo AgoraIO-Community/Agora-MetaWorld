@@ -8,10 +8,49 @@
 import Foundation
 import AgoraRtcKit
 
-class MetaChatEngine: NSObject {
-    static let sharedEngine = MetaChatEngine()
+//private let kAdvertisingURL = "https://test.cdn.sbnh.cn/9ad87c1738bf0485b7f243ee5cfb409f.mp4" // 宣传片地址
+private let kAdvertisingURL = "http://agora.fronted.love/yyl.mov" // 宣传片地址
+private let npcTableFileName = "tableNPC"
+private let npc1MoveFileName = "moveNPC1"
+private let npc2MoveFileName = "moveNPC2"
 
-    var rtcEngine: AgoraRtcEngineKit?
+enum MetaChatDisplayID:Int32 {
+    case tv = 0
+    case npc_table = 1
+    case npc_move1
+    case npc_move2
+}
+
+enum KTVSteamDataMessageType:Int {
+    case seek = 0
+    case finish = 1
+//    case console = 2
+}
+
+class MetaChatEngine: NSObject {
+    @objc static let sharedEngine = MetaChatEngine()
+
+    @objc var rtcEngine: AgoraRtcEngineKit?
+    var localSpatial: AgoraLocalSpatialAudioKit?
+    
+    /// 是否正在唱歌
+    var isSinging = false
+
+    private var mvStreamId: Int = 0
+    
+    /// 桌子旁边的NPC播放器
+    private var tvPlayerMgr: MetaChatPlayerManager?
+    /// 桌子旁边的NPC播放器
+    private var tableNPCPlayerMgr: MetaChatPlayerManager?
+    /// 移动NPC1
+    private var moveNPCPlayerMgr1: MetaChatPlayerManager?
+    /// 移动NPC2
+    private var moveNPCPlayerMgr2: MetaChatPlayerManager?
+    
+    var metachatKit: AgoraMetachatKit?
+    var playerName: String?
+    var currentSceneInfo: AgoraMetachatSceneInfo?
+    var metachatScene: AgoraMetachatScene?
     
     override init() {
         super.init()
@@ -21,11 +60,16 @@ class MetaChatEngine: NSObject {
         rtcEngineConfig.areaCode = .global
         rtcEngine = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         rtcEngine?.setParameters("{\"rtc.audio.force_bluetooth_a2dp\": true}")
+        rtcEngine?.setChannelProfile(.liveBroadcasting)
+        rtcEngine?.setClientRole(.broadcaster)
     }
     
-    var metachatKit: AgoraMetachatKit?
-
-    var playerName: String?
+    func createMVStream() {
+        let config = AgoraDataStreamConfig()
+        config.ordered = true
+        config.syncWithAudio = true
+        rtcEngine?.createDataStream(&mvStreamId, config: config)
+    }
         
     func createMetachatKit(userName: String, avatarUrl: String, delegate: AgoraMetachatEventDelegate?) {
         playerName = userName
@@ -45,10 +89,8 @@ class MetaChatEngine: NSObject {
         metaChatconfig.localDownloadPath = paths.first!
         metaChatconfig.rtcEngine = rtcEngine
         metachatKit = AgoraMetachatKit.sharedMetachat(with: metaChatconfig)
+        createMVStream()
     }
-    
-    var currentSceneInfo: AgoraMetachatSceneInfo?
-    var metachatScene: AgoraMetachatScene?
 
     func createScene(_ sceneInfo: AgoraMetachatSceneInfo, delegate: AgoraMetachatSceneEventDelegate) {
         currentSceneInfo = sceneInfo
@@ -85,8 +127,6 @@ class MetaChatEngine: NSObject {
         metachatScene?.updateLocalAvatarConfig(avatarConfig)
     }
     
-    var localSpatial: AgoraLocalSpatialAudioKit?
-    
     func joinRtcChannel(success: @escaping () -> Void) {
         rtcEngine?.setClientRole(.audience)
 
@@ -100,26 +140,43 @@ class MetaChatEngine: NSObject {
         localSpatial = AgoraLocalSpatialAudioKit.sharedLocalSpatialAudio(with: localSpatialConfig)
         localSpatial?.muteLocalAudioStream(false)
         localSpatial?.muteAllRemoteAudioStreams(false)
-        localSpatial?.setAudioRecvRange(50)
+        localSpatial?.setAudioRecvRange(6)
         localSpatial?.setDistanceUnit(1)
         
-        rtcEngine?.joinChannel(byToken: KeyCenter.RTC_TOKEN, channelId: KeyCenter.CHANNEL_ID, info: nil, uid: KeyCenter.RTC_UID, joinSuccess: { String, UInt, Int in
+       rtcEngine?.joinChannel(byToken: KeyCenter.RTC_TOKEN, channelId: KeyCenter.CHANNEL_ID, info: nil, uid: KeyCenter.RTC_UID, joinSuccess: { String, UInt, Int in
+           DLog("joinChannel 回调 ======= ",String,UInt,Int)
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
             success()
-        })
+       })
     }
     
     func leaveRtcChannel() {
         AgoraLocalSpatialAudioKit.destroy()
         localSpatial = nil
+        if isSinging {
+            broadcastKTVFinishMessage()
+            isSinging = false
+        }
         rtcEngine?.leaveChannel()
     }
     
     func leaveScene() {
         metachatScene?.leave()
+        
+        tvPlayerMgr?.destroy()
+        tableNPCPlayerMgr?.destroy()
+        moveNPCPlayerMgr1?.destroy()
+        moveNPCPlayerMgr2?.destroy()
+        tvPlayerMgr = nil
+        tableNPCPlayerMgr = nil
+        moveNPCPlayerMgr1 = nil
+        moveNPCPlayerMgr2 = nil
+        
+        isSinging = false
     }
     
     func resetMetachat() {
+        
         metachatScene?.destroy()
         metachatScene = nil
         
@@ -148,64 +205,240 @@ class MetaChatEngine: NSObject {
         localSpatial?.muteAllRemoteAudioStreams(isMute)
 //        rtcEngine?.muteAllRemoteAudioStreams(isMute)
     }
+    
+    // 创建并打开电视播放器
+    func createAndOpenTVPlayer(resourceUrl:String = kAdvertisingURL, firstOpenCompleted: @escaping ((_ player: AgoraRtcMediaPlayerProtocol)->()), playBackAllLoopsCompleted:(()->())?) {
+        tvPlayerMgr = MetaChatPlayerManager(displayId: .tv, resourceUrl: resourceUrl, metachatScene: metachatScene, rtcEngine: rtcEngine)
+        tvPlayerMgr?.player?.setVideoFrameDelegate(self)
+        tvPlayerMgr?.openComplteted = { player, isfirstOpen in
+            if isfirstOpen {
+                player.mute(true)
+                firstOpenCompleted(player)
+            }
+            KTVConsoleManager.shared().resetConfig()
+        }
+        
+        tvPlayerMgr?.playBackAllLoopsCompleted = { _ in
+            playBackAllLoopsCompleted?()
+        }
+        tvPlayerMgr?.didChangedToPosition = { [weak self] player, position in
+            guard let wSelf  = self else { return }
+            if wSelf.isSinging {
+                let mvUrl = player.getPlaySrc()
+                wSelf.broadcastKTVSeekMessage(mvUrl: mvUrl, position: position)
+            }
+        }
+        initalConsoleConfig()
+    }
+    
+    func createAndOpenNPCPlayer(tableNPCOpenCompleted: @escaping ((_ player: AgoraRtcMediaPlayerProtocol)->())){
+        func filePathWithName(fileName:String) -> String{
+            guard let url = Bundle.main.path(forResource: fileName, ofType: "m4a") else { return ""}
+            return url
+        }
+        tableNPCPlayerMgr = MetaChatPlayerManager(displayId: .npc_table, resourceUrl: filePathWithName(fileName: npcTableFileName), metachatScene: metachatScene, rtcEngine: rtcEngine, openCompleted: { player, _  in
+            player.mute(true)
+            tableNPCOpenCompleted(player)
+        })
+        moveNPCPlayerMgr1 = MetaChatPlayerManager(displayId: .npc_move1, resourceUrl: filePathWithName(fileName: npc1MoveFileName), metachatScene: metachatScene, rtcEngine: rtcEngine, openCompleted: { player, _ in
+            player.mute(true)
+        })
+        moveNPCPlayerMgr2 = MetaChatPlayerManager(displayId: .npc_move2, resourceUrl: filePathWithName(fileName: npc2MoveFileName), metachatScene: metachatScene, rtcEngine: rtcEngine, openCompleted: { player, _ in
+            player.mute(true)
+        })
+    }
+    
+    func changeTVUrl(_ newUrl: String) {
+        tvPlayerMgr?.changeTVUrl(newUrl)
+    }
+    
+    // 初始化控制台的设置
+    private func initalConsoleConfig(){
+        guard let rtcEngine = self.rtcEngine, let player = self.tvPlayerMgr?.player else {
+            return
+        }
+        let console = KTVConsoleManager.shared()
+        console.setRtcEngine(rtcEngine, player: player)
+    }
+    
+    func resetTV() {
+        changeTVUrl(kAdvertisingURL)
+    }
+    
+    func setTVoff() {
+        stopPushVideo(displayId: UInt32(MetaChatDisplayID.tv.rawValue))
+    }
+    
+    // 停止投屏
+    func stopPushVideo(displayId:UInt32){
+        tvPlayerMgr?.player?.stop()
+        metachatScene?.enableVideoDisplay(displayId, enable: false)
+    }
+    
+    // 发送消息
+    func sendMessage(dic:[String: Any]) {
+        if let data = try? JSONSerialization.data(withJSONObject:dic, options: .fragmentsAllowed) {
+            metachatScene?.sendMessage(toScene: data)
+        }
+    }
+    
+    // 设置电视的空间音效
+    private func setUpSpatialForMediaPlayer(_ player: AgoraRtcMediaPlayerProtocol?, position: [NSNumber], forward:[NSNumber]) {
+        if player == nil {
+            return
+        }
+        let positionInfo = AgoraRemoteVoicePositionInfo()
+        positionInfo.position = position
+        positionInfo.forward = forward
+        if let playerId = player?.getMediaPlayerId() {
+            localSpatial?.updatePlayerPositionInfo(Int(playerId), positionInfo: positionInfo)
+        }
+    }
+    
+    func updateSpatialForMediaPlayer(id:ObjectID, postion: [NSNumber], forward:[NSNumber] = [0,0,1]) {
+        var player: AgoraRtcMediaPlayerProtocol?
+        
+        switch id {
+        case .tv:
+            player = tvPlayerMgr?.player
+        case .npcTable:
+            player = tableNPCPlayerMgr?.player
+        case .npcMove1:
+            if moveNPCPlayerMgr1?.isOpenCompleted ?? false {
+                player = moveNPCPlayerMgr1?.player
+            }
+        case .npcMove2:
+            if moveNPCPlayerMgr2?.isOpenCompleted ?? false {
+                player = moveNPCPlayerMgr2?.player
+            }
+        }
+        setUpSpatialForMediaPlayer(player, position: postion, forward: forward)
+    }
+    
+    // 广播一条歌曲同步的消息
+    func broadcastKTVFinishMessage() {
+        broadcastKTVMessage(type: .finish, message: [:])
+    }
+    
+    // 广播一条k歌结束的消息
+    func broadcastKTVSeekMessage( mvUrl:String, position:Int) {
+        let isOriginal = KTVConsoleManager.shared().originalSong
+        let localVoicepitch = KTVConsoleManager.shared().localVoicePitch
+        let accompanyVolumn = KTVConsoleManager.shared().accompanyVolume
+        let audioEffect = KTVConsoleManager.shared().audioEffectPreset.preset
+        let console = ["origin":isOriginal,"pitch":localVoicepitch,"accompany": accompanyVolumn,"effect":audioEffect.rawValue] as [String : Any]
+        let json = ["mv":mvUrl,"pos":position,"console": console] as [String : Any]
+        broadcastKTVMessage(type: .seek, message: json)
+    }
+    
+   @objc func broadcastKTVConsoleMessage(isOriginal:Bool, localVoicepitch: Double, accompanyVolumn:Int, audioEffect: AgoraAudioEffectPreset) {
+//        let json = ["origin":isOriginal,"pitch":localVoicepitch,"accompany":accompanyVolumn,"effect":audioEffect.rawValue] as [String : Any]
+//        broadcastKTVMessage(type: .console, message: json)
+    }
+    
+    // 广播k歌消息
+    private func broadcastKTVMessage(type:KTVSteamDataMessageType, message:[String: Any]) {
+        let json = [
+            "t": type.rawValue,
+            "msg": message
+        ] as [String : Any]
+        if let data = try? JSONSerialization.data(withJSONObject:json , options: .fragmentsAllowed) {
+            if let ret = rtcEngine?.sendStreamMessage(mvStreamId, data: data) {
+                DLog("sendStreamMessage error === \(ret) streamid = \(mvStreamId) jsonStr == \(json)")
+            }
+        }
+    }
+    
+    func handleKTVSeekMessage(_ message:[String: Any])  {
+        // 如果正在唱歌 不接收别人的seek消息
+        if isSinging {
+            return
+        }
+        let mv: String = message["mv"] as! String
+        let pos: Int = message["pos"] as! Int
+        let mediaPlayer = tvPlayerMgr?.player
+        if mediaPlayer?.getPlaySrc() == mv {
+            guard let currentPos = mediaPlayer?.getPosition() else { return }
+            if abs(currentPos - pos) > 3000  {
+                mediaPlayer?.seek(toPosition: pos)
+            }
+        }else{
+            mediaPlayer?.stop()
+            mediaPlayer?.open(mv, startPos: pos)
+        }
+        
+        if let console = message["console"] as? [String: Any] {
+            handleConsoleChangedMessage(console)
+        }
+        DLog("receiveStreamMessageFromUid message == \(message) 当前线程 == \(Thread.current)")
+    }
+    
+    func handleKTVFinishMessage(){
+        resetTV()
+    }
+    
+    func handleConsoleChangedMessage(_ message: [String: Any]){
+        let tvPlayer = tvPlayerMgr?.player
+        let isOrigin: Bool = message["origin"] as! Bool
+        let pitch: Double = message["pitch"] as! Double
+        let accompany: Int = message["accompany"] as! Int
+        let effect: Int = message["effect"] as! Int
+        tvPlayer?.selectAudioTrack(isOrigin ? 0: 1)
+        self.rtcEngine?.setLocalVoicePitch(pitch)
+        tvPlayer?.adjustPlayoutVolume(Int32(accompany))
+        tvPlayer?.adjustPublishSignalVolume(Int32(accompany))
+        self.rtcEngine?.setAudioEffectPreset(AgoraAudioEffectPreset(rawValue: effect)!)
+    }
 }
 
 extension MetaChatEngine: AgoraRtcEngineDelegate {
-    func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurWarning warningCode: AgoraWarningCode) {
 
-    }
-    
-    /// callback when error occured for agora sdk, you are recommended to display the error descriptions on demand
-    /// to let user know something wrong is happening
-    /// Error code description can be found at:
-    /// en: https://docs.agora.io/en/Voice/API%20Reference/oc/Constants/AgoraErrorCode.html
-    /// cn: https://docs.agora.io/cn/Voice/API%20Reference/oc/Constants/AgoraErrorCode.html
-    /// @param errorCode error code of the problem
-    func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurError errorCode: AgoraErrorCode) {
-
-    }
-    
-    func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinChannel channel: String, withUid uid: UInt, elapsed: Int) {
-
-    }
-    
-    /// callback when a remote user is joinning the channel, note audience in live broadcast mode will NOT trigger this event
-    /// @param uid uid of remote joined user
-    /// @param elapsed time elapse since current sdk instance join the channel in ms
-    func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
-
-    }
-    
-    /// callback when a remote user is leaving the channel, note audience in live broadcast mode will NOT trigger this event
-    /// @param uid uid of remote joined user
-    /// @param reason reason why this user left, note this event may be triggered when the remote user
-    /// become an audience in live broadcasting profile
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
         localSpatial?.removeRemotePosition(uid)
     }
-    
-    /// Reports which users are speaking, the speakers' volumes, and whether the local user is speaking.
-    /// @params speakers volume info for all speakers
-    /// @params totalVolume Total volume after audio mixing. The value range is [0,255].
-    func rtcEngine(_ engine: AgoraRtcEngineKit, reportAudioVolumeIndicationOfSpeakers speakers: [AgoraRtcAudioVolumeInfo], totalVolume: Int) {
-    }
-    
-    /// Reports the statistics of the current call. The SDK triggers this callback once every two seconds after the user joins the channel.
-    /// @param stats stats struct
-    func rtcEngine(_ engine: AgoraRtcEngineKit, reportRtcStats stats: AgoraChannelStats) {
 
+    func rtcEngine(_ engine: AgoraRtcEngineKit, receiveStreamMessageFromUid uid: UInt, streamId: Int, data: Data) {
+        DLog("receiveStreamMessageFromUid  === 收到了消息, streamId == \(streamId)")
+        if let jsonObj = try? JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed) as? [String: Any] {
+            DLog("jsonObj === ",jsonObj)
+            guard let t = jsonObj["t"] as? Int else { return }
+            let type = KTVSteamDataMessageType(rawValue: t)
+            guard let msg = jsonObj["msg"] as? [String: Any] else {return}
+            switch type {
+            case .seek:
+                handleKTVSeekMessage(msg)
+            case .finish:
+                handleKTVFinishMessage()
+//            case .console:
+//                handleConsoleChangedMessage(msg)
+            case .none:
+                break
+            }
+           
+        }
     }
     
-    /// Reports the statistics of the uploading local audio streams once every two seconds.
-    /// @param stats stats struct
-    func rtcEngine(_ engine: AgoraRtcEngineKit, localAudioStats stats: AgoraRtcLocalAudioStats) {
-        
+    func rtcEngine(_ engine: AgoraRtcEngineKit, didOccurStreamMessageErrorFromUid uid: UInt, streamId: Int, error: Int, missed: Int, cached: Int) {
+        DLog("didOccurStreamMessageErrorFromUid  === 收到了消息报错 \(streamId),error == \(error)")
     }
     
-    /// Reports the statistics of the audio stream from each remote user/host.
-    /// @param stats stats struct for current call statistics
-    func rtcEngine(_ engine: AgoraRtcEngineKit, remoteAudioStats stats: AgoraRtcRemoteAudioStats) {
-        
-    }
-
 }
+
+extension MetaChatEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
+    
+    func agoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didReceive videoFrame: AgoraOutputVideoFrame) {
+        guard let pixelBuffer = videoFrame.pixelBuffer, let data = LibyuvHelper.i420Buffer(of: pixelBuffer) else {
+            return
+        }
+        
+        let vf = AgoraVideoFrame()
+        vf.format = 1
+        vf.strideInPixels = Int32(videoFrame.width)
+        vf.height = Int32(videoFrame.height)
+        vf.dataBuf = data
+        metachatScene?.pushVideoFrame(toDisplay: 0, frame: vf)
+        DLog("didReceive videoFrame:  width = \(videoFrame.width), height = \(videoFrame.height)", Thread.current,"time === ", Date.timeIntervalSinceReferenceDate)
+    }
+}
+
+
