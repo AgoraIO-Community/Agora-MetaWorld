@@ -9,6 +9,8 @@ import UIKit
 import AgoraRtcKit
 import Zip
 
+let kOnConnectionStateChangedNotifyName = NSNotification.Name(rawValue: "onConnectionStateChanged")
+
 class SelSexCell: UIView {
     @IBOutlet weak var selectedBack: UIView!
     @IBOutlet weak var selectedButton: UIButton!
@@ -125,7 +127,13 @@ class MetaChatLoginViewController: UIViewController {
     
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
+    #if DEBUG
+    private var currentSceneId: Int = 4
+    #elseif TEST
+    private var currentSceneId: Int = 4
+    #else
     private var currentSceneId: Int = 1
+    #endif
     
     private let libraryPath = NSHomeDirectory() + "/Library/Caches/"
     
@@ -159,14 +167,14 @@ class MetaChatLoginViewController: UIViewController {
         FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
         let path = Bundle.main.path(forResource: "3", ofType: "zip")
         try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: libraryPath), overwrite: true, password: nil) { progress in
-            print("zip progress = \(progress)")
+            DLog("zip progress = \(progress)")
         } fileOutputHandler: { unzippedFile in
-            print(unzippedFile.path)
+            DLog(unzippedFile.path)
         }
     }
     
     override var shouldAutorotate: Bool {
-        return false
+        return true
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -219,9 +227,13 @@ class MetaChatLoginViewController: UIViewController {
         if !checkValid() {
             return
         }
-                
+        
         indicatorView = UIActivityIndicatorView.init(frame: view.frame)
-        indicatorView?.style = UIActivityIndicatorView.Style.large
+        if #available(iOS 13.0, *) {
+            indicatorView?.style = UIActivityIndicatorView.Style.large
+        } else {
+            // Fallback on earlier versions
+        }
         indicatorView?.color = UIColor.white
         view.addSubview(indicatorView!)
         indicatorView?.startAnimating()
@@ -288,7 +300,8 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
             MetaChatEngine.sharedEngine.leaveRtcChannel()
             MetaChatEngine.sharedEngine.leaveScene()
             DispatchQueue.main.async {
-                self.dismiss(animated: true, completion: nil)
+                DLog("state == \(state.rawValue), reason == \(reason.rawValue)")
+                NotificationCenter.default.post(name: kOnConnectionStateChangedNotifyName, object: nil, userInfo: ["state":state.rawValue,"reason":reason.rawValue])
             }
         }
     }
@@ -323,8 +336,9 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
             return
         }
         let metachatKit = MetaChatEngine.sharedEngine.metachatKit
+        let totalSize = firstScene.totalSize / 1024
         if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
-            let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载50M数据包", preferredStyle:.alert)
+            let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载\(totalSize)M数据包", preferredStyle:.alert)
             
             alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
             alertController.addAction(UIAlertAction.init(title: "立即下载", style: .default, handler: { UIAlertAction in

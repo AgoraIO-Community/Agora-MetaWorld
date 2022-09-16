@@ -7,21 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		937D797EC8ECFE42424EC388 /* Pods_MetaChatDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */; };
+		2611B3EC28741A230053E24E /* LibyuvHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 2611B3EB28741A230053E24E /* LibyuvHelper.mm */; };
+		A801FDE2288AA6BE00037560 /* UIViewController+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = A801FDE1288AA6BE00037560 /* UIViewController+Extension.m */; };
+		A801FDE6288E480100037560 /* GuideAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A801FDE5288E480100037560 /* GuideAlertViewController.m */; };
+		A801FDE9288FA9E100037560 /* UIViewController+RotationControl.m in Sources */ = {isa = PBXBuildFile; fileRef = A801FDE8288FA9E100037560 /* UIViewController+RotationControl.m */; };
+		A801FDEC288FC23B00037560 /* KTVSingingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A801FDEB288FC23B00037560 /* KTVSingingCell.m */; };
+		A815942C286F910400ACD6F1 /* Pods_MetaChatDemo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */; };
+		A82D3E4E2891500C00B6E082 /* moveNPC1.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A82D3E4D2891500C00B6E082 /* moveNPC1.m4a */; };
+		A82D3E532893860700B6E082 /* moveNPC2.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A82D3E522893860700B6E082 /* moveNPC2.m4a */; };
+		A82D3E572893B6D600B6E082 /* MetaChatTokenCreater.mm in Sources */ = {isa = PBXBuildFile; fileRef = A82D3E552893B6D600B6E082 /* MetaChatTokenCreater.mm */; };
+		A88331CF28768B5800BC2FEE /* Novice guide.rtfd in Resources */ = {isa = PBXBuildFile; fileRef = A88331CE28768B5800BC2FEE /* Novice guide.rtfd */; };
+		A88331DF287864E000BC2FEE /* CustomMessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88331DE287864E000BC2FEE /* CustomMessageHandler.swift */; };
+		A88331E2287C0BD000BC2FEE /* KTVContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88331E1287C0BD000BC2FEE /* KTVContainerViewController.swift */; };
+		A88331E7287C0C8300BC2FEE /* KTVChooseSongContainerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88331E6287C0C8300BC2FEE /* KTVChooseSongContainerVC.swift */; };
+		A88331F3287C36D000BC2FEE /* EXT_UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = A88331F2287C36D000BC2FEE /* EXT_UIColor.swift */; };
+		A88331FB287D4B3300BC2FEE /* KTVChooseSongCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A88331FA287D4B3300BC2FEE /* KTVChooseSongCell.m */; };
+		A88331FE287D4B6F00BC2FEE /* KTVDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A88331FD287D4B6F00BC2FEE /* KTVDataManager.m */; };
+		A8833201287D4C4B00BC2FEE /* KTVChooseSongVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833200287D4C4B00BC2FEE /* KTVChooseSongVC.m */; };
+		A8833204287D59EC00BC2FEE /* KTVHaveChosenVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833203287D59EC00BC2FEE /* KTVHaveChosenVC.m */; };
+		A8833207287D5B0E00BC2FEE /* KTVSearchSongVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833206287D5B0E00BC2FEE /* KTVSearchSongVC.m */; };
+		A883320A287D5B2300BC2FEE /* KTVConsoleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833209287D5B2300BC2FEE /* KTVConsoleVC.m */; };
+		A883320D287D67CD00BC2FEE /* KTVSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A883320C287D67CD00BC2FEE /* KTVSearchBar.m */; };
+		A8833210287EA1C800BC2FEE /* UIViewController+KTVBackgroud.m in Sources */ = {isa = PBXBuildFile; fileRef = A883320F287EA1C800BC2FEE /* UIViewController+KTVBackgroud.m */; };
+		A8833213287EA91F00BC2FEE /* KTVNaviBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833212287EA91F00BC2FEE /* KTVNaviBar.m */; };
+		A8833216287EB13200BC2FEE /* KTVHaveChosenCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833215287EB13200BC2FEE /* KTVHaveChosenCell.m */; };
+		A883321E287F152000BC2FEE /* KTVConsoleView.m in Sources */ = {isa = PBXBuildFile; fileRef = A883321D287F152000BC2FEE /* KTVConsoleView.m */; };
+		A8833225287FF50500BC2FEE /* KTVCosoleStyleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A8833224287FF50500BC2FEE /* KTVCosoleStyleCell.m */; };
+		A88332282880006C00BC2FEE /* KTVToneContolView.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332272880006C00BC2FEE /* KTVToneContolView.m */; };
+		A88332312881646D00BC2FEE /* KTVSongTagsView.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332302881646D00BC2FEE /* KTVSongTagsView.m */; };
+		A88332342881650200BC2FEE /* KTVSongTag.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332332881650200BC2FEE /* KTVSongTag.m */; };
+		A88332372885425A00BC2FEE /* KTVMusic.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332362885425A00BC2FEE /* KTVMusic.m */; };
+		A883323A2886636F00BC2FEE /* KTVMusicHotType.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332392886636F00BC2FEE /* KTVMusicHotType.m */; };
+		A883323D28867B0D00BC2FEE /* KTVNetworkHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A883323C28867B0D00BC2FEE /* KTVNetworkHelper.m */; };
+		A883324028868E5700BC2FEE /* NSString+MetaChat.m in Sources */ = {isa = PBXBuildFile; fileRef = A883323F28868E5600BC2FEE /* NSString+MetaChat.m */; };
+		A88332432886FA0500BC2FEE /* KTVMusicResource.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332422886FA0400BC2FEE /* KTVMusicResource.m */; };
+		A88332462889024200BC2FEE /* KTVConsoleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A88332452889024000BC2FEE /* KTVConsoleManager.m */; };
+		A8833248288931E400BC2FEE /* tableNPC.m4a in Resources */ = {isa = PBXBuildFile; fileRef = A883324728892F9500BC2FEE /* tableNPC.m4a */; };
+		A883324B2889604200BC2FEE /* KTVAudioEffectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A883324A2889604200BC2FEE /* KTVAudioEffectModel.m */; };
+		A8C702FD289A74270037EE20 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C702FC289A74270037EE20 /* Utils.swift */; };
+		A8C70301289B6AAB0037EE20 /* MetaChatPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8C70300289B6AAB0037EE20 /* MetaChatPlayerManager.swift */; };
 		E7E263DE282ABD08002FE8DB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E7E2636A282ABD07002FE8DB /* LICENSE */; };
 		E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DA282ABD08002FE8DB /* libcrypto.a */; };
-		E7E263E0282ABD08002FE8DB /* libssl-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DB282ABD08002FE8DB /* libssl-tvOS.a */; };
 		E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DC282ABD08002FE8DB /* libssl.a */; };
-		E7E263E2282ABD08002FE8DB /* libcrypto-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DD282ABD08002FE8DB /* libcrypto-tvOS.a */; };
-		E7FAFB89283528AF00F25821 /* 3.zip in Resources */ = {isa = PBXBuildFile; fileRef = E7FAFB88283528AF00F25821 /* 3.zip */; };
 		F303917B2817E58B004A6A40 /* OnlineUserTableviewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */; };
 		F348D15B2811637A00039743 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348D15A2811637A00039743 /* AppDelegate.swift */; };
-		F348D15D2811637A00039743 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348D15C2811637A00039743 /* SceneDelegate.swift */; };
 		F348D15F2811637A00039743 /* MetaChatLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348D15E2811637A00039743 /* MetaChatLoginViewController.swift */; };
 		F348D1622811637A00039743 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F348D1602811637A00039743 /* Main.storyboard */; };
 		F348D1642811637B00039743 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F348D1632811637B00039743 /* Assets.xcassets */; };
 		F348D1672811637B00039743 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F348D1652811637B00039743 /* LaunchScreen.storyboard */; };
-		F355AB352823B55A00656A67 /* MetaChatTokenCreater.mm in Sources */ = {isa = PBXBuildFile; fileRef = F355AB342823B55A00656A67 /* MetaChatTokenCreater.mm */; };
 		F355AB372823B98400656A67 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F355AB362823B98400656A67 /* libz.tbd */; };
 		F3BA5F4028191B1E00821E23 /* KeyCenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA5F3F28191B1D00821E23 /* KeyCenter.swift */; };
 		F3BA5F4228194F2200821E23 /* MetaChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */; };
@@ -29,7 +62,100 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2611B3EA28741A1E0053E24E /* LibyuvHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibyuvHelper.h; sourceTree = "<group>"; };
+		2611B3EB28741A230053E24E /* LibyuvHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LibyuvHelper.mm; sourceTree = "<group>"; };
+		2611B3F228741ACC0053E24E /* scale_row.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scale_row.h; sourceTree = "<group>"; };
+		2611B3F328741ACC0053E24E /* scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scale.h; sourceTree = "<group>"; };
+		2611B3F428741ACC0053E24E /* libyuv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libyuv.h; sourceTree = "<group>"; };
+		2611B3F628741ACC0053E24E /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
+		2611B3F728741ACC0053E24E /* cpu_id.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpu_id.h; sourceTree = "<group>"; };
+		2611B3F828741ACC0053E24E /* video_common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = video_common.h; sourceTree = "<group>"; };
+		2611B3F928741ACC0053E24E /* compare_row.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compare_row.h; sourceTree = "<group>"; };
+		2611B3FA28741ACC0053E24E /* mjpeg_decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mjpeg_decoder.h; sourceTree = "<group>"; };
+		2611B3FB28741ACC0053E24E /* rotate_row.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate_row.h; sourceTree = "<group>"; };
+		2611B3FC28741ACC0053E24E /* planar_functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = planar_functions.h; sourceTree = "<group>"; };
+		2611B3FD28741ACC0053E24E /* scale_argb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = scale_argb.h; sourceTree = "<group>"; };
+		2611B3FE28741ACC0053E24E /* compare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compare.h; sourceTree = "<group>"; };
+		2611B3FF28741ACC0053E24E /* convert_argb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert_argb.h; sourceTree = "<group>"; };
+		2611B40028741ACC0053E24E /* rotate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate.h; sourceTree = "<group>"; };
+		2611B40128741ACC0053E24E /* convert_from_argb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert_from_argb.h; sourceTree = "<group>"; };
+		2611B40228741ACC0053E24E /* basic_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = basic_types.h; sourceTree = "<group>"; };
+		2611B40328741ACC0053E24E /* convert_from.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert_from.h; sourceTree = "<group>"; };
+		2611B40428741ACC0053E24E /* convert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convert.h; sourceTree = "<group>"; };
+		2611B40528741ACC0053E24E /* rotate_argb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rotate_argb.h; sourceTree = "<group>"; };
+		2611B40628741ACC0053E24E /* macros_msa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = macros_msa.h; sourceTree = "<group>"; };
+		2611B40728741ACC0053E24E /* row.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = row.h; sourceTree = "<group>"; };
 		4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.release.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.release.xcconfig"; sourceTree = "<group>"; };
+		77E7A017B7C72BE421DCC563 /* Pods-MetaChatDemo.releasetest.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.releasetest.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.releasetest.xcconfig"; sourceTree = "<group>"; };
+		A801FDE0288AA6BE00037560 /* UIViewController+Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+Extension.h"; sourceTree = "<group>"; };
+		A801FDE1288AA6BE00037560 /* UIViewController+Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+Extension.m"; sourceTree = "<group>"; };
+		A801FDE4288E480100037560 /* GuideAlertViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GuideAlertViewController.h; sourceTree = "<group>"; };
+		A801FDE5288E480100037560 /* GuideAlertViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GuideAlertViewController.m; sourceTree = "<group>"; };
+		A801FDE7288FA9E100037560 /* UIViewController+RotationControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+RotationControl.h"; sourceTree = "<group>"; };
+		A801FDE8288FA9E100037560 /* UIViewController+RotationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+RotationControl.m"; sourceTree = "<group>"; };
+		A801FDEA288FC23B00037560 /* KTVSingingCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVSingingCell.h; sourceTree = "<group>"; };
+		A801FDEB288FC23B00037560 /* KTVSingingCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVSingingCell.m; sourceTree = "<group>"; };
+		A815942F286F910F00ACD6F1 /* Zip.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Zip.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A81FC9E9289934E6005886FF /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		A82D3E4D2891500C00B6E082 /* moveNPC1.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = moveNPC1.m4a; sourceTree = "<group>"; };
+		A82D3E522893860700B6E082 /* moveNPC2.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = moveNPC2.m4a; sourceTree = "<group>"; };
+		A82D3E542893B6D600B6E082 /* MetaChatTokenCreater.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MetaChatTokenCreater.h; sourceTree = "<group>"; };
+		A82D3E552893B6D600B6E082 /* MetaChatTokenCreater.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MetaChatTokenCreater.mm; sourceTree = "<group>"; };
+		A82D3E562893B6D600B6E082 /* RtcTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtcTokenBuilder.h; sourceTree = "<group>"; };
+		A82D3E582893B7C300B6E082 /* RtmTokenBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RtmTokenBuilder.h; sourceTree = "<group>"; };
+		A8640953287434BC00BF501A /* libyuv.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libyuv.a; sourceTree = "<group>"; };
+		A88331CE28768B5800BC2FEE /* Novice guide.rtfd */ = {isa = PBXFileReference; lastKnownFileType = wrapper.rtfd; path = "Novice guide.rtfd"; sourceTree = "<group>"; };
+		A88331DE287864E000BC2FEE /* CustomMessageHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMessageHandler.swift; sourceTree = "<group>"; };
+		A88331E1287C0BD000BC2FEE /* KTVContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KTVContainerViewController.swift; sourceTree = "<group>"; };
+		A88331E6287C0C8300BC2FEE /* KTVChooseSongContainerVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KTVChooseSongContainerVC.swift; sourceTree = "<group>"; };
+		A88331F2287C36D000BC2FEE /* EXT_UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EXT_UIColor.swift; sourceTree = "<group>"; };
+		A88331F9287D4B3300BC2FEE /* KTVChooseSongCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVChooseSongCell.h; sourceTree = "<group>"; };
+		A88331FA287D4B3300BC2FEE /* KTVChooseSongCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVChooseSongCell.m; sourceTree = "<group>"; };
+		A88331FC287D4B6F00BC2FEE /* KTVDataManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVDataManager.h; sourceTree = "<group>"; };
+		A88331FD287D4B6F00BC2FEE /* KTVDataManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVDataManager.m; sourceTree = "<group>"; };
+		A88331FF287D4C4B00BC2FEE /* KTVChooseSongVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVChooseSongVC.h; sourceTree = "<group>"; };
+		A8833200287D4C4B00BC2FEE /* KTVChooseSongVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVChooseSongVC.m; sourceTree = "<group>"; };
+		A8833202287D59EC00BC2FEE /* KTVHaveChosenVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVHaveChosenVC.h; sourceTree = "<group>"; };
+		A8833203287D59EC00BC2FEE /* KTVHaveChosenVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVHaveChosenVC.m; sourceTree = "<group>"; };
+		A8833205287D5B0E00BC2FEE /* KTVSearchSongVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVSearchSongVC.h; sourceTree = "<group>"; };
+		A8833206287D5B0E00BC2FEE /* KTVSearchSongVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVSearchSongVC.m; sourceTree = "<group>"; };
+		A8833208287D5B2300BC2FEE /* KTVConsoleVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVConsoleVC.h; sourceTree = "<group>"; };
+		A8833209287D5B2300BC2FEE /* KTVConsoleVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVConsoleVC.m; sourceTree = "<group>"; };
+		A883320B287D67CD00BC2FEE /* KTVSearchBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVSearchBar.h; sourceTree = "<group>"; };
+		A883320C287D67CD00BC2FEE /* KTVSearchBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVSearchBar.m; sourceTree = "<group>"; };
+		A883320E287EA1C800BC2FEE /* UIViewController+KTVBackgroud.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+KTVBackgroud.h"; sourceTree = "<group>"; };
+		A883320F287EA1C800BC2FEE /* UIViewController+KTVBackgroud.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+KTVBackgroud.m"; sourceTree = "<group>"; };
+		A8833211287EA91F00BC2FEE /* KTVNaviBar.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVNaviBar.h; sourceTree = "<group>"; };
+		A8833212287EA91F00BC2FEE /* KTVNaviBar.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVNaviBar.m; sourceTree = "<group>"; };
+		A8833214287EB13200BC2FEE /* KTVHaveChosenCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVHaveChosenCell.h; sourceTree = "<group>"; };
+		A8833215287EB13200BC2FEE /* KTVHaveChosenCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVHaveChosenCell.m; sourceTree = "<group>"; };
+		A883321C287F152000BC2FEE /* KTVConsoleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVConsoleView.h; sourceTree = "<group>"; };
+		A883321D287F152000BC2FEE /* KTVConsoleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVConsoleView.m; sourceTree = "<group>"; };
+		A8833223287FF50500BC2FEE /* KTVCosoleStyleCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVCosoleStyleCell.h; sourceTree = "<group>"; };
+		A8833224287FF50500BC2FEE /* KTVCosoleStyleCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVCosoleStyleCell.m; sourceTree = "<group>"; };
+		A88332262880006C00BC2FEE /* KTVToneContolView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVToneContolView.h; sourceTree = "<group>"; };
+		A88332272880006C00BC2FEE /* KTVToneContolView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVToneContolView.m; sourceTree = "<group>"; };
+		A883322F2881646D00BC2FEE /* KTVSongTagsView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVSongTagsView.h; sourceTree = "<group>"; };
+		A88332302881646D00BC2FEE /* KTVSongTagsView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVSongTagsView.m; sourceTree = "<group>"; };
+		A88332322881650200BC2FEE /* KTVSongTag.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVSongTag.h; sourceTree = "<group>"; };
+		A88332332881650200BC2FEE /* KTVSongTag.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVSongTag.m; sourceTree = "<group>"; };
+		A88332352885425A00BC2FEE /* KTVMusic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVMusic.h; sourceTree = "<group>"; };
+		A88332362885425A00BC2FEE /* KTVMusic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVMusic.m; sourceTree = "<group>"; };
+		A88332382886636F00BC2FEE /* KTVMusicHotType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVMusicHotType.h; sourceTree = "<group>"; };
+		A88332392886636F00BC2FEE /* KTVMusicHotType.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVMusicHotType.m; sourceTree = "<group>"; };
+		A883323B28867B0D00BC2FEE /* KTVNetworkHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVNetworkHelper.h; sourceTree = "<group>"; };
+		A883323C28867B0D00BC2FEE /* KTVNetworkHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVNetworkHelper.m; sourceTree = "<group>"; };
+		A883323E28868E5600BC2FEE /* NSString+MetaChat.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+MetaChat.h"; sourceTree = "<group>"; };
+		A883323F28868E5600BC2FEE /* NSString+MetaChat.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+MetaChat.m"; sourceTree = "<group>"; };
+		A88332412886FA0400BC2FEE /* KTVMusicResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVMusicResource.h; sourceTree = "<group>"; };
+		A88332422886FA0400BC2FEE /* KTVMusicResource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVMusicResource.m; sourceTree = "<group>"; };
+		A88332442889024000BC2FEE /* KTVConsoleManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVConsoleManager.h; sourceTree = "<group>"; };
+		A88332452889024000BC2FEE /* KTVConsoleManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVConsoleManager.m; sourceTree = "<group>"; };
+		A883324728892F9500BC2FEE /* tableNPC.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = tableNPC.m4a; sourceTree = "<group>"; };
+		A88332492889604200BC2FEE /* KTVAudioEffectModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KTVAudioEffectModel.h; sourceTree = "<group>"; };
+		A883324A2889604200BC2FEE /* KTVAudioEffectModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KTVAudioEffectModel.m; sourceTree = "<group>"; };
+		A8C702FC289A74270037EE20 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		A8C70300289B6AAB0037EE20 /* MetaChatPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChatPlayerManager.swift; sourceTree = "<group>"; };
 		B10E144C72931B74232CB8D9 /* Pods-MetaChatDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MetaChatDemo.debug.xcconfig"; path = "Target Support Files/Pods-MetaChatDemo/Pods-MetaChatDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MetaChatDemo.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7E262D9282ABADC002FE8DB /* AgoraRtcKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AgoraRtcKit.framework; sourceTree = "<group>"; };
@@ -153,26 +279,19 @@
 		E7E263D7282ABD08002FE8DB /* lhash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lhash.h; sourceTree = "<group>"; };
 		E7E263D8282ABD08002FE8DB /* asn1err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1err.h; sourceTree = "<group>"; };
 		E7E263DA282ABD08002FE8DB /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
-		E7E263DB282ABD08002FE8DB /* libssl-tvOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libssl-tvOS.a"; sourceTree = "<group>"; };
 		E7E263DC282ABD08002FE8DB /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
-		E7E263DD282ABD08002FE8DB /* libcrypto-tvOS.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libcrypto-tvOS.a"; sourceTree = "<group>"; };
-		E7FAFB88283528AF00F25821 /* 3.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = 3.zip; sourceTree = "<group>"; };
 		F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OnlineUserTableviewCell.xib; sourceTree = "<group>"; };
 		F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChatSceneViewController.swift; sourceTree = "<group>"; };
 		F348D1572811637A00039743 /* MetaChatDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MetaChatDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F348D15A2811637A00039743 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F348D15C2811637A00039743 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F348D15E2811637A00039743 /* MetaChatLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChatLoginViewController.swift; sourceTree = "<group>"; };
 		F348D1612811637A00039743 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F348D1632811637B00039743 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F348D1662811637B00039743 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F348D1682811637B00039743 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F355AAB02823813000656A67 /* RtmTokenBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RtmTokenBuilder.h; sourceTree = "<group>"; };
 		F355AAB12823814300656A67 /* AccessToken.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccessToken.h; sourceTree = "<group>"; };
 		F355AAB22823815B00656A67 /* utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		F355AAB32823816700656A67 /* Packer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Packer.h; sourceTree = "<group>"; };
-		F355AB332823B55A00656A67 /* MetaChatTokenCreater.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MetaChatTokenCreater.h; sourceTree = "<group>"; };
-		F355AB342823B55A00656A67 /* MetaChatTokenCreater.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MetaChatTokenCreater.mm; sourceTree = "<group>"; };
 		F355AB362823B98400656A67 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		F3BA5F3F28191B1D00821E23 /* KeyCenter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyCenter.swift; sourceTree = "<group>"; };
 		F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetaChatEngine.swift; sourceTree = "<group>"; };
@@ -184,21 +303,59 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A815942C286F910400ACD6F1 /* Pods_MetaChatDemo.framework in Frameworks */,
 				E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */,
 				E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */,
-				E7E263E2282ABD08002FE8DB /* libcrypto-tvOS.a in Frameworks */,
 				F355AB372823B98400656A67 /* libz.tbd in Frameworks */,
-				E7E263E0282ABD08002FE8DB /* libssl-tvOS.a in Frameworks */,
-				937D797EC8ECFE42424EC388 /* Pods_MetaChatDemo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2611B3F028741AAA0053E24E /* LibYuv */ = {
+			isa = PBXGroup;
+			children = (
+				2611B3F128741ACC0053E24E /* libyuv */,
+				2611B3EA28741A1E0053E24E /* LibyuvHelper.h */,
+				2611B3EB28741A230053E24E /* LibyuvHelper.mm */,
+			);
+			path = LibYuv;
+			sourceTree = "<group>";
+		};
+		2611B3F128741ACC0053E24E /* libyuv */ = {
+			isa = PBXGroup;
+			children = (
+				A8640953287434BC00BF501A /* libyuv.a */,
+				2611B3F228741ACC0053E24E /* scale_row.h */,
+				2611B3F328741ACC0053E24E /* scale.h */,
+				2611B3F428741ACC0053E24E /* libyuv.h */,
+				2611B3F628741ACC0053E24E /* version.h */,
+				2611B3F728741ACC0053E24E /* cpu_id.h */,
+				2611B3F828741ACC0053E24E /* video_common.h */,
+				2611B3F928741ACC0053E24E /* compare_row.h */,
+				2611B3FA28741ACC0053E24E /* mjpeg_decoder.h */,
+				2611B3FB28741ACC0053E24E /* rotate_row.h */,
+				2611B3FC28741ACC0053E24E /* planar_functions.h */,
+				2611B3FD28741ACC0053E24E /* scale_argb.h */,
+				2611B3FE28741ACC0053E24E /* compare.h */,
+				2611B3FF28741ACC0053E24E /* convert_argb.h */,
+				2611B40028741ACC0053E24E /* rotate.h */,
+				2611B40128741ACC0053E24E /* convert_from_argb.h */,
+				2611B40228741ACC0053E24E /* basic_types.h */,
+				2611B40328741ACC0053E24E /* convert_from.h */,
+				2611B40428741ACC0053E24E /* convert.h */,
+				2611B40528741ACC0053E24E /* rotate_argb.h */,
+				2611B40628741ACC0053E24E /* macros_msa.h */,
+				2611B40728741ACC0053E24E /* row.h */,
+			);
+			path = libyuv;
+			sourceTree = "<group>";
+		};
 		53A74D4EB082C93C34FE745F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				A815942F286F910F00ACD6F1 /* Zip.framework */,
 				F355AB362823B98400656A67 /* libz.tbd */,
 				E7E262DA282ABADC002FE8DB /* AgoraDav1dExtension.framework */,
 				E7E262DF282ABADF002FE8DB /* Agoraffmpeg.framework */,
@@ -212,6 +369,118 @@
 				DDCEC6D51938F8A6FF925774 /* Pods_MetaChatDemo.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A801FDE3288E47A200037560 /* Sence */ = {
+			isa = PBXGroup;
+			children = (
+				A801FDE4288E480100037560 /* GuideAlertViewController.h */,
+				A801FDE5288E480100037560 /* GuideAlertViewController.m */,
+			);
+			path = Sence;
+			sourceTree = "<group>";
+		};
+		A88331CD28768AB800BC2FEE /* Resourse */ = {
+			isa = PBXGroup;
+			children = (
+				A883324728892F9500BC2FEE /* tableNPC.m4a */,
+				A82D3E4D2891500C00B6E082 /* moveNPC1.m4a */,
+				A82D3E522893860700B6E082 /* moveNPC2.m4a */,
+				A88331CE28768B5800BC2FEE /* Novice guide.rtfd */,
+			);
+			path = Resourse;
+			sourceTree = "<group>";
+		};
+		A88331E0287C0B5200BC2FEE /* KTV */ = {
+			isa = PBXGroup;
+			children = (
+				A88331F6287D478C00BC2FEE /* Views */,
+				A88331EE287C0CE400BC2FEE /* Data */,
+				A88331E3287C0C3300BC2FEE /* Controllers */,
+			);
+			path = KTV;
+			sourceTree = "<group>";
+		};
+		A88331E3287C0C3300BC2FEE /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A88331E1287C0BD000BC2FEE /* KTVContainerViewController.swift */,
+				A88331E6287C0C8300BC2FEE /* KTVChooseSongContainerVC.swift */,
+				A88331FF287D4C4B00BC2FEE /* KTVChooseSongVC.h */,
+				A8833200287D4C4B00BC2FEE /* KTVChooseSongVC.m */,
+				A8833202287D59EC00BC2FEE /* KTVHaveChosenVC.h */,
+				A8833203287D59EC00BC2FEE /* KTVHaveChosenVC.m */,
+				A8833205287D5B0E00BC2FEE /* KTVSearchSongVC.h */,
+				A8833206287D5B0E00BC2FEE /* KTVSearchSongVC.m */,
+				A8833208287D5B2300BC2FEE /* KTVConsoleVC.h */,
+				A8833209287D5B2300BC2FEE /* KTVConsoleVC.m */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		A88331EE287C0CE400BC2FEE /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				A88331FC287D4B6F00BC2FEE /* KTVDataManager.h */,
+				A88331FD287D4B6F00BC2FEE /* KTVDataManager.m */,
+				A88332322881650200BC2FEE /* KTVSongTag.h */,
+				A88332332881650200BC2FEE /* KTVSongTag.m */,
+				A88332352885425A00BC2FEE /* KTVMusic.h */,
+				A88332362885425A00BC2FEE /* KTVMusic.m */,
+				A88332412886FA0400BC2FEE /* KTVMusicResource.h */,
+				A88332422886FA0400BC2FEE /* KTVMusicResource.m */,
+				A88332382886636F00BC2FEE /* KTVMusicHotType.h */,
+				A88332392886636F00BC2FEE /* KTVMusicHotType.m */,
+				A883323B28867B0D00BC2FEE /* KTVNetworkHelper.h */,
+				A883323C28867B0D00BC2FEE /* KTVNetworkHelper.m */,
+				A88332442889024000BC2FEE /* KTVConsoleManager.h */,
+				A88332452889024000BC2FEE /* KTVConsoleManager.m */,
+				A88332492889604200BC2FEE /* KTVAudioEffectModel.h */,
+				A883324A2889604200BC2FEE /* KTVAudioEffectModel.m */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		A88331F1287C36B800BC2FEE /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A8C702FC289A74270037EE20 /* Utils.swift */,
+				A88331F2287C36D000BC2FEE /* EXT_UIColor.swift */,
+				A883323E28868E5600BC2FEE /* NSString+MetaChat.h */,
+				A883323F28868E5600BC2FEE /* NSString+MetaChat.m */,
+				A801FDE0288AA6BE00037560 /* UIViewController+Extension.h */,
+				A801FDE1288AA6BE00037560 /* UIViewController+Extension.m */,
+				A883320E287EA1C800BC2FEE /* UIViewController+KTVBackgroud.h */,
+				A883320F287EA1C800BC2FEE /* UIViewController+KTVBackgroud.m */,
+				A801FDE7288FA9E100037560 /* UIViewController+RotationControl.h */,
+				A801FDE8288FA9E100037560 /* UIViewController+RotationControl.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		A88331F6287D478C00BC2FEE /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A88331F9287D4B3300BC2FEE /* KTVChooseSongCell.h */,
+				A88331FA287D4B3300BC2FEE /* KTVChooseSongCell.m */,
+				A8833214287EB13200BC2FEE /* KTVHaveChosenCell.h */,
+				A8833215287EB13200BC2FEE /* KTVHaveChosenCell.m */,
+				A801FDEA288FC23B00037560 /* KTVSingingCell.h */,
+				A801FDEB288FC23B00037560 /* KTVSingingCell.m */,
+				A883320B287D67CD00BC2FEE /* KTVSearchBar.h */,
+				A883320C287D67CD00BC2FEE /* KTVSearchBar.m */,
+				A8833211287EA91F00BC2FEE /* KTVNaviBar.h */,
+				A8833212287EA91F00BC2FEE /* KTVNaviBar.m */,
+				A883321C287F152000BC2FEE /* KTVConsoleView.h */,
+				A883321D287F152000BC2FEE /* KTVConsoleView.m */,
+				A8833223287FF50500BC2FEE /* KTVCosoleStyleCell.h */,
+				A8833224287FF50500BC2FEE /* KTVCosoleStyleCell.m */,
+				A88332262880006C00BC2FEE /* KTVToneContolView.h */,
+				A88332272880006C00BC2FEE /* KTVToneContolView.m */,
+				A883322F2881646D00BC2FEE /* KTVSongTagsView.h */,
+				A88332302881646D00BC2FEE /* KTVSongTagsView.m */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		E7E26367282ABD07002FE8DB /* openssl */ = {
@@ -353,9 +622,7 @@
 			isa = PBXGroup;
 			children = (
 				E7E263DA282ABD08002FE8DB /* libcrypto.a */,
-				E7E263DB282ABD08002FE8DB /* libssl-tvOS.a */,
 				E7E263DC282ABD08002FE8DB /* libssl.a */,
-				E7E263DD282ABD08002FE8DB /* libcrypto-tvOS.a */,
 			);
 			path = lib;
 			sourceTree = "<group>";
@@ -365,6 +632,7 @@
 			children = (
 				B10E144C72931B74232CB8D9 /* Pods-MetaChatDemo.debug.xcconfig */,
 				4121F17EC38E443A154C47B9 /* Pods-MetaChatDemo.release.xcconfig */,
+				77E7A017B7C72BE421DCC563 /* Pods-MetaChatDemo.releasetest.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -372,6 +640,7 @@
 		F348D14E2811637A00039743 = {
 			isa = PBXGroup;
 			children = (
+				A88331CD28768AB800BC2FEE /* Resourse */,
 				E7E26367282ABD07002FE8DB /* openssl */,
 				F348D1592811637A00039743 /* MetaChatDemo */,
 				F348D1582811637A00039743 /* Products */,
@@ -391,20 +660,25 @@
 		F348D1592811637A00039743 /* MetaChatDemo */ = {
 			isa = PBXGroup;
 			children = (
+				A88331E0287C0B5200BC2FEE /* KTV */,
+				A801FDE3288E47A200037560 /* Sence */,
+				A88331F1287C36B800BC2FEE /* Utils */,
+				2611B3F028741AAA0053E24E /* LibYuv */,
 				F3BA5F3F28191B1D00821E23 /* KeyCenter.swift */,
 				F348D15A2811637A00039743 /* AppDelegate.swift */,
-				F348D15C2811637A00039743 /* SceneDelegate.swift */,
 				F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */,
 				F348D15E2811637A00039743 /* MetaChatLoginViewController.swift */,
 				F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */,
+				A8C70300289B6AAB0037EE20 /* MetaChatPlayerManager.swift */,
+				A88331DE287864E000BC2FEE /* CustomMessageHandler.swift */,
 				F355AAAF28237F9F00656A67 /* TokenBuilder */,
 				F348D1602811637A00039743 /* Main.storyboard */,
 				F303917A2817E58B004A6A40 /* OnlineUserTableviewCell.xib */,
 				F348D1632811637B00039743 /* Assets.xcassets */,
-				E7FAFB88283528AF00F25821 /* 3.zip */,
 				F348D1652811637B00039743 /* LaunchScreen.storyboard */,
 				F348D1682811637B00039743 /* Info.plist */,
 				F3D54E932819732F00C5F41A /* MetaChatDemo-Bridging-Header.h */,
+				A81FC9E9289934E6005886FF /* PrefixHeader.pch */,
 			);
 			path = MetaChatDemo;
 			sourceTree = "<group>";
@@ -412,12 +686,13 @@
 		F355AAAF28237F9F00656A67 /* TokenBuilder */ = {
 			isa = PBXGroup;
 			children = (
-				F355AAB02823813000656A67 /* RtmTokenBuilder.h */,
+				A82D3E582893B7C300B6E082 /* RtmTokenBuilder.h */,
+				A82D3E542893B6D600B6E082 /* MetaChatTokenCreater.h */,
+				A82D3E552893B6D600B6E082 /* MetaChatTokenCreater.mm */,
+				A82D3E562893B6D600B6E082 /* RtcTokenBuilder.h */,
 				F355AAB12823814300656A67 /* AccessToken.h */,
 				F355AAB22823815B00656A67 /* utils.h */,
 				F355AAB32823816700656A67 /* Packer.h */,
-				F355AB332823B55A00656A67 /* MetaChatTokenCreater.h */,
-				F355AB342823B55A00656A67 /* MetaChatTokenCreater.mm */,
 			);
 			path = TokenBuilder;
 			sourceTree = "<group>";
@@ -487,8 +762,11 @@
 				F348D1672811637B00039743 /* LaunchScreen.storyboard in Resources */,
 				F348D1642811637B00039743 /* Assets.xcassets in Resources */,
 				F348D1622811637A00039743 /* Main.storyboard in Resources */,
-				E7FAFB89283528AF00F25821 /* 3.zip in Resources */,
+				A88331CF28768B5800BC2FEE /* Novice guide.rtfd in Resources */,
 				F303917B2817E58B004A6A40 /* OnlineUserTableviewCell.xib in Resources */,
+				A8833248288931E400BC2FEE /* tableNPC.m4a in Resources */,
+				A82D3E4E2891500C00B6E082 /* moveNPC1.m4a in Resources */,
+				A82D3E532893860700B6E082 /* moveNPC2.m4a in Resources */,
 				E7E263DE282ABD08002FE8DB /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -559,13 +837,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8833201287D4C4B00BC2FEE /* KTVChooseSongVC.m in Sources */,
 				F3D54E992819788C00C5F41A /* MetaChatSceneViewController.swift in Sources */,
+				A88331F3287C36D000BC2FEE /* EXT_UIColor.swift in Sources */,
+				A88332342881650200BC2FEE /* KTVSongTag.m in Sources */,
+				2611B3EC28741A230053E24E /* LibyuvHelper.mm in Sources */,
 				F3BA5F4028191B1E00821E23 /* KeyCenter.swift in Sources */,
+				A8833210287EA1C800BC2FEE /* UIViewController+KTVBackgroud.m in Sources */,
+				A88332372885425A00BC2FEE /* KTVMusic.m in Sources */,
+				A88332312881646D00BC2FEE /* KTVSongTagsView.m in Sources */,
+				A82D3E572893B6D600B6E082 /* MetaChatTokenCreater.mm in Sources */,
+				A88332432886FA0500BC2FEE /* KTVMusicResource.m in Sources */,
 				F3BA5F4228194F2200821E23 /* MetaChatEngine.swift in Sources */,
+				A883324028868E5700BC2FEE /* NSString+MetaChat.m in Sources */,
 				F348D15F2811637A00039743 /* MetaChatLoginViewController.swift in Sources */,
+				A8833225287FF50500BC2FEE /* KTVCosoleStyleCell.m in Sources */,
+				A883324B2889604200BC2FEE /* KTVAudioEffectModel.m in Sources */,
+				A88331E2287C0BD000BC2FEE /* KTVContainerViewController.swift in Sources */,
+				A8C702FD289A74270037EE20 /* Utils.swift in Sources */,
+				A883320A287D5B2300BC2FEE /* KTVConsoleVC.m in Sources */,
+				A883321E287F152000BC2FEE /* KTVConsoleView.m in Sources */,
+				A88332462889024200BC2FEE /* KTVConsoleManager.m in Sources */,
+				A88331DF287864E000BC2FEE /* CustomMessageHandler.swift in Sources */,
+				A8833207287D5B0E00BC2FEE /* KTVSearchSongVC.m in Sources */,
+				A8833216287EB13200BC2FEE /* KTVHaveChosenCell.m in Sources */,
+				A801FDEC288FC23B00037560 /* KTVSingingCell.m in Sources */,
+				A801FDE9288FA9E100037560 /* UIViewController+RotationControl.m in Sources */,
+				A801FDE6288E480100037560 /* GuideAlertViewController.m in Sources */,
 				F348D15B2811637A00039743 /* AppDelegate.swift in Sources */,
-				F348D15D2811637A00039743 /* SceneDelegate.swift in Sources */,
-				F355AB352823B55A00656A67 /* MetaChatTokenCreater.mm in Sources */,
+				A88331FE287D4B6F00BC2FEE /* KTVDataManager.m in Sources */,
+				A883320D287D67CD00BC2FEE /* KTVSearchBar.m in Sources */,
+				A883323D28867B0D00BC2FEE /* KTVNetworkHelper.m in Sources */,
+				A8833204287D59EC00BC2FEE /* KTVHaveChosenVC.m in Sources */,
+				A88332282880006C00BC2FEE /* KTVToneContolView.m in Sources */,
+				A8C70301289B6AAB0037EE20 /* MetaChatPlayerManager.swift in Sources */,
+				A883323A2886636F00BC2FEE /* KTVMusicHotType.m in Sources */,
+				A88331FB287D4B3300BC2FEE /* KTVChooseSongCell.m in Sources */,
+				A88331E7287C0C8300BC2FEE /* KTVChooseSongContainerVC.swift in Sources */,
+				A801FDE2288AA6BE00037560 /* UIViewController+Extension.m in Sources */,
+				A8833213287EA91F00BC2FEE /* KTVNaviBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,6 +901,122 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A82D3E5028924FCC00B6E082 /* ReleaseTest */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/MetaChatDemo/PrefixHeader.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = ReleaseTest;
+		};
+		A82D3E5128924FCC00B6E082 /* ReleaseTest */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 77E7A017B7C72BE421DCC563 /* Pods-MetaChatDemo.releasetest.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1006;
+				DEVELOPMENT_TEAM = YS397FG5PA;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/openssl/include",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = MetaChatDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MetaChatDemo;
+				INFOPLIST_KEY_NSCameraUsageDescription = "请求摄像头权限";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "请求麦克风权限";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UIStatusBarHidden = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/openssl/lib",
+					"$(PROJECT_DIR)/MetaChatDemo/openssl/lib",
+					"$(PROJECT_DIR)/MetaChatDemo",
+					"$(PROJECT_DIR)/MetaChatDemo/LibYuv/libyuv",
+					"$(PROJECT_DIR)",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.scenes.MetaChat.test;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = TEST;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "MetaChatDemo/MetaChatDemo-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_WORKSPACE = YES;
+			};
+			name = ReleaseTest;
+		};
 		F348D1692811637B00039743 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -631,6 +1057,8 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/MetaChatDemo/PrefixHeader.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -641,7 +1069,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -689,13 +1117,15 @@
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/MetaChatDemo/PrefixHeader.pch";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -712,27 +1142,34 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 1006;
 				DEVELOPMENT_TEAM = YS397FG5PA;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/openssl/include";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/openssl/include",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = MetaChatDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MetaChatDemo;
 				INFOPLIST_KEY_NSCameraUsageDescription = "请求摄像头权限";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "请求麦克风权限";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UIStatusBarHidden = NO;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -741,10 +1178,15 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/openssl/lib",
 					"$(PROJECT_DIR)/MetaChatDemo/openssl/lib",
+					"$(PROJECT_DIR)/MetaChatDemo",
+					"$(PROJECT_DIR)/MetaChatDemo/LibYuv/libyuv",
+					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.agora.scenes.MetaChat;
+				MARKETING_VERSION = 1.0.0;
+				OTHER_SWIFT_FLAGS = "$(inherited) -D COCOAPODS";
+				PRODUCT_BUNDLE_IDENTIFIER = io.agora.scenes.MetaChat.test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "MetaChatDemo/MetaChatDemo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -761,27 +1203,34 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 1006;
 				DEVELOPMENT_TEAM = YS397FG5PA;
+				ENABLE_APP_SANDBOX = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				GENERATE_INFOPLIST_FILE = YES;
-				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/openssl/include";
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/openssl/include",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = MetaChatDemo/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = MetaChatDemo;
 				INFOPLIST_KEY_NSCameraUsageDescription = "请求摄像头权限";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "请求麦克风权限";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
 				INFOPLIST_KEY_UIStatusBarHidden = NO;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -790,10 +1239,14 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/openssl/lib",
 					"$(PROJECT_DIR)/MetaChatDemo/openssl/lib",
+					"$(PROJECT_DIR)/MetaChatDemo",
+					"$(PROJECT_DIR)/MetaChatDemo/LibYuv/libyuv",
+					"$(PROJECT_DIR)",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.agora.scenes.MetaChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "MetaChatDemo/MetaChatDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -810,6 +1263,7 @@
 			buildConfigurations = (
 				F348D1692811637B00039743 /* Debug */,
 				F348D16A2811637B00039743 /* Release */,
+				A82D3E5028924FCC00B6E082 /* ReleaseTest */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -819,6 +1273,7 @@
 			buildConfigurations = (
 				F348D16C2811637B00039743 /* Debug */,
 				F348D16D2811637B00039743 /* Release */,
+				A82D3E5128924FCC00B6E082 /* ReleaseTest */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
