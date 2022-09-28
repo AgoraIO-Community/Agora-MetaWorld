@@ -1,7 +1,6 @@
 package io.agora.metachat.example.ui.game;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
@@ -20,9 +19,10 @@ import java.util.Locale;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
-//import io.agora.meta.AgoraMetaActivity;
-//import io.agora.meta.AgoraMetaView;
+import io.agora.metachat.IMetachatEventHandler;
+import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
+import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.example.MainActivity;
 import io.agora.metachat.example.MetaChatContext;
@@ -31,7 +31,7 @@ import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.rtc2.Constants;
 
-public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.OnClickListener, IMetachatSceneEventHandler {
+public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler {
 
     private GameActivityBinding binding;
     private TextureView mTextureView = null;
@@ -102,13 +102,13 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
         enableSpeaker.addOnPropertyChangedCallback(callback);
         isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
-
+        MetaChatContext.getInstance().registerMetaChatEventHandler(this);
         //initUnity();
         mTextureView = new TextureView(this);
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                refreshByIntent(getIntent(),mTextureView);
+                refreshByIntent(getIntent(), mTextureView);
             }
 
             @Override
@@ -130,12 +130,13 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1, -1);
         localView.addView(mTextureView, 0, layoutParams);
 
+
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        refreshByIntent(intent,mTextureView);
+        refreshByIntent(intent, mTextureView);
     }
 
     @Override
@@ -149,7 +150,7 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
     }
 
-    private void refreshByIntent(Intent intent,TextureView tv) {
+    private void refreshByIntent(Intent intent, TextureView tv) {
         String nickname = intent.getStringExtra("nickname");
         if (nickname != null) {
             binding.card.nickname.setText(nickname);
@@ -167,7 +168,7 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
 
         String roomName = intent.getStringExtra("roomName");
         if (roomName != null) {
-            MetaChatContext.getInstance().createAndEnterScene(this,roomName,tv);
+            MetaChatContext.getInstance().createScene(this, roomName, tv);
         }
     }
 
@@ -248,6 +249,37 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
 
     @Override
     public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
+
+    }
+
+    @Override
+    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+        //异步线程回调需在主线程处理
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MetaChatContext.getInstance().enterScene();
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionStateChanged(int state, int reason) {
+
+    }
+
+    @Override
+    public void onRequestToken() {
+
+    }
+
+    @Override
+    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
+
+    }
+
+    @Override
+    public void onDownloadSceneProgress(long SceneId, int progress, int state) {
 
     }
 }

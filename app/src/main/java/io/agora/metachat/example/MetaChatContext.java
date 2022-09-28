@@ -12,14 +12,16 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.agora.metachat.AvatarModelInfo;
+import io.agora.metachat.EnterSceneConfig;
+import io.agora.metachat.ILocalUserAvatar;
 import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
 import io.agora.metachat.IMetachatService;
 import io.agora.metachat.MetachatConfig;
+import io.agora.metachat.MetachatSceneConfig;
 import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserAvatarConfig;
-import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
@@ -41,11 +43,13 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private IMetachatService metaChatService;
     private IMetachatScene metaChatScene;
     private MetachatSceneInfo sceneInfo;
-    private MetachatUserAvatarConfig avatarConfig;
+    private AvatarModelInfo modelInfo;
     private String roomName;
+    private TextureView sceneView;
     private final ConcurrentHashMap<IMetachatEventHandler, Integer> metaChatEventHandlerMap;
     private final ConcurrentHashMap<IMetachatSceneEventHandler, Integer> metaChatSceneEventHandlerMap;
     private boolean mJoinedRtc = false;
+    private ILocalUserAvatar localUserAvatar;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
@@ -98,13 +102,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     MetachatConfig config = new MetachatConfig() {{
                         mRtcEngine = rtcEngine;
                         mAppId = KeyCenter.APP_ID;
-                        mToken = KeyCenter.RTM_TOKEN;
+                        mRtmToken = KeyCenter.RTM_TOKEN;
                         mLocalDownloadPath = context.getExternalCacheDir().getPath();
-                        mUserInfo = new MetachatUserInfo() {{
+                        mUserId = KeyCenter.RTM_UID;
+                        /*mUserInfo = new MetachatUserInfo() {{
                             mUserId = KeyCenter.RTM_UID;
                             mUserName = nickname == null ? mUserId : nickname;
                             mUserIconUrl = avatar == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : avatar;
-                        }};
+                        }};*/
                         mEventHandler = MetaChatContext.this;
                     }};
                     ret += metaChatService.initialize(config);
@@ -140,8 +145,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         metaChatSceneEventHandlerMap.remove(eventHandler);
     }
 
-    public boolean getScenes() {
-        return metaChatService.getScenes() == Constants.ERR_OK;
+    public boolean getSceneInfos() {
+        return metaChatService.getSceneInfos() == Constants.ERR_OK;
     }
 
     public boolean isSceneDownloaded(MetachatSceneInfo sceneInfo) {
@@ -156,14 +161,15 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return metaChatService.cancelDownloadScene(sceneInfo.mSceneId) == Constants.ERR_OK;
     }
 
-    public void prepareScene(MetachatSceneInfo sceneInfo, MetachatUserAvatarConfig avatarConfig) {
+    public void prepareScene(MetachatSceneInfo sceneInfo, AvatarModelInfo modelInfo) {
         this.sceneInfo = sceneInfo;
-        this.avatarConfig = avatarConfig;
+        this.modelInfo = modelInfo;
     }
 
-    public boolean createAndEnterScene(Context activityContext, String roomName, TextureView tv) {
+    public boolean createScene(Context activityContext, String roomName, TextureView tv) {
         Log.d(TAG, String.format("createAndEnterScene %s", roomName));
         this.roomName = roomName;
+        this.sceneView = tv;
 
         if (spatialAudioEngine == null && enableSpatialAudio) {
             spatialAudioEngine = ILocalSpatialAudioEngine.create();
@@ -175,11 +181,35 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             spatialAudioEngine.muteAllRemoteAudioStreams(false);
         }
 
+        MetachatSceneConfig sceneConfig = new MetachatSceneConfig();
+        sceneConfig.mActivityContext = activityContext;
+        int ret = -1;
         if (metaChatScene == null) {
-            metaChatScene = metaChatService.createScene(activityContext,this.roomName, this);
+            ret = metaChatService.createScene(sceneConfig);
         }
         mJoinedRtc = false;
-        return metaChatScene.enterScene(tv,sceneInfo, avatarConfig,null) == Constants.ERR_OK;
+        return ret == Constants.ERR_OK;
+    }
+
+    public void enterScene() {
+        if (null != metaChatScene) {
+            metaChatScene.addEventHandler(MetaChatContext.getInstance());
+            EnterSceneConfig config = new EnterSceneConfig();
+            config.mSceneView = this.sceneView;
+            config.mRoomName = this.roomName;
+            config.mSceneId = this.sceneInfo.mSceneId;
+
+            metaChatScene.enterScene(config);
+        }
+    }
+
+    @Override
+    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+        metaChatScene = scene;
+        localUserAvatar = metaChatScene.getLocalUserAvatar();
+        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
+            handler.onCreateSceneResult(scene, errorCode);
+        }
     }
 
     public boolean updateRole(int role) {
@@ -189,10 +219,13 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             //publishAudioTrack = isBroadcaster;
             clientRoleType = role;
         }});
-        avatarConfig.mLocalVisible = true;
-        avatarConfig.mSyncPosition = isBroadcaster;
-        avatarConfig.mRemoteVisible = isBroadcaster;
-        ret += metaChatScene.updateLocalAvatarConfig(avatarConfig);
+        modelInfo.mLocalVisible = true;
+        modelInfo.mSyncPosition = isBroadcaster;
+        modelInfo.mRemoteVisible = isBroadcaster;
+
+        if (null != localUserAvatar && Constants.ERR_OK == localUserAvatar.setModelInfo(modelInfo)) {
+            ret += localUserAvatar.applyInfo();
+        }
         return ret == Constants.ERR_OK;
     }
 
@@ -236,9 +269,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     @Override
-    public void onGetScenesResult(MetachatSceneInfo[] scenes, int errorCode) {
+    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
         for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
-            handler.onGetScenesResult(scenes, errorCode);
+            handler.onGetSceneInfosResult(scenes, errorCode);
         }
     }
 

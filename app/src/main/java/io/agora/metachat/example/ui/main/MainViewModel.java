@@ -9,9 +9,10 @@ import androidx.lifecycle.ViewModel;
 import java.util.Arrays;
 import java.util.List;
 
+import io.agora.metachat.AvatarModelInfo;
 import io.agora.metachat.IMetachatEventHandler;
+import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserAvatarConfig;
 import io.agora.metachat.example.MainApplication;
 import io.agora.metachat.example.MetaChatContext;
 
@@ -80,15 +81,15 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
                 avatar.getValue()
         );
         if (flag) {
-            metaChatContext.getScenes();
+            metaChatContext.getSceneInfos();
         }
     }
 
     public void prepareScene(MetachatSceneInfo sceneInfo) {
         MetaChatContext metaChatContext = MetaChatContext.getInstance();
-        metaChatContext.prepareScene(sceneInfo, new MetachatUserAvatarConfig() {{
+        metaChatContext.prepareScene(sceneInfo, new AvatarModelInfo() {{
             // TODO choose one
-            mAvatarCode = sceneInfo.mAvatars[0].mAvatarCode;
+            mBundleCode = sceneInfo.mBundles[0].mBundleCode;
             mLocalVisible = true;
             mRemoteVisible = true;
             mSyncPosition = true;
@@ -109,6 +110,10 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
     }
 
     @Override
+    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+    }
+
+    @Override
     public void onConnectionStateChanged(int state, int reason) {
 
     }
@@ -119,14 +124,14 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
     }
 
     @Override
-    public void onGetScenesResult(MetachatSceneInfo[] scenes, int errorCode) {
+    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
         sceneList.postValue(Arrays.asList(scenes));
     }
 
     @Override
     public void onDownloadSceneProgress(long mSceneId, int progress, int state) {
         Log.d("progress", String.valueOf(progress));
-        if(state == 3){
+        if (state == 3) {
             downloadingProgress.postValue(-1);
             return;
         }
