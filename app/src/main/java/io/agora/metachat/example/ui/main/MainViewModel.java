@@ -12,7 +12,10 @@ import java.util.List;
 import io.agora.metachat.AvatarModelInfo;
 import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
+import io.agora.metachat.MetachatBundleInfo;
 import io.agora.metachat.MetachatSceneInfo;
+import io.agora.metachat.MetachatUserInfo;
+import io.agora.metachat.example.KeyCenter;
 import io.agora.metachat.example.MainApplication;
 import io.agora.metachat.example.MetaChatContext;
 
@@ -76,9 +79,7 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         MetaChatContext metaChatContext = MetaChatContext.getInstance();
         metaChatContext.registerMetaChatEventHandler(this);
         boolean flag = metaChatContext.initialize(
-                MainApplication.instance,
-                nickname.getValue(),
-                avatar.getValue()
+                MainApplication.instance
         );
         if (flag) {
             metaChatContext.getSceneInfos();
@@ -89,10 +90,20 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         MetaChatContext metaChatContext = MetaChatContext.getInstance();
         metaChatContext.prepareScene(sceneInfo, new AvatarModelInfo() {{
             // TODO choose one
-            mBundleCode = sceneInfo.mBundles[0].mBundleCode;
+            MetachatBundleInfo[] bundles = sceneInfo.mBundles;
+            for (MetachatBundleInfo bundleInfo : bundles) {
+                if (bundleInfo.mBundleType == 2) {
+                    mBundleCode = bundleInfo.mBundleCode;
+                    break;
+                }
+            }
             mLocalVisible = true;
             mRemoteVisible = true;
             mSyncPosition = true;
+        }}, new MetachatUserInfo() {{
+            mUserId = KeyCenter.RTM_UID;
+            mUserName = nickname.getValue() == null ? mUserId : nickname.getValue();
+            mUserIconUrl = avatar.getValue() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : avatar.getValue();
         }});
         if (metaChatContext.isSceneDownloaded(sceneInfo)) {
             selectScene.postValue(sceneInfo.mSceneId);

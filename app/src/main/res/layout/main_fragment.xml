@@ -106,29 +106,31 @@
         android:id="@+id/enter"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginTop="99dp"
+        android:layout_marginBottom="10dp"
         android:background="@null"
         android:src="@mipmap/enter"
+        app:layout_constraintBottom_toTopOf="@id/enter_tip"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sex" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
+        android:id="@+id/enter_tip"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
-        android:layout_marginTop="11dp"
+        android:layout_marginBottom="40dp"
         android:alpha="0.41"
         android:text="进入"
         android:textColor="#d9f9f9f9"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/logo_label"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enter" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
+        android:id="@+id/logo_label"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="10dp"
         android:alpha="0.51"
         android:text="Agora.io"
         android:textColor="#d9ffffff"

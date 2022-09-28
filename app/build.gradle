@@ -79,6 +79,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
-def releaseTime() {
+static def releaseTime() {
     return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("UTC"))
 }

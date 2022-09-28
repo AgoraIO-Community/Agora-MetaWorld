@@ -19,9 +19,11 @@ import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
 import io.agora.metachat.IMetachatService;
+import io.agora.metachat.MetachatBundleInfo;
 import io.agora.metachat.MetachatConfig;
 import io.agora.metachat.MetachatSceneConfig;
 import io.agora.metachat.MetachatSceneInfo;
+import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
@@ -44,6 +46,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private IMetachatScene metaChatScene;
     private MetachatSceneInfo sceneInfo;
     private AvatarModelInfo modelInfo;
+    private MetachatUserInfo userInfo;
     private String roomName;
     private TextureView sceneView;
     private final ConcurrentHashMap<IMetachatEventHandler, Integer> metaChatEventHandlerMap;
@@ -67,7 +70,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return instance;
     }
 
-    public boolean initialize(Context context, @Nullable String nickname, @Nullable String avatar) {
+    public boolean initialize(Context context) {
         int ret = Constants.ERR_OK;
         if (rtcEngine == null) {
             try {
@@ -105,11 +108,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                         mRtmToken = KeyCenter.RTM_TOKEN;
                         mLocalDownloadPath = context.getExternalCacheDir().getPath();
                         mUserId = KeyCenter.RTM_UID;
-                        /*mUserInfo = new MetachatUserInfo() {{
-                            mUserId = KeyCenter.RTM_UID;
-                            mUserName = nickname == null ? mUserId : nickname;
-                            mUserIconUrl = avatar == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : avatar;
-                        }};*/
                         mEventHandler = MetaChatContext.this;
                     }};
                     ret += metaChatService.initialize(config);
@@ -161,9 +159,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return metaChatService.cancelDownloadScene(sceneInfo.mSceneId) == Constants.ERR_OK;
     }
 
-    public void prepareScene(MetachatSceneInfo sceneInfo, AvatarModelInfo modelInfo) {
+    public void prepareScene(MetachatSceneInfo sceneInfo, AvatarModelInfo modelInfo, MetachatUserInfo userInfo) {
         this.sceneInfo = sceneInfo;
         this.modelInfo = modelInfo;
+        this.userInfo = userInfo;
     }
 
     public boolean createScene(Context activityContext, String roomName, TextureView tv) {
@@ -192,6 +191,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void enterScene() {
+        if (null != localUserAvatar) {
+            localUserAvatar.setUserInfo(userInfo);
+            localUserAvatar.setModelInfo(modelInfo);
+        }
         if (null != metaChatScene) {
             metaChatScene.addEventHandler(MetaChatContext.getInstance());
             EnterSceneConfig config = new EnterSceneConfig();
@@ -216,7 +219,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         int ret = Constants.ERR_OK;
         boolean isBroadcaster = role == Constants.CLIENT_ROLE_BROADCASTER;
         ret += rtcEngine.updateChannelMediaOptions(new ChannelMediaOptions() {{
-            //publishAudioTrack = isBroadcaster;
             clientRoleType = role;
         }});
         modelInfo.mLocalVisible = true;
