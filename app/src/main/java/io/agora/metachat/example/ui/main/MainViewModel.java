@@ -92,7 +92,7 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
             // TODO choose one
             MetachatBundleInfo[] bundles = sceneInfo.mBundles;
             for (MetachatBundleInfo bundleInfo : bundles) {
-                if (bundleInfo.mBundleType == 2) {
+                if (bundleInfo.mBundleType == MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR) {
                     mBundleCode = bundleInfo.mBundleCode;
                     break;
                 }
