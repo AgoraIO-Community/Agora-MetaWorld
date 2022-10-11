@@ -253,7 +253,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             ILocalSpatialAudioEngine.destroy();
             spatialAudioEngine = null;
         }
+        Log.d(TAG, "leaveScene success");
         return ret == Constants.ERR_OK;
+
     }
 
     @Override
@@ -385,4 +387,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         }
     }
 
+    public MetachatSceneInfo getSceneInfo() {
+        return sceneInfo;
+    }
 }

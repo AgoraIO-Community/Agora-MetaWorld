@@ -142,27 +142,13 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
     @Override
     public void onDownloadSceneProgress(long mSceneId, int progress, int state) {
         Log.d("progress", String.valueOf(progress));
-        if (state == 3) {
+        if (state == SceneDownloadState.METACHAT_SCENE_DOWNLOAD_STATE_FAILED) {
             downloadingProgress.postValue(-1);
             return;
         }
         downloadingProgress.postValue(progress);
-        if (state == 2) {
+        if (state == SceneDownloadState.METACHAT_SCENE_DOWNLOAD_STATE_DOWNLOADED) {
             selectScene.postValue(mSceneId);
         }
     }
-
-//    @Override
-//    public void onDownloadSceneProgress(MetachatSceneInfo sceneInfo, int progress, int state) {
-//        Log.d("progress", String.valueOf(progress));
-//        if(state == 3){
-//            downloadingProgress.postValue(-1);
-//            return;
-//        }
-//        downloadingProgress.postValue(progress);
-//        if (state == 2) {
-//            selectScene.postValue(sceneInfo);
-//        }
-//    }
-
 }

@@ -27,6 +27,7 @@ import java.util.Locale;
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
 import io.agora.metachat.example.KeyCenter;
+import io.agora.metachat.example.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.adapter.SexAdapter;
 import io.agora.metachat.example.databinding.MainFragmentBinding;
@@ -106,10 +107,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mViewModel.getSceneList().observe(owner, metachatSceneInfos -> {
             // TODO choose one
             if (metachatSceneInfos.size() > 0) {
-                for(int a = 0; a < metachatSceneInfos.size(); a++){
-                   if(metachatSceneInfos.get(a).getSceneId() == 8){
-                       mViewModel.prepareScene(metachatSceneInfos.get(a));
-                   }
+                for (int a = 0; a < metachatSceneInfos.size(); a++) {
+                    //8为内容中心测试的ID号
+                    if (metachatSceneInfos.get(a).getSceneId() == 8) {
+                        mViewModel.prepareScene(metachatSceneInfos.get(a));
+                        break;
+                    }
                 }
 
             }
@@ -130,11 +133,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
             if (aBoolean) {
                 CustomDialog.showDownloadingChooser(context, materialDialog -> {
-                    for(int a = 0; a < mViewModel.getSceneList().getValue().size(); a++){
-                        if(mViewModel.getSceneList().getValue().get(a).getSceneId() == 8){
-                            mViewModel.downloadScene(mViewModel.getSceneList().getValue().get(a));
-                        }
-                    }
+                    mViewModel.downloadScene(MetaChatContext.getInstance().getSceneInfo());
 
                     return null;
                 }, null);
@@ -143,11 +142,10 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         mViewModel.getDownloadingProgress().observe(owner, integer -> {
             if (progressDialog == null) {
                 progressDialog = CustomDialog.showDownloadingProgress(context, materialDialog -> {
-                    mViewModel.cancelDownloadScene(mViewModel.getSceneList().getValue().get(0));
+                    mViewModel.cancelDownloadScene(MetaChatContext.getInstance().getSceneInfo());
                     return null;
                 });
-            }
-            else if(integer < 0){
+            } else if (integer < 0) {
                 progressDialog.dismiss();
                 progressDialog = null;
                 return;
