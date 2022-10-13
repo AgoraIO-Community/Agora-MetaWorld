@@ -31,7 +31,7 @@ import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.rtc2.Constants;
 
-public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler {
+public class GameActivity extends Activity implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler {
 
     private GameActivityBinding binding;
     private TextureView mTextureView = null;
@@ -200,26 +200,6 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
         }
     }
 
-    //@Override
-//    public void onUnityPlayerLoaded(AgoraMetaView view) {
-//        binding.unity.addView(view);
-//    }
-
-    //@Override
-    public void onUnityPlayerUnloaded() {
-        // 必须在onUnityPlayerUnloaded里调用
-        MetaChatContext.getInstance().destroy();
-
-        isEnterScene.set(false);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
-    }
-
-    //@Override
-    public void onUnityPlayerQuitted() {
-    }
 
     @Override
     public void onEnterSceneResult(int errorCode) {
@@ -238,7 +218,12 @@ public class GameActivity extends Activity/*AgoraMetaActivity*/ implements View.
     @Override
     public void onLeaveSceneResult(int errorCode) {
         if (errorCode == 0) {
-            //unloadUnity();
+            MetaChatContext.getInstance().destroy();
+            // isEnterScene.set(false);
+
+            Intent intent = new Intent(GameActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 
