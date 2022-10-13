@@ -219,7 +219,13 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     public void onLeaveSceneResult(int errorCode) {
         if (errorCode == 0) {
             MetaChatContext.getInstance().destroy();
-            // isEnterScene.set(false);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    isEnterScene.set(false);
+                }
+            });
+
 
             Intent intent = new Intent(GameActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
