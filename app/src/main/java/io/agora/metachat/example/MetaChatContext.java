@@ -348,6 +348,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     @Override
+    public void onReleasedScene(int status) {
+        Log.d(TAG, String.format("onReleasedScene %d", status));
+        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
+            handler.onReleasedScene(status);
+        }
+    }
+
+    @Override
     public void onRecvMessageFromScene(byte[] message) {
         Log.d(TAG, String.format("onRecvMessageFromScene %s", new String(message)));
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
