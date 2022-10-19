@@ -2,6 +2,7 @@ package io.agora.metachat.example.ui.game;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.view.TextureView;
@@ -136,6 +137,9 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
         refreshByIntent(intent, mTextureView);
     }
 
@@ -245,8 +249,12 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             });
 
 
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
             Intent intent = new Intent(GameActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
     }

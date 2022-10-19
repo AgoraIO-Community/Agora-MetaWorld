@@ -18,16 +18,17 @@ import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.example.KeyCenter;
 import io.agora.metachat.example.MainApplication;
 import io.agora.metachat.example.MetaChatContext;
+import io.agora.metachat.example.SingleLiveData;
 
 public class MainViewModel extends ViewModel implements IMetachatEventHandler {
 
-    private final MutableLiveData<String> avatar = new MutableLiveData<>();
-    private final MutableLiveData<String> nickname = new MutableLiveData<>();
-    private final MutableLiveData<String> sex = new MutableLiveData<>();
-    private final MutableLiveData<List<MetachatSceneInfo>> sceneList = new MutableLiveData<>();
-    private final MutableLiveData<Long> selectScene = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> requestDownloading = new MutableLiveData<>();
-    private final MutableLiveData<Integer> downloadingProgress = new MutableLiveData<>();
+    private final SingleLiveData<String> avatar = new SingleLiveData<>();
+    private final SingleLiveData<String> nickname = new SingleLiveData<>();
+    private final SingleLiveData<String> sex = new SingleLiveData<>();
+    private final SingleLiveData<List<MetachatSceneInfo>> sceneList = new SingleLiveData<>();
+    private final SingleLiveData<Long> selectScene = new SingleLiveData<>();
+    private final SingleLiveData<Boolean> requestDownloading = new SingleLiveData<>();
+    private final SingleLiveData<Integer> downloadingProgress = new SingleLiveData<>();
 
     @Override
     protected void onCleared() {
