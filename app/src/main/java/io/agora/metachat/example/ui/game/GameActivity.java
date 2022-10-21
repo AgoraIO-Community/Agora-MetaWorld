@@ -240,10 +240,10 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     public void onReleasedScene(int status) {
         if (status == 0) {
-            MetaChatContext.getInstance().destroy();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    MetaChatContext.getInstance().destroy();
                     isEnterScene.set(false);
                 }
             });
