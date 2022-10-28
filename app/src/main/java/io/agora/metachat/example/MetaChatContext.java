@@ -196,6 +196,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             localUserAvatar.setModelInfo(modelInfo);
         }
         if (null != metaChatScene) {
+            metaChatScene.enableUserPositionNotification(true);
             metaChatScene.addEventHandler(MetaChatContext.getInstance());
             EnterSceneConfig config = new EnterSceneConfig();
             config.mSceneView = this.sceneView;
@@ -318,8 +319,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     // Just for test
     private void pushVideoFrameToDisplay() {
-        metaChatScene.enableVideoDisplay(0, true);
-        metaChatScene.pushVideoFrameToDisplay(0, new AgoraVideoFrame() {{
+        metaChatScene.enableVideoDisplay("0", true);
+        metaChatScene.pushVideoFrameToDisplay("0", new AgoraVideoFrame() {{
             format = AgoraVideoFrame.FORMAT_RGBA;
             stride = 496;
             height = 498;
