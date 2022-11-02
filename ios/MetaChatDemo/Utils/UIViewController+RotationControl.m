@@ -8,13 +8,13 @@
 #import "UIViewController+RotationControl.h"
 
 @implementation UIAlertController (RotationControl)
-- (BOOL)shouldAutorotate {
-    return YES;
-}
-
-- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskLandscapeRight;
-}
+//- (BOOL)shouldAutorotate {
+//    return YES;
+//}
+//
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskLandscapeRight;
+//}
 
 @end
 
@@ -24,6 +24,10 @@
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    NSString *version = [UIDevice currentDevice].systemVersion;
+//    if (version.doubleValue >= 16.0) {
+//        return  UIInterfaceOrientationMaskAll;
+//    }
     return UIInterfaceOrientationMaskLandscapeRight;
 }
 
@@ -52,14 +56,18 @@
 
 @implementation UINavigationController (RotationControl)
 - (BOOL)shouldAutorotate {
+    DLog(@"self.topViewController.shouldAutorotate  === %d",self.topViewController.shouldAutorotate)
     return self.topViewController.shouldAutorotate;
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    DLog(@"self.topViewController.supportedInterfaceOrientations === %zd",self.topViewController.supportedInterfaceOrientations)
+
     return self.topViewController.supportedInterfaceOrientations;
 }
 
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    DLog(@"self.topViewController.preferredInterfaceOrientationForPresentation == %zd",self.topViewController.preferredInterfaceOrientationForPresentation);
     return self.topViewController.preferredInterfaceOrientationForPresentation;
 }
 

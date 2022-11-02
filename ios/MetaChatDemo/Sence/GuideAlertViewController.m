@@ -114,7 +114,7 @@
         _textView = [UITextView new];
         _textView.backgroundColor = [UIColor clearColor];
         _textView.editable = NO;
-        _textView.userInteractionEnabled = NO;
+//        _textView.userInteractionEnabled = NO;
         if (self.localFileName) {
             NSURL *url = [[NSBundle mainBundle] URLForResource: self.localFileName withExtension:@"rtfd"];
             _textView.attributedText = [[NSAttributedString alloc] initWithURL:url options:@{} documentAttributes:nil error:nil];

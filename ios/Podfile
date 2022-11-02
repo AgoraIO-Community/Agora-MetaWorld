@@ -9,11 +9,10 @@ target 'MetaChatDemo' do
   pod 'SnapKit'
   pod 'Masonry'
   pod 'JXSegmentedView'
-  pod 'SDWebImage'
-#  pod 'IQKeyboardManager'
+  pod 'SDWebImage','5.12.6'
   pod 'AFNetworking'
   pod 'MJExtension'
-  # Pods for MetaChatDemo
-#  pod 'libyuv-iOS', '~> 1.0.2'
-
+  pod 'MBProgressHUD'
+  pod 'HyphenateChat','3.9.5'
+  pod 'MJRefresh'
 end

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>songCode</key>
+		<string>6499473155149450</string>
+		<key>name</key>
+		<string>Bye Bye</string>
+		<key>poster</key>
+		<string>avatar5</string>
+		<key>singer</key>
+		<string>旅行团乐队</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473155212650</string>
+		<key>name</key>
+		<string>pray for you</string>
+		<key>poster</key>
+		<string>avatar6</string>
+		<key>singer</key>
+		<string>沙宝亮</string>
+		<key>pitchType</key>
+		<integer>5</integer>
+		<key>type</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473155316400</string>
+		<key>name</key>
+		<string>dream girl</string>
+		<key>poster</key>
+		<string>avatar7</string>
+		<key>singer</key>
+		<string>八三夭</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473155339730</string>
+		<key>name</key>
+		<string>i remember</string>
+		<key>poster</key>
+		<string>avatar8</string>
+		<key>singer</key>
+		<string>郭采洁</string>
+		<key>pitchType</key>
+		<integer>2</integer>
+		<key>type</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473155412800</string>
+		<key>name</key>
+		<string>happy</string>
+		<key>poster</key>
+		<string>avatar9</string>
+		<key>singer</key>
+		<string>白举纲</string>
+		<key>pitchType</key>
+		<integer>5</integer>
+		<key>type</key>
+		<integer>4</integer>
+	</dict>
+</array>
+</plist>

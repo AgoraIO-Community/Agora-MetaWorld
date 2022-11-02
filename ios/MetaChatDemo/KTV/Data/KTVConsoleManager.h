@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, nonatomic) BOOL originalSong;    // 切换原唱
 @property (assign, nonatomic) BOOL inEarmonitoring; // 耳返
-@property (assign, nonatomic) double localVoicePitch;
+@property (assign, nonatomic) NSInteger localVoicePitch;
 @property (assign, nonatomic) NSInteger recordingSignalVolume;
 @property (assign, nonatomic) NSInteger accompanyVolume;
 @property (strong, nonatomic) KTVAudioEffectModel *audioEffectPreset;

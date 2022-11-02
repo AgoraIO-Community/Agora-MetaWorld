@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>songCode</key>
+		<string>6499473157051120</string>
+		<key>name</key>
+		<string>trust my gut</string>
+		<key>poster</key>
+		<string>avatar1</string>
+		<key>singer</key>
+		<string>ice</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>3</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473157358670</string>
+		<key>name</key>
+		<string>Sad</string>
+		<key>poster</key>
+		<string>avatar2</string>
+		<key>singer</key>
+		<string>姜云升</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473157385490</string>
+		<key>name</key>
+		<string>Alice</string>
+		<key>poster</key>
+		<string>avatar3</string>
+		<key>singer</key>
+		<string>李斯丹妮</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>songCode</key>
+		<string>6499473157548200</string>
+		<key>name</key>
+		<string>let you go</string>
+		<key>poster</key>
+		<string>avatar4</string>
+		<key>singer</key>
+		<string>牛奶咖啡</string>
+		<key>pitchType</key>
+		<integer>2</integer>
+		<key>type</key>
+		<integer>5</integer>
+	</dict>
+</array>
+</plist>

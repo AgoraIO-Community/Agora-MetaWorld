@@ -45,7 +45,7 @@
     }];
     
 
-    [self addSubview:self.titleLabel];
+    [self.contentView addSubview:self.titleLabel];
     [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.center.mas_equalTo(self.contentView);
         make.width.mas_equalTo(self.contentView).offset(-6);

@@ -4,7 +4,7 @@
 //
 //  Created by 胡润辰 on 2022/4/21.
 //
-
+/*
 import UIKit
 import AgoraRtcKit
 import Zip
@@ -139,6 +139,8 @@ class MetaChatLoginViewController: UIViewController {
     
     var selSex: Int = 0    //0未选择，1男，2女
     
+    var roomId: String!
+    
     var selAvatarIndex: Int = 0
     
     var avatarUrlArray = ["https://accpic.sd-rtn.com/pic/test/png/2.png", "https://accpic.sd-rtn.com/pic/test/png/4.png", "https://accpic.sd-rtn.com/pic/test/png/1.png", "https://accpic.sd-rtn.com/pic/test/png/3.png", "https://accpic.sd-rtn.com/pic/test/png/6.png", "https://accpic.sd-rtn.com/pic/test/png/5.png"]
@@ -154,10 +156,6 @@ class MetaChatLoginViewController: UIViewController {
         selAvatarAlert.delegate = self
         
         view.addGestureRecognizer(UITapGestureRecognizer.init(target: self, action: #selector(hideKeyboard)))
-        
-        DispatchQueue.global().async {
-//            self.moveFileHandler()
-        }
     }
 
     private func moveFileHandler() {
@@ -238,7 +236,7 @@ class MetaChatLoginViewController: UIViewController {
         view.addSubview(indicatorView!)
         indicatorView?.startAnimating()
         
-        MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
+        MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex])
                         
         MetaChatEngine.sharedEngine.metachatKit?.getScenes()
     }
@@ -251,7 +249,7 @@ class MetaChatLoginViewController: UIViewController {
             
             guard let sceneViewController = storyBoard.instantiateViewController(withIdentifier: "SceneViewController") as? MetaChatSceneViewController else { return }
             sceneViewController.modalPresentationStyle = .fullScreen
-            MetaChatEngine.sharedEngine.createScene(sceneInfo, delegate: sceneViewController)
+//            MetaChatEngine.sharedEngine.createScene(sceneInfo, roomId: self.roomId)
 
             self.present(sceneViewController, animated: true)
         }
@@ -297,7 +295,6 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
                 self.indicatorView = nil
             }
         } else if state == .reconnecting || state == .aborted {
-            MetaChatEngine.sharedEngine.leaveRtcChannel()
             MetaChatEngine.sharedEngine.leaveScene()
             DispatchQueue.main.async {
                 DLog("state == \(state.rawValue), reason == \(reason.rawValue)")
@@ -364,3 +361,4 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         }
     }
 }
+*/

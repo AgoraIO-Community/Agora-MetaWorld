@@ -1,0 +1,77 @@
+/* 
+  Localizable.strings
+  MetaChatDemo
+
+  Created by FanPengpeng on 2022/8/24.
+  
+*/
+"welcomeText" = "欢迎来到声网Meta，在这个元宇宙世界中，你能体验到声网各项元宇宙技术，跟随引导一起来探索体验吧!";
+"Create a room" = "创建房间";
+"Room ID" = "房间号";
+"Choose a song" = "点歌";
+"Selected" = "已点";
+"Recommend Songs" = "嗨歌推荐";
+"TikTok hot songs" = "抖音热歌";
+"Chinese Archaic Style Popular Songs" = "古风热歌";
+"KTV Popular Songs" = "KTV必唱";
+"Console" = "控制台";
+"Earphone Monitoring" = "耳返";
+"Change Key of Song" = "升降调";
+"Volume" = "音量";
+"Enable Accompaniment Music" = "伴奏";
+"Recording Studio" = "录音棚";
+"Concert" = "演唱会";
+"Hollow Sound" = "空旷";
+"Quit room" = "退出";
+"Enable Spatial Audio Background" = "空间音频";
+"Vocal Distortion" = "人声模糊";
+"Vocal Air Attenuation Factor" = "空气衰减";
+"User View Setting" = "视角设置";
+"1st person perspective view" = "第一人称";
+"3rd person perspective view" = "第三人称";
+"Omni-perspective view" = "上帝视角";
+"Disc setting" = "轮盘设置";
+"General" = "通用";
+"Operation" = "操作";
+"Sound" = "声音";
+"Room" = "房间";
+"Name" = "昵称";
+"Profile" = "头像";
+"Badge" = "徽章";
+"Avatar" = "虚拟形象";
+"Confirm" = "确定";
+"Cancel" = "取消";
+"Open" = "打开";
+"Close" = "关闭";
+"Room name" = "房间名";
+"Do you want to encrypt the room?" = "房间是否加密";
+"Password" = "房间密码";
+"Visitor mode" = "游客模式";
+"Audio chat mode" = "语聊模式";
+"quit_room_alert_title" = "退出房间";
+"quit_room_alert_msg" = "确定解散该房间吗";
+"quit_room_notify_alert_title" = "房主已解散房间，请确认离开房间";
+"Encrypted" = "加密";
+"Public" = "不加密";
+"Search" = "搜索";
+"Original singing" = "原唱";
+"console_original_singing_tips" = "请点击按钮切换原唱和伴奏";
+"console_earophone_monitoring_tips" = "请使用耳机来体验耳返功能";
+"singing" = "演唱中";
+"progress_image_name" = "room_progress_zh";
+"Visitor tips" = "游客指导";
+"Beginner Guide" = "新手指导";
+"The room has been disbanded" = "该房间已解散";
+"The number of people has exceeded the maximum limit" = "房间人数已达到上限";
+"download_scene_title_1" = "首次进入MetaChat场景需下载 ";
+"download_scene_title_2" = " 数据包";
+"Download tips" = "下载提示";
+"Next time" = "下次再说";
+"Download now" = "立即下载";
+"Select your profile picture" = "请选择头像";
+"Select your badge" = "请选择徽章";
+"Please enter the password" = "请输入密码";
+"npcTableFileName" = "tableNPC_en.mp3";
+"npc1MoveFileName" = "moveNPC1_en.mp3";
+"Please input 1-12 characters" = "请输入1-12个字作为房间名称";
+"nickname length tips" = "必须包含2-12个字符";

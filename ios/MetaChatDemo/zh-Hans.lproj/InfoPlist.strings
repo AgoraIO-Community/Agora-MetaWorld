@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  MetaChatDemo
+
+  Created by FanPengpeng on 2022/9/14.
+  
+*/
+NSCameraUsageDescription = "需要您的同意,才能访问相机";
+NSMicrophoneUsageDescription = "需要您的同意,才能访问麦克风";

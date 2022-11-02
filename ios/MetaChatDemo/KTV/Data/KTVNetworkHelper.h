@@ -21,6 +21,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (void)mvWithSongCode:(NSInteger)songCode Success:(void(^)(KTVMusicResource * _Nullable resouce)) success fail:(void(^)( NSError * _Nullable err)) fail;
 
+
++ (void)downloadMV:(NSString *)url dir:(NSString *)dir completionHandler:(void(^)(NSError *_Nullable err)) completion;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -31,7 +31,7 @@
 
 - (void)setUpUI{
     [self ktv_setBlurBackground];
-    [self ktv_configCustomNaviBarWithTitle:@"Console"];
+    [self ktv_configCustomNaviBarWithTitle:NSLocalizedString(@"Console", @"")];
     
     UIScrollView *scrollView = [UIScrollView new];
     [self.view addSubview:scrollView];
@@ -66,7 +66,7 @@
     
     consoleView.toneValueChangedBlock = ^(NSInteger value, double floatValue) {
         DLog(@"toneValueChanged --> %zd floatValue = %.2f",value, floatValue);
-        console.localVoicePitch = floatValue;
+        console.localVoicePitch = (NSInteger)floatValue;
         [self broadcoastConsoleMessage];
     };
     
@@ -89,8 +89,8 @@
 }
 
 - (void)broadcoastConsoleMessage {
-    KTVConsoleManager *console = _console;
-    [[MetaChatEngine sharedEngine] broadcastKTVConsoleMessageWithIsOriginal:console.originalSong localVoicepitch:console.localVoicePitch accompanyVolumn:console.accompanyVolume audioEffect:console.audioEffectPreset.preset];
+//    KTVConsoleManager *console = _console;
+//    [[MetaChatEngine sharedEngine] broadcastKTVConsoleMessageWithIsOriginal:console.originalSong localVoicepitch:console.localVoicePitch accompanyVolumn:console.accompanyVolume audioEffect:console.audioEffectPreset.preset];
 
 }
 

@@ -92,9 +92,7 @@ static NSString * const kCellID = @"KTVChooseSongCell";
     };
     cell.didClickReduceButtonBlock = ^{
         if (music.isPlaying) {
-            [self ex_showAlertWithTitle:@"This song is playing!!!" message:nil cancelHandler:^(UIAlertAction * _Nonnull action) {
-                
-            } comfirmHandler:^(UIAlertAction * _Nonnull action) {
+            [self ex_showMCAlertWithTitle:@"This song is playing!!!" message:nil cancelTitle:MCLocalizedString(@"Cancel") confirmTitle:MCLocalizedString(@"Confirm") cancelHandler:nil confirmHandler:^{
                 [[KTVDataManager shared] makeNextAsPlaying];
             }];
         }else{

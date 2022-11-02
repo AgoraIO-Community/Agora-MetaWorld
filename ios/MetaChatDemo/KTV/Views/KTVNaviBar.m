@@ -57,7 +57,7 @@
 - (UILabel *)titleLabel {
     if (!_titleLabel) {
         _titleLabel = [UILabel new];
-        _titleLabel.text = @"Search";
+        _titleLabel.text = MCLocalizedString(@"Search");
         _titleLabel.font = [UIFont boldSystemFontOfSize:16];
         _titleLabel.textColor = [UIColor whiteColor];
     }

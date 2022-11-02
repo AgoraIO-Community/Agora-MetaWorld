@@ -85,7 +85,12 @@
 #pragma mark - public
 
 - (void)setImage:(NSString *)imgUrl name:(NSString *)name author:(NSString *)author type:(NSInteger)type pitchType:(NSInteger)pitchType isAdded:(BOOL) isAdded {
-    [self.imgView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"avatar6"]];
+    UIImage *image = [UIImage imageNamed:imgUrl];
+    if (image) {
+        self.imgView.image = image;
+    }else{
+        [self.imgView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"avatar6"]];
+    }
     self.nameLabel.text = name;
     self.addButton.selected = isAdded;
     
@@ -135,7 +140,7 @@
         _accompanyTag = [KTVSongTag new];
         _accompanyTag.tagName = @"Accompany";
         _accompanyTag.colorValue = 0xDEA960;
-        _accompanyTag.alpha = 0.5;
+        _accompanyTag.alpha = 1;
     }
     return _accompanyTag;
 }
@@ -145,7 +150,7 @@
         _originalTag = [KTVSongTag new];
         _originalTag.tagName = @"Original";
         _originalTag.colorValue = 0x35C67A;
-        _originalTag.alpha = 0.5;
+        _originalTag.alpha = 1;
     }
     return _originalTag;
 }
@@ -155,7 +160,7 @@
         _scoreTag = [KTVSongTag new];
         _scoreTag.tagName = @"Score";
         _scoreTag.colorValue = 0x00A1FF;
-        _scoreTag.alpha = 0.5;
+        _scoreTag.alpha = 1;
     }
     return _scoreTag;
 }

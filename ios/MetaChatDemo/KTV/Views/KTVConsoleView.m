@@ -43,7 +43,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     CGFloat leftMargin = 44.f;
     
     // ear to return
-    UILabel *originalLabel = [self addLabelWithTitle:@"Original singing"];
+    UILabel *originalLabel = [self addLabelWithTitle:MCLocalizedString(@"Original singing")];
     [originalLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self);
         make.left.mas_equalTo(leftMargin);
@@ -56,7 +56,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     }];
     
     UILabel *originalInfoLabel = [UILabel new];
-    originalInfoLabel.text = @"Click the button to switch the original singing and accompaniment";
+    originalInfoLabel.text = MCLocalizedString(@"console_original_singing_tips");
     originalInfoLabel.textColor = [[UIColor alloc] initWithHexString:@"#B7B7B7"];
     originalInfoLabel.numberOfLines = 2;
     originalInfoLabel.font = [UIFont systemFontOfSize:10];
@@ -69,7 +69,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     }];
     
     // ear to return
-    UILabel *ear2ReturnLabel = [self addLabelWithTitle:@"Earphone Monitoring"];
+    UILabel *ear2ReturnLabel = [self addLabelWithTitle:MCLocalizedString(@"Earphone Monitoring")];
     [ear2ReturnLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(65);
         make.left.mas_equalTo(leftMargin);
@@ -82,7 +82,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     }];
     
     UILabel *earInfoLabel = [UILabel new];
-    earInfoLabel.text = @"Please insert the earphone to use the earreturn function";
+    earInfoLabel.text = MCLocalizedString(@"console_earophone_monitoring_tips");
     earInfoLabel.textColor = [[UIColor alloc] initWithHexString:@"#B7B7B7"];
     earInfoLabel.numberOfLines = 2;
     earInfoLabel.font = [UIFont systemFontOfSize:10];
@@ -95,7 +95,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     }];
     
     // Rising-falling tone
-    UILabel *risingLabel = [self addLabelWithTitle:@"Change Key of Song"];
+    UILabel *risingLabel = [self addLabelWithTitle:MCLocalizedString(@"Change Key of Song")];
     [risingLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(130);
         make.left.mas_equalTo(leftMargin);
@@ -110,7 +110,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     }];
     
     // volume
-    UILabel *volumeLabel = [self addLabelWithTitle:@"Volume"];
+    UILabel *volumeLabel = [self addLabelWithTitle:MCLocalizedString(@"Volume")];
     [volumeLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(128 + 65);
         make.left.mas_equalTo(leftMargin);
@@ -124,7 +124,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     }];
     
     // accompany
-    UILabel *accompanyLabel = [self addLabelWithTitle:@"Enable Accompaniment Music"];
+    UILabel *accompanyLabel = [self addLabelWithTitle:MCLocalizedString(@"Enable Accompaniment Music")];
     [accompanyLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(self).offset(187 + 65);
         make.left.mas_equalTo(leftMargin);
@@ -262,8 +262,8 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     if (!_toneContrlView) {
         _toneContrlView = [KTVToneContolView new];
         _toneContrlView.maxValue = 13;
-        _toneContrlView.minFloatValue = 0.5;
-        _toneContrlView.maxFloatValue = 2.0;
+        _toneContrlView.minFloatValue = -12;
+        _toneContrlView.maxFloatValue = 12;
         __weak typeof(self) wSelf = self;
         _toneContrlView.valueChangedBlock = ^(NSInteger value, double floatValue) {
             if (wSelf.toneValueChangedBlock) {
@@ -278,7 +278,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     if (!_volumeSlider) {
         _volumeSlider = [self createCustomSlider];
         _volumeSlider.minimumValue = 0;
-        _volumeSlider.maximumValue = 400;
+        _volumeSlider.maximumValue = 100;
         [_volumeSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     }
     return _volumeSlider;
@@ -288,7 +288,7 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
     if (!_accmpanySlider) {
         _accmpanySlider = [self createCustomSlider];
         _accmpanySlider.minimumValue = 0;
-        _accmpanySlider.maximumValue = 400;
+        _accmpanySlider.maximumValue = 100;
         [_accmpanySlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
     }
     return _accmpanySlider;
@@ -313,10 +313,10 @@ static NSString * const kCellID = @"KTVCosoleStyleCell";
 
 - (NSArray<KTVAudioEffectModel *> *)audioEffectArray {
     if (!_audioEffectArray) {
-        KTVAudioEffectModel *recording = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousStudio title:@"Recording Studio" imageName:@"audio_effect_recording_studio"];
-        KTVAudioEffectModel *concert = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousVocalConcer title:@"Concert" imageName:@"audio_effect_concert"];
+        KTVAudioEffectModel *recording = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousStudio title:MCLocalizedString(@"Recording Studio") imageName:@"audio_effect_recording_studio"];
+        KTVAudioEffectModel *concert = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousVocalConcer title:MCLocalizedString(@"Concert") imageName:@"audio_effect_concert"];
         KTVAudioEffectModel *ktv = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousticsKTV title:@"KTV" imageName:@"audio_effect_KTV"];
-        KTVAudioEffectModel *hollow = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousSpatial title:@"Hollow Sound" imageName:@"audio_effect_hollow"];
+        KTVAudioEffectModel *hollow = [KTVAudioEffectModel effectWithPreset:AgoraAudioEffectPresetRoomAcousSpatial title:MCLocalizedString(@"Hollow Sound") imageName:@"audio_effect_hollow"];
         
         _audioEffectArray = @[recording,concert, ktv, hollow];
     }

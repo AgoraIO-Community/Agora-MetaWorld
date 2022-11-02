@@ -96,7 +96,7 @@ static CGFloat const diff = 2;
         }
     }];
     if (update) {
-        _currentFloatValue = _minFloatValue + (double)currentValue / _maxValue * (_maxFloatValue - _minFloatValue);
+        _currentFloatValue = _minFloatValue + (double)(currentValue - 1) / (_maxValue - 1) * (_maxFloatValue - _minFloatValue);
     }
     if (self.valueChangedBlock) {
         self.valueChangedBlock(currentValue,_currentFloatValue);
@@ -115,7 +115,7 @@ static CGFloat const diff = 2;
 #pragma mark - actions
 
 - (void)didClickReduceButton {
-    if (self.currentValue == 0) {
+    if (self.currentValue <= 1) {
         return;
     }
     self.currentValue --;

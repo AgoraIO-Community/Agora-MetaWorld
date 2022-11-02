@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  MetaChatDemo
+
+  Created by FanPengpeng on 2022/9/14.
+  
+*/
+
+NSCameraUsageDescription = "Is this app allowed to use the camera?";
+NSMicrophoneUsageDescription = "Do you allow this app to use your microphone?";

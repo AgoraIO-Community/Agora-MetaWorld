@@ -31,8 +31,10 @@ class KTVChooseSongContainerVC: UIViewController {
         return containerView
     }()
     
-    private var titles = [kHotTypeRecommend,kHotTypeDouyinHot,kHotTypeClassic,kHotTypeKTV]
+//    private let titles = [NSLocalizedString(kHotTypeRecommend, comment: ""),NSLocalizedString(kHotTypeDouyinHot, comment: ""),NSLocalizedString(kHotTypeClassic, comment: ""),NSLocalizedString(kHotTypeKTV, comment: "")]
 
+    private let titles = [NSLocalizedString(kHotTypeRecommend, comment: ""),NSLocalizedString(kHotTypeDouyinHot, comment: ""),NSLocalizedString(kHotTypeClassic, comment: "")]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpUI()

@@ -15,6 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        initialThirdPartySDK()
         return true
     }
 
@@ -25,5 +26,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         DLog("AFNetworkReachabilityManager.shared().isReachable ==== \(AFNetworkReachabilityManager.shared().networkReachabilityStatus.rawValue)")
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        MCRoomManager.shared.leaveRoom()
+    }
 }
 
+extension AppDelegate {
+    func initialThirdPartySDK(){
+        MCRoomManager.shared.initialSDK()
+    }
+}

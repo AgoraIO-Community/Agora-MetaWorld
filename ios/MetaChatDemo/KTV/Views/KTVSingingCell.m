@@ -96,7 +96,12 @@
 
 - (void)setImage:(NSString *)imgUrl name:(NSString *)name author:(NSString *)author index:(NSInteger)index {
     self.indexLabel.text = [NSString stringWithFormat:@"%zd",index + 1];
-    [self.imgView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"avatar6"]];
+    UIImage *image = [UIImage imageNamed:imgUrl];
+    if (image) {
+        self.imgView.image = image;
+    }else{
+        [self.imgView sd_setImageWithURL:[NSURL URLWithString:imgUrl] placeholderImage:[UIImage imageNamed:@"avatar6"]];
+    }
     self.nameLabel.text = name;
     self.authorLabel.text = author;
 }
@@ -166,7 +171,7 @@
         _singingButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _singingButton.titleLabel.font = [UIFont systemFontOfSize:14];
         [_singingButton setImage:[UIImage imageNamed:@"singing"] forState:UIControlStateNormal];
-        [_singingButton setTitle:@"singing" forState:UIControlStateNormal];
+        [_singingButton setTitle:MCLocalizedString(@"singing") forState:UIControlStateNormal];
         _singingButton.titleEdgeInsets = UIEdgeInsetsMake(0, 5, 0, 5);
     }
     return _singingButton;

@@ -17,4 +17,8 @@
 # define DLog(...);
 #endif
 
+# define MCLocalizedString(key) NSLocalizedString(key, "")
+
+//#define Overseas 1
+
 #endif /* PrefixHeader_pch */

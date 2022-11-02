@@ -1,0 +1,78 @@
+/* 
+  Localizable.strings
+  MetaChatDemo
+
+  Created by FanPengpeng on 2022/8/24.
+  
+*/
+
+"welcomeText" = "Welcome to Agora Meta demo. In this demo, you can experience various metaverse features of Agora provides. Please follow the guide to explore and learn more.";
+"Create a room" = "Create a room";
+"Room ID" = "Room ID";
+"Choose a song" = "Choose a song";
+"Selected" = "Selected";
+"Recommend Songs" = "Recommend Songs";
+"TikTok hot songs" = "TikTok hot songs";
+"Chinese Archaic Style Popular Songs" = "Chinese Archaic Style Popular Songs";
+"KTV Popular Songs" = "KTV Popular Songs";
+"Console" = "Console";
+"Earphone Monitoring" = "Earphone Monitoring";
+"Change Key of Song" = "Change Key of Song";
+"Volume" = "Volume";
+"Enable Accompaniment Music" = "Enable Accompaniment Music";
+"Recording Studio" = "Recording Studio";
+"Concert" = "Concert";
+"Hollow Sound" = "Hollow Sound";
+"Quit room" = "Leave room";
+"Enable Spatial Audio Background" = "Enable Spatial Audio Background";
+"Vocal Distortion" = "Vocal Distortion";
+"Vocal Air Attenuation Factor" = "Vocal Air Attenuation Factor";
+"User View Setting" = "User View Setting";
+"1st person perspective view" = "1st person perspective view";
+"3rd person perspective view" = "3rd person perspective view";
+"Omni-perspective view" = "Omni-perspective view";
+"Disc setting" = "Disc setting";
+"General" = "General";
+"Operation" = "Operation";
+"Sound" = "Sound";
+"Room" = "Room";
+"Name" = "Name";
+"Profile" = "Profile";
+"Badge" = "Badge";
+"Avatar" = "Avatar";
+"Confirm" = "Confirm";
+"Cancel" = "Cancel";
+"Open" = "On";
+"Close" = "Off";
+"Room name" = "Room name";
+"Do you want to encrypt the room?" = "Do you want to encrypt the room?";
+"Password" = "Password";
+"Visitor mode" = "Visitor mode";
+"Audio chat mode" = "Audio chat mode";
+"quit_room_alert_title" = "Quit room";
+"quit_room_alert_msg" = "Are you sure to delete the room?";
+"quit_room_notify_alert_title" = "The owner has delete the room, please confirm to leave the room";
+"Encrypted" = "Private";
+"Public" = "Public";
+"Search" = "Search";
+"Original singing" = "Original singing";
+"console_original_singing_tips" = "Click the button to switch the original singing and accompaniment";
+"console_earophone_monitoring_tips" = "Please insert the earphone to use the earreturn function";
+"singing" = "singing";
+"progress_image_name" = "room_progress_en";
+"Visitor tips" = "Visitor tips";
+"Beginner Guide" = "Beginner Guide";
+"The room has been disbanded" = "The room has been closed";
+"The number of people has exceeded the maximum limit" = "The number of people has exceeded the maximum limit" ;
+"download_scene_title_1" = "If this is the first time you enter a room, you need to download the ";
+"download_scene_title_2" = " data package";
+"Download tips" = "Download tips";
+"Next time" = "Next time";
+"Download now" = "Download";
+"Select your profile picture" = "Select your profile picture";
+"Select your badge" = "Select your badge";
+"Please enter the password" = "Please enter the password";
+"npcTableFileName" = "tableNPC_en.mp3";
+"npc1MoveFileName" = "moveNPC1_en.mp3";
+"Please input 1-12 characters" = "Please input 1-12 characters";
+"nickname length tips" = "must contain 2-12 characters";

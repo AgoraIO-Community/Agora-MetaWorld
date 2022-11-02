@@ -9,8 +9,10 @@ import Foundation
 
 class MetaChatPlayerManager: NSObject {
     
+    private var downloadingDic: [String:Bool] = [String:Bool]()
+    private (set) var remoteUrl:String!
     private (set) var displayId: MetaChatDisplayID!
-    private (set) var player: AgoraRtcMediaPlayerProtocol?
+    @objc private (set) var player: AgoraRtcMediaPlayerProtocol?
     private (set) var isOpenCompleted = false
     private var isFirstOpen = true
     private weak var rtcEngine: AgoraRtcEngineKit?
@@ -37,16 +39,64 @@ class MetaChatPlayerManager: NSObject {
         self.rtcEngine = rtcEngine
     }
     
-    func changeTVUrl(_ newUrl: String) {
+    func changeUrl(_ newUrl: String) {
+        remoteUrl = newUrl
         player?.stop()
         player?.open(newUrl, startPos: 0)
-//        mediaPlayer?.switchSrc(newUrl, syncPts: false)
+//        openRemoteUrl(newUrl)
+    }
+    
+    func openRemoteUrl(_ newUrl:String) {
+        let localPath = MetaChatPlayerManager.localPathWithRemoteUrl(newUrl)
+        if FileManager.default.fileExists(atPath: localPath) {
+            player?.open(localPath, startPos: 0)
+        }else{
+            downloadAndOpenUrl(newUrl)
+        }
+    }
+    
+    private func downloadAndOpenUrl(_ newUrl: String) {
+        let path = MetaChatPlayerManager.localPathWithRemoteUrl(newUrl)
+        if downloadingDic[newUrl] == true {
+            return
+        }
+        downloadingDic[newUrl] = true
+        KTVNetworkHelper.downloadMV(newUrl, dir: MetaChatPlayerManager.ktvSongsDir()) {[weak self] err in
+            self?.downloadingDic[newUrl] = false
+            if err == nil {
+                self?.player?.open(path, startPos: 0)
+            }
+        }
     }
     
     func destroy() {
         player?.stop()
         rtcEngine?.destroyMediaPlayer(player)
+        if player != nil {
+            DLog("播放器\(player!)销毁了")
+        }
         player = nil
+    }
+}
+
+extension MetaChatPlayerManager {
+    static func ktvSongsDir() -> String {
+        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
+        let cachePath = paths.first
+        guard let dir = cachePath?.appending("/ktvSongs/") else {
+            return ""
+        }
+        if FileManager.default.fileExists(atPath: dir) {
+            return dir
+        }
+        try? FileManager.default.createDirectory(at: URL(fileURLWithPath: dir), withIntermediateDirectories: true)
+        return dir
+    }
+    
+    static func localPathWithRemoteUrl(_ url:String) -> String {
+        let ocUrl:NSString = url as NSString
+        let filePath = ktvSongsDir().appending(ocUrl.md5())
+        return filePath
     }
 }
 

@@ -47,8 +47,8 @@ static KTVConsoleManager *instance = nil;
     _originalSong = YES;
     
     _inEarmonitoring = NO;
-//        pitch Voice frequency, in the range of 0.5 to 2.0. The default value is 1.0.
-    _localVoicePitch = 1.0;
+//    The value ranges from -12 to 12
+    _localVoicePitch = 0;
     /*
     * 0: Mute
     * 100: Original volume
@@ -74,9 +74,10 @@ static KTVConsoleManager *instance = nil;
     [self.rtcEngine enableInEarMonitoring:inEarmonitoring];
 }
 
-- (void)setLocalVoicePitch:(double)localVoicePitch {
+- (void)setLocalVoicePitch:(NSInteger)localVoicePitch {
     _localVoicePitch = localVoicePitch;
-    [self.rtcEngine setLocalVoicePitch:localVoicePitch];
+//    [self.rtcEngine setLocalVoicePitch:localVoicePitch];
+    [self.tvPlayer setAudioPitch:localVoicePitch];
 }
 
 - (void)setRecordingSignalVolume:(NSInteger)recordingSignalVolume {
@@ -88,7 +89,6 @@ static KTVConsoleManager *instance = nil;
     _accompanyVolume = accompanyVolume;
     int ret = [self.tvPlayer adjustPlayoutVolume:(int)accompanyVolume];
     DLog("ret == %d",ret);
-    [self.tvPlayer adjustPublishSignalVolume:(int)accompanyVolume];
 }
 
 - (void)setAudioEffectPreset:(KTVAudioEffectModel *)audioEffectPreset {

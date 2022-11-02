@@ -84,8 +84,9 @@ class KTVContainerViewController: UIViewController {
         let dataSource = JXSegmentedNumberDataSource()
         dataSource.isTitleColorGradientEnabled = true
         let count = KTVDataManager.shared().localMusicList.count;
-        let chosenTitle = count > 0 ? "Selected \(count)" : "Selected"
-        dataSource.titles = ["Choose a song",chosenTitle]
+        let selectedStr = NSLocalizedString("Selected", comment: "")
+        let chosenTitle = count > 0 ? "\(selectedStr) \(count)" : "\(selectedStr)"
+        dataSource.titles = [NSLocalizedString("Choose a song", comment: ""),chosenTitle]
         dataSource.numbers = [0,0];
         dataSource.titleNormalFont = UIFont.systemFont(ofSize: 12)
         dataSource.titleSelectedFont = UIFont.boldSystemFont(ofSize: 16)
@@ -119,6 +120,7 @@ class KTVContainerViewController: UIViewController {
         }
         
         // 搜索按钮
+        searchButton.isHidden = true
         view.addSubview(searchButton)
         searchButton.snp.makeConstraints { make in
             make.right.equalTo(listContainerView).offset(-40)
@@ -162,8 +164,9 @@ class KTVContainerViewController: UIViewController {
     @objc func hanldeNumberRefresh(){
         if let _segDataSource = segmentedDataSource {
             let count = KTVDataManager.shared().localMusicList.count;
-            let chosenTitle = count > 0 ? "Selected \(count)" : "Selected"
-            _segDataSource.titles = ["Choose a song",chosenTitle]
+            let selectedStr = NSLocalizedString("Selected", comment: "")
+            let chosenTitle = count > 0 ? "\(selectedStr) \(count)" : "\(selectedStr)"
+            _segDataSource.titles = [NSLocalizedString("Choose a song", comment: ""),chosenTitle]
             segmentedView.reloadDataWithoutListContainer()
         }
     }

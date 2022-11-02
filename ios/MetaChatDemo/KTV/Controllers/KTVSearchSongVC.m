@@ -37,15 +37,13 @@ static NSString * const kCellID = @"KTVChooseSongCell";
 
 - (void)setUpUI{
     
-//    [IQKeyboardManager sharedManager].enable = YES;
-//    [IQKeyboardManager sharedManager].shouldResignOnTouchOutside = YES;
     [self ktv_setBlurBackground];
 //    __weak typeof(self) wSelf = self;
 //    [self tapBlankAction:^{
 //        [wSelf dismissViewControllerAnimated:YES completion:nil];
 //    }];
     
-    [self ktv_configCustomNaviBarWithTitle:@"Search"];
+    [self ktv_configCustomNaviBarWithTitle:MCLocalizedString(@"Search")];
     
     KTVSearchBar *searchBar = [KTVSearchBar new];
     __weak typeof(self) wSelf = self;

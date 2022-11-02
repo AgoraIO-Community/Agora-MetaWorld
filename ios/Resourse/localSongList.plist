@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>mvUrl</key>
+		<string>https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/metaChat/Backstreet_Boys_I_Want_It_That_Way(Video_Karaoke_with_a_colored_background)_55190.mp4</string>
+		<key>songCode</key>
+		<string>8530</string>
+		<key>name</key>
+		<string>I Want It That Way</string>
+		<key>poster</key>
+		<string>avatar10</string>
+		<key>singer</key>
+		<string>Backstreet Boys</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>mvUrl</key>
+		<string>https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/metaChat/Eurythmics_Sweet_Dreams_(Are_Made_of_This)(Video_Karaoke_with_a_colored_background)_10601948.mp4</string>
+		<key>songCode</key>
+		<string>69124</string>
+		<key>name</key>
+		<string>Sweet Dreams (Are Made of This)</string>
+		<key>poster</key>
+		<string>avatar12</string>
+		<key>singer</key>
+		<string>Eurythmics</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>2</integer>
+	</dict>
+	<dict>
+		<key>mvUrl</key>
+		<string>https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/metaChat/Gloria_Gaynor_I_Will_Survive(Video_Karaoke_with_a_colored_background)_56048.mp4</string>
+		<key>songCode</key>
+		<string>5921</string>
+		<key>name</key>
+		<string>I Will Survive</string>
+		<key>poster</key>
+		<string>avatar13</string>
+		<key>singer</key>
+		<string>Gloria Gaynor</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>4</integer>
+	</dict>
+	<dict>
+		<key>mvUrl</key>
+		<string>https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/metaChat/Queen_Bohemian_Rhapsody(Video_Karaoke_with_a_colored_background)_55911.mp4</string>
+		<key>songCode</key>
+		<string>12617</string>
+		<key>name</key>
+		<string>Bohemian Rhapsody</string>
+		<key>poster</key>
+		<string>avatar14</string>
+		<key>singer</key>
+		<string>Queen</string>
+		<key>pitchType</key>
+		<integer>2</integer>
+		<key>type</key>
+		<integer>5</integer>
+	</dict>
+	<dict>
+		<key>mvUrl</key>
+		<string>https://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/metaChat/Whitney_Houston_I_Wanna_Dance_with_Somebody(Video_Karaoke_with_a_colored_background)_134240.mp4</string>
+		<key>songCode</key>
+		<string>5468</string>
+		<key>name</key>
+		<string>I Wanna Dance with Somebody</string>
+		<key>poster</key>
+		<string>avatar14</string>
+		<key>singer</key>
+		<string>Whitney Houston</string>
+		<key>pitchType</key>
+		<integer>1</integer>
+		<key>type</key>
+		<integer>3</integer>
+	</dict>
+</array>
+</plist>

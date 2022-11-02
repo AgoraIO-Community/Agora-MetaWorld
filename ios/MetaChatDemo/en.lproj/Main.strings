@@ -1,0 +1,179 @@
+
+/* Class = "UILabel"; text = "Agora.io"; ObjectID = "1Qv-gR-jhQ"; */
+"1Qv-gR-jhQ.text" = "Agora.io";
+
+/* Class = "UIButton"; normalTitle = "Confirm room and enter"; ObjectID = "28C-FU-vZ1"; */
+"28C-FU-vZ1.normalTitle" = "Confirm room and enter";
+
+/* Class = "UILabel"; text = "19:00"; ObjectID = "32e-1l-drr"; */
+"32e-1l-drr.text" = "19:00";
+
+/* Class = "UIButton"; normalTitle = "Create"; ObjectID = "4LV-ke-UEq"; */
+"4LV-ke-UEq.normalTitle" = "Create";
+
+/* Class = "UILabel"; text = "Nickname"; ObjectID = "4pZ-B0-THQ"; */
+"4pZ-B0-THQ.text" = "Nickname";
+
+/* Class = "UILabel"; text = "我"; ObjectID = "ACT-oz-w0M"; */
+"ACT-oz-w0M.text" = "Me";
+
+/* Class = "UIButton"; normalTitle = "Novice guide"; ObjectID = "BKf-uB-IIi"; */
+"BKf-uB-IIi.normalTitle" = "Novice guide";
+
+/* Class = "UIButton"; configuration.title = "确定"; ObjectID = "Bvv-x5-dAj"; */
+"Bvv-x5-dAj.configuration.title" = "Confirm";
+
+/* Class = "UIButton"; normalTitle = "确定"; ObjectID = "Bvv-x5-dAj"; */
+"Bvv-x5-dAj.normalTitle" = "Confirm";
+
+/* Class = "UIButton"; configuration.title = "取消"; ObjectID = "D0K-5j-iGj"; */
+"D0K-5j-iGj.configuration.title" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "取消"; ObjectID = "D0K-5j-iGj"; */
+"D0K-5j-iGj.normalTitle" = "Cancel";
+
+/* Class = "UILabel"; text = "Please set the 4-digit room password"; ObjectID = "D9P-qW-ajs"; */
+"D9P-qW-ajs.text" = "Please set the 4-digit room password";
+
+/* Class = "UILabel"; text = "语聊模式"; ObjectID = "DQ3-Pf-aWk"; */
+"DQ3-Pf-aWk.text" = "Audio chat mode";
+
+/* Class = "UITextField"; placeholder = "Please enter a nickname"; ObjectID = "Ds4-zm-1lS"; */
+"Ds4-zm-1lS.placeholder" = "Please enter a nickname";
+
+/* Class = "UIButton"; normalTitle = "Settings"; ObjectID = "GZD-3w-KNf"; */
+"GZD-3w-KNf.normalTitle" = "Settings";
+
+/* Class = "UILabel"; text = "20"; ObjectID = "Ixo-Aw-VFs"; */
+"Ixo-Aw-VFs.text" = "20";
+
+/* Class = "UILabel"; text = "下载中"; ObjectID = "Jwg-wJ-Bgm"; */
+"Jwg-wJ-Bgm.text" = "Loading";
+
+/* Class = "UILabel"; text = "MetaChat"; ObjectID = "L6d-bw-X2j"; */
+"L6d-bw-X2j.text" = "MetaChat";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "Miv-0j-MQ4"; */
+"Miv-0j-MQ4.text" = "Label";
+
+/* Class = "UIButton"; normalTitle = "歌单"; ObjectID = "P4h-vr-gEz"; */
+"P4h-vr-gEz.normalTitle" = "Song list";
+
+/* Class = "UILabel"; text = "Room Name"; ObjectID = "PTb-7y-8es"; */
+"PTb-7y-8es.text" = "Room Name";
+
+/* Class = "UILabel"; text = "男"; ObjectID = "PV6-yw-5rH"; */
+"PV6-yw-5rH.text" = "Male";
+
+/* Class = "UILabel"; text = "Select your profile picture"; ObjectID = "QiM-xJ-0Zs"; */
+"QiM-xJ-0Zs.text" = "Select your profile picture";
+
+/* Class = "UIButton"; normalTitle = "Join"; ObjectID = "Skt-C4-7yP"; */
+"Skt-C4-7yP.normalTitle" = "Join";
+
+/* Class = "UILabel"; text = "Select avatar"; ObjectID = "T7y-GC-MIU"; */
+"T7y-GC-MIU.text" = "Select avatar";
+
+/* Class = "UIButton"; normalTitle = "Disable Mic"; ObjectID = "WfM-SZ-zLf"; */
+"WfM-SZ-zLf.normalTitle" = "Online";
+
+/* Class = "UIButton"; selectedTitle = "Enable Mic"; ObjectID = "WfM-SZ-zLf"; */
+"WfM-SZ-zLf.selectedTitle" = "Offline";
+
+/* Class = "UILabel"; text = "Update"; ObjectID = "Wr3-Zl-NEZ"; */
+"Wr3-Zl-NEZ.text" = "Change";
+
+/* Class = "UILabel"; text = "Badge"; ObjectID = "Zg6-Cw-4dA"; */
+"Zg6-Cw-4dA.text" = "Badge";
+
+/* Class = "UILabel"; text = "Maturlala，please choose your avatar"; ObjectID = "Zx0-S9-hOs"; */
+"Zx0-S9-hOs.text" = "Please choose your avatar";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "ZyF-b4-TyM"; */
+"ZyF-b4-TyM.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "进入"; ObjectID = "bGw-rV-kIy"; */
+"bGw-rV-kIy.text" = "Enter";
+
+/* Class = "UILabel"; text = "请选择性别"; ObjectID = "bZe-br-1O5"; */
+"bZe-br-1O5.text" = "Select gender";
+
+/* Class = "UINavigationItem"; title = "MetaChat"; ObjectID = "c0X-TG-fRB"; */
+"c0X-TG-fRB.title" = "MetaChat";
+
+/* Class = "UILabel"; text = "Do you want to encrypt the room？"; ObjectID = "cZz-PA-mrg"; */
+"cZz-PA-mrg.text" = "Do you want to encrypt the room？";
+
+/* Class = "UILabel"; text = "name"; ObjectID = "dbc-dF-Qig"; */
+"dbc-dF-Qig.text" = "name";
+
+/* Class = "UIButton"; normalTitle = "Female"; ObjectID = "dpd-fc-hGu"; */
+"dpd-fc-hGu.normalTitle" = "Female";
+
+/* Class = "UILabel"; text = "选择头像"; ObjectID = "fAk-ZM-biC"; */
+"fAk-ZM-biC.text" = "Select profile";
+
+/* Class = "UIButton"; configuration.title = "取消"; ObjectID = "fYW-m0-1SP"; */
+"fYW-m0-1SP.configuration.title" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "fYW-m0-1SP"; */
+"fYW-m0-1SP.normalTitle" = "Cancel";
+
+/* Class = "UIButton"; configuration.title = "Cancel"; ObjectID = "gvX-mr-lUN"; */
+"gvX-mr-lUN.configuration.title" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "gvX-mr-lUN"; */
+"gvX-mr-lUN.normalTitle" = "Cancel";
+
+/* Class = "UIButton"; configuration.title = "取消"; ObjectID = "hXU-JS-fz0"; */
+"hXU-JS-fz0.configuration.title" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "Button"; ObjectID = "hXU-JS-fz0"; */
+"hXU-JS-fz0.normalTitle" = "Button";
+
+/* Class = "UILabel"; text = "Gender"; ObjectID = "hfG-p5-zUV"; */
+"hfG-p5-zUV.text" = "Gender";
+
+/* Class = "UIButton"; normalTitle = "Random"; ObjectID = "hfi-JC-j7S"; */
+"hfi-JC-j7S.normalTitle" = "Randomize";
+
+/* Class = "UILabel"; text = "Agora.io"; ObjectID = "iKQ-gs-x3U"; */
+"iKQ-gs-x3U.text" = "Agora.io";
+
+/* Class = "UILabel"; text = "女"; ObjectID = "j6G-qs-9Gy"; */
+"j6G-qs-9Gy.text" = "Female";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "l6B-qe-e1t"; */
+"l6B-qe-e1t.text" = "Label";
+
+/* Class = "UILabel"; text = "name"; ObjectID = "mbo-O9-wd2"; */
+"mbo-O9-wd2.text" = "name";
+
+/* Class = "UITextField"; placeholder = "请输入2-10个字符"; ObjectID = "oTC-pg-WUB"; */
+"oTC-pg-WUB.placeholder" = "Please input 2-10 characters";
+
+/* Class = "UILabel"; text = "must contain 2-12 characters"; ObjectID = "r0f-TH-FYi"; */
+"r0f-TH-FYi.text" = "must contain 2-12 characters";
+
+/* Class = "UIButton"; normalTitle = "Male"; ObjectID = "rpT-04-0yx"; */
+"rpT-04-0yx.normalTitle" = "Male";
+
+/* Class = "UIButton"; normalTitle = "Public"; ObjectID = "sKQ-HJ-J9Y"; */
+"sKQ-HJ-J9Y.normalTitle" = "Public";
+
+/* Class = "UIButton"; normalTitle = "Confirm"; ObjectID = "uRr-Z3-3mY"; */
+"uRr-Z3-3mY.normalTitle" = "Confirm";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "y07-XV-snu"; */
+"y07-XV-snu.text" = "Label";
+
+/* Class = "UINavigationItem"; title = "MetaChat"; ObjectID = "yfO-7a-IqQ"; */
+"yfO-7a-IqQ.title" = "MetaChat";
+
+/* Class = "UIButton"; normalTitle = "Create a room"; ObjectID = "zLg-hN-t2B"; */
+"zLg-hN-t2B.normalTitle" = "Create a room";
+
+/* Class = "UIButton"; normalTitle = "Encrypted"; ObjectID = "zYp-6s-cMU"; */
+"zYp-6s-cMU.normalTitle" = "Private";
+
+"ige-Lj-Gte.normalTitle" = "Cancel";

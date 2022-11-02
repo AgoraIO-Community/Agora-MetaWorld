@@ -136,10 +136,10 @@ static KTVDataManager *instance = nil;
 - (NSDictionary *)hotTypeDic {
     if (!_hotTypeDic) {
         _hotTypeDic = @{
-            kHotTypeRecommend:@3,
-            kHotTypeDouyinHot:@4,
-            kHotTypeClassic:@5,
-            kHotTypeKTV:@6
+            MCLocalizedString(kHotTypeRecommend):@0,
+            MCLocalizedString(kHotTypeDouyinHot):@4,
+            MCLocalizedString(kHotTypeClassic):@5,
+            MCLocalizedString(kHotTypeKTV):@6
         };
     }
     return _hotTypeDic;
