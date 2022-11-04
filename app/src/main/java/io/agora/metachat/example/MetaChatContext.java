@@ -1,20 +1,14 @@
 package io.agora.metachat.example;
 
 import android.content.Context;
-import android.content.res.AssetManager;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.TextureView;
 
-import androidx.annotation.NonNull;
 
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 
+import io.agora.base.VideoFrame;
 import io.agora.metachat.AvatarModelInfo;
 import io.agora.metachat.EnterSceneConfig;
 import io.agora.metachat.ILocalUserAvatar;
@@ -31,12 +25,11 @@ import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.video.AgoraVideoFrame;
 import io.agora.spatialaudio.ILocalSpatialAudioEngine;
 import io.agora.spatialaudio.LocalSpatialAudioConfig;
 import io.agora.spatialaudio.RemoteVoicePositionInfo;
 
-public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEventHandler {
+public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEventHandler, AgoraMediaPlayer.OnMediaVideoFramePushListener {
 
     private final static String TAG = MetaChatContext.class.getName();
     private volatile static MetaChatContext instance = null;
@@ -55,8 +48,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private final ConcurrentHashMap<IMetachatSceneEventHandler, Integer> metaChatSceneEventHandlerMap;
     private boolean mJoinedRtc = false;
     private ILocalUserAvatar localUserAvatar;
-
-    private static final int MESSAGE_PUSH_VIDEO_FRAME = 1;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
@@ -117,6 +108,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     }};
                     ret += metaChatService.initialize(config);
                 }
+
+                AgoraMediaPlayer.getInstance().initMediaPlayer(rtcEngine);
+                AgoraMediaPlayer.getInstance().setOnMediaVideoFramePushListener(this);
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -130,7 +124,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         metaChatService = null;
         RtcEngine.destroy();
         rtcEngine = null;
-        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void registerMetaChatEventHandler(IMetachatEventHandler eventHandler) {
@@ -326,13 +319,13 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     // Just for test
     private void pushVideoFrameToDisplay() {
         metaChatScene.enableVideoDisplay("1", true);
-        mHandler.sendEmptyMessage(MESSAGE_PUSH_VIDEO_FRAME);
+        AgoraMediaPlayer.getInstance().play(MetaChatConstants.VIDEO_URL, 0);
     }
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
         Log.d(TAG, String.format("onLeaveSceneResult %d", errorCode));
-        mHandler.removeMessages(MESSAGE_PUSH_VIDEO_FRAME);
+        AgoraMediaPlayer.getInstance().stop();
         if (errorCode == 0) {
             metaChatScene.release();
             metaChatScene = null;
@@ -395,31 +388,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return sceneInfo;
     }
 
-    private final Handler mHandler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(@NonNull Message msg) {
-            switch (msg.what) {
-                case MESSAGE_PUSH_VIDEO_FRAME:
-                    if (null == metaChatScene) {
-                        break;
-                    }
-                    metaChatScene.pushVideoFrameToDisplay("1", new AgoraVideoFrame() {{
-                        format = AgoraVideoFrame.FORMAT_RGBA;
-                        stride = 496;
-                        height = 498;
-                        buf = new byte[stride * 4 * height];
-                        try {
-                            AssetManager assetManager = MainApplication.instance.getAssets();
-                            InputStream stream = assetManager.open("test.rgba", AssetManager.ACCESS_BUFFER);
-                            stream.read(buf);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }});
-                    mHandler.sendEmptyMessageDelayed(MESSAGE_PUSH_VIDEO_FRAME, 2 * 1000);
-                    break;
-            }
-            return false;
+    @Override
+    public void onMediaVideoFramePushed(VideoFrame frame) {
+        if (null != metaChatScene) {
+            metaChatScene.pushVideoFrameToDisplay("1", frame);
         }
-    });
+    }
 }
