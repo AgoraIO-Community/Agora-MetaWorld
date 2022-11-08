@@ -1,4 +1,4 @@
-package io.agora.metachat.example;
+package io.agora.metachat.example.utils;
 
 import android.util.Log;
 

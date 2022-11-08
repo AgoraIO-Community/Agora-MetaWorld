@@ -1,4 +1,4 @@
-package io.agora.metachat.example;
+package io.agora.metachat.example.metachat;
 
 import android.content.Context;
 import android.util.Log;
@@ -21,6 +21,9 @@ import io.agora.metachat.MetachatSceneConfig;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
+import io.agora.metachat.example.utils.AgoraMediaPlayer;
+import io.agora.metachat.example.utils.KeyCenter;
+import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -48,10 +51,12 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private final ConcurrentHashMap<IMetachatSceneEventHandler, Integer> metaChatSceneEventHandlerMap;
     private boolean mJoinedRtc = false;
     private ILocalUserAvatar localUserAvatar;
+    private boolean isInScene;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
         metaChatSceneEventHandlerMap = new ConcurrentHashMap<>();
+        isInScene = false;
     }
 
     public static MetaChatContext getInstance() {
@@ -297,6 +302,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void onEnterSceneResult(int errorCode) {
         Log.d(TAG, String.format("onEnterSceneResult %d", errorCode));
         if (errorCode == 0) {
+            isInScene = true;
             rtcEngine.joinChannel(
                     KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
                     new ChannelMediaOptions() {{
@@ -325,6 +331,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     @Override
     public void onLeaveSceneResult(int errorCode) {
         Log.d(TAG, String.format("onLeaveSceneResult %d", errorCode));
+        isInScene = false;
         AgoraMediaPlayer.getInstance().stop();
         if (errorCode == 0) {
             metaChatScene.release();
@@ -393,5 +400,17 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         if (null != metaChatScene) {
             metaChatScene.pushVideoFrameToDisplay("1", frame);
         }
+    }
+
+    public void pauseMedia() {
+        AgoraMediaPlayer.getInstance().pause();
+    }
+
+    public void resumeMedia() {
+        AgoraMediaPlayer.getInstance().resume();
+    }
+
+    public boolean isInScene() {
+        return isInScene;
     }
 }

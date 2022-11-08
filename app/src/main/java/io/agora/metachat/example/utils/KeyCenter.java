@@ -1,13 +1,14 @@
-package io.agora.metachat.example;
+package io.agora.metachat.example.utils;
 
 import java.util.Random;
 
 import io.agora.media.RtcTokenBuilder;
+import io.agora.metachat.example.BuildConfig;
 import io.agora.rtm.RtmTokenBuilder;
 
 public class KeyCenter {
 
-    public static final String CHANNEL_ID = "MetaChatTest11";
+    public static final String CHANNEL_ID = "MetaChatTest116";
 
     public static final String APP_ID = BuildConfig.APP_ID;
     public static final int RTC_UID = new Random().nextInt(1000); // 不要设置成0！！！

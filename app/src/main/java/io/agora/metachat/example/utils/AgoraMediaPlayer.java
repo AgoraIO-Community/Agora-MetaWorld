@@ -1,4 +1,4 @@
-package io.agora.metachat.example;
+package io.agora.metachat.example.utils;
 
 import android.util.Log;
 
@@ -55,6 +55,18 @@ public class AgoraMediaPlayer implements IMediaPlayerObserver, IMediaPlayerVideo
             mMediaPlayer.stop();
             mMediaPlayer.destroy();
             mMediaPlayer = null;
+        }
+    }
+
+    public void pause() {
+        if (null != mMediaPlayer) {
+            mMediaPlayer.pause();
+        }
+    }
+
+    public void resume() {
+        if (null != mMediaPlayer) {
+            mMediaPlayer.resume();
         }
     }
 

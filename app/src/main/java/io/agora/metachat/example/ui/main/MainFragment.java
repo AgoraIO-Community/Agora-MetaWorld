@@ -1,5 +1,6 @@
 package io.agora.metachat.example.ui.main;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -21,18 +22,22 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
-import io.agora.metachat.example.KeyCenter;
-import io.agora.metachat.example.MetaChatContext;
+import io.agora.metachat.example.utils.KeyCenter;
+import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.adapter.SexAdapter;
 import io.agora.metachat.example.databinding.MainFragmentBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.metachat.example.ui.game.GameActivity;
+import io.agora.metachat.example.utils.MMKVUtils;
+import io.agora.metachat.example.utils.MetaChatConstants;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
 
@@ -43,6 +48,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         return new MainFragment();
     }
 
+    @SuppressLint("CheckResult")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -70,13 +76,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 adapter.check(i);
                 mViewModel.setSex(adapter.getItem(i).toString());
+                MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_GENDER, i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        binding.enter.setOnClickListener(this);
+        //防止多次频繁点击异常处理
+        RxView.clicks(binding.enter).throttleFirst(5, TimeUnit.SECONDS).subscribe(o -> {
+            mViewModel.getScenes();
+        });
         return binding.getRoot();
     }
 
@@ -179,9 +189,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                     mViewModel.setAvatar(charSequence.toString());
                     return null;
                 }, null, null);
-                break;
-            case R.id.enter:
-                mViewModel.getScenes();
                 break;
             default:
                 break;

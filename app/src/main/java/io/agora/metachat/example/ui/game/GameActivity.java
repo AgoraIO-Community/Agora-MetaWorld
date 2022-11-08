@@ -26,11 +26,12 @@ import io.agora.metachat.IMetachatSceneEventHandler;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.example.MainActivity;
-import io.agora.metachat.example.MetaChatContext;
+import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.rtc2.Constants;
+import io.agora.rtc2.video.AgoraVideoFrame;
 
 public class GameActivity extends Activity implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler {
 
@@ -299,4 +300,25 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     public void onDownloadSceneProgress(long SceneId, int progress, int state) {
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (MetaChatContext.getInstance().isInScene()) {
+            MetaChatContext.getInstance().resumeMedia();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (MetaChatContext.getInstance().isInScene()) {
+            MetaChatContext.getInstance().pauseMedia();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+    }
+
 }

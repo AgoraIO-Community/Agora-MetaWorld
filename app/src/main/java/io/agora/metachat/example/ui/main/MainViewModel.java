@@ -3,7 +3,6 @@ package io.agora.metachat.example.ui.main;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Arrays;
@@ -15,10 +14,10 @@ import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.MetachatBundleInfo;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
-import io.agora.metachat.example.KeyCenter;
+import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.MainApplication;
-import io.agora.metachat.example.MetaChatContext;
-import io.agora.metachat.example.SingleLiveData;
+import io.agora.metachat.example.metachat.MetaChatContext;
+import io.agora.metachat.example.utils.SingleLiveData;
 
 public class MainViewModel extends ViewModel implements IMetachatEventHandler {
 
@@ -80,7 +79,7 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         MetaChatContext metaChatContext = MetaChatContext.getInstance();
         metaChatContext.registerMetaChatEventHandler(this);
         boolean flag = metaChatContext.initialize(
-                MainApplication.instance
+                MainApplication.mGlobalApplication
         );
         if (flag) {
             metaChatContext.getSceneInfos();
