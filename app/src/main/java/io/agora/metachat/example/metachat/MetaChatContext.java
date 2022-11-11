@@ -5,7 +5,10 @@ import android.util.Log;
 import android.view.TextureView;
 
 
+import com.alibaba.fastjson.JSONArray;
+
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
@@ -21,13 +24,16 @@ import io.agora.metachat.MetachatSceneConfig;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
+import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.utils.AgoraMediaPlayer;
 import io.agora.metachat.example.utils.KeyCenter;
+import io.agora.metachat.example.utils.MMKVUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
+import io.agora.rtm.RtmTokenBuilder;
 import io.agora.spatialaudio.ILocalSpatialAudioEngine;
 import io.agora.spatialaudio.LocalSpatialAudioConfig;
 import io.agora.spatialaudio.RemoteVoicePositionInfo;
@@ -52,11 +58,16 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private boolean mJoinedRtc = false;
     private ILocalUserAvatar localUserAvatar;
     private boolean isInScene;
+    private int currentScene;
+    private RoleInfo roleInfo;
+    private List<RoleInfo> roleInfos;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
         metaChatSceneEventHandlerMap = new ConcurrentHashMap<>();
         isInScene = false;
+        currentScene = MetaChatConstants.SCENE_GAME;
+        roleInfo = null;
     }
 
     public static MetaChatContext getInstance() {
@@ -200,7 +211,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             localUserAvatar.setModelInfo(modelInfo);
         }
         if (null != metaChatScene) {
-            metaChatScene.enableUserPositionNotification(true);
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                metaChatScene.enableUserPositionNotification(true);
+            }
             metaChatScene.addEventHandler(MetaChatContext.getInstance());
             EnterSceneConfig config = new EnterSceneConfig();
             config.mSceneView = this.sceneView;
@@ -413,4 +426,56 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public boolean isInScene() {
         return isInScene;
     }
+
+    public void initRoleInfo(String name, int gender) {
+        roleInfos = JSONArray.parseArray(MMKVUtils.getInstance().getValue(MetaChatConstants.MMKV_ROLE_INFO, ""), RoleInfo.class);
+
+        if (roleInfos != null && roleInfos.size() != 0) {
+            for (int i = 0; i < roleInfos.size(); i++) {
+                if (null != roleInfos.get(i)) {
+                    if ((null != roleInfos.get(i).getName() && roleInfos.get(i).getName().equalsIgnoreCase(name)) && roleInfos.get(i).getGender() == gender) {
+                        roleInfo = roleInfos.get(i);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (null == roleInfo) {
+            currentScene = MetaChatConstants.SCENE_DRESS;
+        } else {
+            currentScene = MetaChatConstants.SCENE_GAME;
+        }
+
+        //for game for test
+        currentScene = MetaChatConstants.SCENE_GAME;
+    }
+
+    public RoleInfo getRoleInfo() {
+        return roleInfo;
+    }
+
+    public List<RoleInfo> getRoleInfos() {
+        return roleInfos;
+    }
+
+    public int getCurrentScene() {
+        return currentScene;
+    }
+
+    public void sendSceneMessage(String msg) {
+        if (metaChatScene == null) {
+            Log.e(TAG, "sendMessageToScene metaChatScene is null");
+            return;
+        }
+
+        if (metaChatScene.sendMessageToScene(msg.getBytes()) == 0) {
+            //successful
+            Log.w(TAG, "sendMessageToScene successful" + msg);
+        } else {
+            //fail
+            Log.w(TAG, "sendMessageToScene fail" + msg);
+        }
+    }
+
 }

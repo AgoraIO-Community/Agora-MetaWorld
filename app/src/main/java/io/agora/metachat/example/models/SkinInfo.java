@@ -20,6 +20,10 @@ public class SkinInfo {
     //类型
     public GarmentType type;
 
+    public SkinInfo() {
+
+    }
+
     /**
      * @param name    名字
      * @param id      衣服、裤子等id  0-1000

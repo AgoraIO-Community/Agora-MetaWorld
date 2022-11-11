@@ -75,8 +75,11 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 adapter.check(i);
-                mViewModel.setSex(adapter.getItem(i).toString());
-                MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_GENDER, i);
+                if (i == 0) {
+                    mViewModel.setSex(MetaChatConstants.GENDER_MAN);
+                } else {
+                    mViewModel.setSex(MetaChatConstants.GENDER_WOMEN);
+                }
             }
 
             @Override
@@ -85,6 +88,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         });
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(5, TimeUnit.SECONDS).subscribe(o -> {
+            MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(), mViewModel.getSex().getValue());
             mViewModel.getScenes();
         });
         return binding.getRoot();
@@ -111,8 +115,13 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 binding.tips.setVisibility(View.GONE);
             }
         });
-        mViewModel.getSex().observe(owner, charSequence -> {
-            binding.sex.setText(charSequence);
+        mViewModel.getSex().observe(owner, i -> {
+            if (i == MetaChatConstants.GENDER_MAN) {
+                binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[0]);
+            } else {
+                binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[1]);
+            }
+
         });
         mViewModel.getSceneList().observe(owner, metachatSceneInfos -> {
             // TODO choose one
@@ -138,6 +147,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             intent.putExtra("nickname", mViewModel.getNickname().getValue());
             intent.putExtra("avatar", mViewModel.getAvatar().getValue());
             intent.putExtra("roomName", KeyCenter.CHANNEL_ID);
+            intent.putExtra("gender",mViewModel.getSex().getValue());
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {

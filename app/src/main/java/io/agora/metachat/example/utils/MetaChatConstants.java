@@ -5,11 +5,12 @@ public class MetaChatConstants {
     public static final int PLAY_ADVERTISING_VIDEO_REPEAT = -1;
 
     public static final String MMKV_ID = "metachat";
-    public static final String MMKV_GENDER = "gender";
-    public static final String MMKV_FIRST_OPEN = "first_open";
     public static final String MMKV_ROLE_INFO = "role_info";
 
-    public static final int GENDER_MALE = 1;
-    public static final int GENDER_FEMALE = 2;
+    public static final int GENDER_MAN = 1;
+    public static final int GENDER_WOMEN = 2;
+
+    public static final int SCENE_DRESS = 1;
+    public static final int SCENE_GAME = 2;
 
 }

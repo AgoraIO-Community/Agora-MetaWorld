@@ -14,19 +14,22 @@ public class RoleInfo {
     //名字
     public String name;
     //性别
-    public String gender;
+    public int gender;
 
-    public RoleInfo(List<SkinInfo> skinInfos, String name, String gender) {
+    public RoleInfo() {
+    }
+
+    public RoleInfo(List<SkinInfo> skinInfos, String name, int gender) {
         this.skinInfos = skinInfos;
         this.name = name;
         this.gender = gender;
     }
 
-    public List<SkinInfo> getChangeClothingList() {
+    public List<SkinInfo> getSkinInfosList() {
         return skinInfos;
     }
 
-    public void setChangeClothingList(List<SkinInfo> skinInfos) {
+    public void setSkinInfosList(List<SkinInfo> skinInfos) {
         this.skinInfos = skinInfos;
     }
 
@@ -38,11 +41,11 @@ public class RoleInfo {
         this.name = name;
     }
 
-    public String getGender() {
+    public int getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 

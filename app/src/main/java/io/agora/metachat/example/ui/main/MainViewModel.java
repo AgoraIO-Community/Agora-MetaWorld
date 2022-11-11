@@ -17,13 +17,14 @@ import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.MainApplication;
 import io.agora.metachat.example.metachat.MetaChatContext;
+import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.metachat.example.utils.SingleLiveData;
 
 public class MainViewModel extends ViewModel implements IMetachatEventHandler {
 
     private final SingleLiveData<String> avatar = new SingleLiveData<>();
     private final SingleLiveData<String> nickname = new SingleLiveData<>();
-    private final SingleLiveData<String> sex = new SingleLiveData<>();
+    private final SingleLiveData<Integer> sex = new SingleLiveData<>();
     private final SingleLiveData<List<MetachatSceneInfo>> sceneList = new SingleLiveData<>();
     private final SingleLiveData<Long> selectScene = new SingleLiveData<>();
     private final SingleLiveData<Boolean> requestDownloading = new SingleLiveData<>();
@@ -51,11 +52,11 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         this.nickname.postValue(nickname);
     }
 
-    public LiveData<String> getSex() {
+    public LiveData<Integer> getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Integer sex) {
         this.sex.postValue(sex);
     }
 
@@ -98,8 +99,13 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
                 }
             }
             mLocalVisible = true;
-            mRemoteVisible = true;
-            mSyncPosition = true;
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                mRemoteVisible = true;
+                mSyncPosition = true;
+            } else {
+                mRemoteVisible = false;
+                mSyncPosition = false;
+            }
         }}, new MetachatUserInfo() {{
             mUserId = KeyCenter.RTM_UID;
             mUserName = nickname.getValue() == null ? mUserId : nickname.getValue();

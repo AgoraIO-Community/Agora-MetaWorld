@@ -51,6 +51,7 @@ public class AgoraMediaPlayer implements IMediaPlayerObserver, IMediaPlayerVideo
 
     public void stop() {
         if (null != mMediaPlayer) {
+            mMediaPlayer.registerVideoFrameObserver(null);
             mMediaPlayer.unRegisterPlayerObserver(this);
             mMediaPlayer.stop();
             mMediaPlayer.destroy();
@@ -61,12 +62,14 @@ public class AgoraMediaPlayer implements IMediaPlayerObserver, IMediaPlayerVideo
     public void pause() {
         if (null != mMediaPlayer) {
             mMediaPlayer.pause();
+            mMediaPlayer.registerVideoFrameObserver(null);
         }
     }
 
     public void resume() {
         if (null != mMediaPlayer) {
             mMediaPlayer.resume();
+            mMediaPlayer.registerVideoFrameObserver(this);
         }
     }
 
