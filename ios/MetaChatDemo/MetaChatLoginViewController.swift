@@ -128,20 +128,25 @@ class MetaChatLoginViewController: UIViewController {
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
     #if DEBUG
-    private var currentSceneId: Int = 4
+    private var currentSceneId: Int = 8
     #elseif TEST
     private var currentSceneId: Int = 4
     #else
-    private var currentSceneId: Int = 1
+    private var currentSceneId: Int = 8
     #endif
     
-    private let libraryPath = NSHomeDirectory() + "/Library/Caches/"
+    var sceneVC: MetaChatSceneViewController!
+        
+    private let libraryPath = NSHomeDirectory() + "/Library/Caches/8/"
     
     var selSex: Int = 0    //0未选择，1男，2女
     
     var selAvatarIndex: Int = 0
     
     var avatarUrlArray = ["https://accpic.sd-rtn.com/pic/test/png/2.png", "https://accpic.sd-rtn.com/pic/test/png/4.png", "https://accpic.sd-rtn.com/pic/test/png/1.png", "https://accpic.sd-rtn.com/pic/test/png/3.png", "https://accpic.sd-rtn.com/pic/test/png/6.png", "https://accpic.sd-rtn.com/pic/test/png/5.png"]
+    
+    var currentSceneInfo: AgoraMetachatSceneInfo?
+    var isEntering: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -161,15 +166,15 @@ class MetaChatLoginViewController: UIViewController {
     }
 
     private func moveFileHandler() {
-        if FileManager.default.fileExists(atPath: libraryPath + "3", isDirectory: nil) {
+        if FileManager.default.fileExists(atPath: libraryPath + "8", isDirectory: nil) {
             return
         }
         FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
-        let path = Bundle.main.path(forResource: "3", ofType: "zip")
-        try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: libraryPath), overwrite: true, password: nil) { progress in
-            DLog("zip progress = \(progress)")
+        let path = Bundle.main.path(forResource: "8", ofType: "zip")
+        try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: NSHomeDirectory() + "/Library/Caches/"), overwrite: true, password: nil) { progress in
+            print("zip progress = \(progress)")
         } fileOutputHandler: { unzippedFile in
-            DLog(unzippedFile.path)
+            print(unzippedFile.path)
         }
     }
     
@@ -228,6 +233,11 @@ class MetaChatLoginViewController: UIViewController {
             return
         }
         
+        if isEntering {
+            return
+        }
+        isEntering = true
+        
         indicatorView = UIActivityIndicatorView.init(frame: view.frame)
         if #available(iOS 13.0, *) {
             indicatorView?.style = UIActivityIndicatorView.Style.large
@@ -240,7 +250,7 @@ class MetaChatLoginViewController: UIViewController {
         
         MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
                         
-        MetaChatEngine.sharedEngine.metachatKit?.getScenes()
+        MetaChatEngine.sharedEngine.metachatKit?.getSceneInfos()
     }
     
     func onSceneReady(_ sceneInfo: AgoraMetachatSceneInfo) {
@@ -251,9 +261,9 @@ class MetaChatLoginViewController: UIViewController {
             
             guard let sceneViewController = storyBoard.instantiateViewController(withIdentifier: "SceneViewController") as? MetaChatSceneViewController else { return }
             sceneViewController.modalPresentationStyle = .fullScreen
-            MetaChatEngine.sharedEngine.createScene(sceneInfo, delegate: sceneViewController)
-
-            self.present(sceneViewController, animated: true)
+            MetaChatEngine.sharedEngine.createScene(sceneViewController)
+            MetaChatEngine.sharedEngine.currentSceneInfo = sceneInfo
+            self.sceneVC = sceneViewController
         }
         
 
@@ -289,6 +299,20 @@ extension MetaChatLoginViewController: SelAvatarAlertDelegate {
 }
 
 extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
+    func onCreateSceneResult(_ scene: AgoraMetachatScene?, errorCode: Int) {
+        if errorCode != 0 {
+            print("create scene error: \(errorCode)")
+            return
+        }
+        
+        MetaChatEngine.sharedEngine.metachatScene = scene
+        DispatchQueue.main.async {
+            if self.presentedViewController == nil {
+                self.present(self.sceneVC, animated: true)
+            }
+        }
+    }
+    
     func onConnectionStateChanged(_ state: AgoraMetachatConnectionStateType, reason: AgoraMetachatConnectionChangedReasonType) {
         if state == .disconnected {
             DispatchQueue.main.async {
@@ -296,12 +320,13 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
                 self.indicatorView?.removeFromSuperview()
                 self.indicatorView = nil
             }
-        } else if state == .reconnecting || state == .aborted {
+        } else if state == .aborted {
             MetaChatEngine.sharedEngine.leaveRtcChannel()
             MetaChatEngine.sharedEngine.leaveScene()
             DispatchQueue.main.async {
                 DLog("state == \(state.rawValue), reason == \(reason.rawValue)")
                 NotificationCenter.default.post(name: kOnConnectionStateChangedNotifyName, object: nil, userInfo: ["state":state.rawValue,"reason":reason.rawValue])
+                self.dismiss(animated: true, completion: nil)
             }
         }
     }
@@ -310,7 +335,9 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         
     }
     
-    func onGetScenesResult(_ scenes: NSMutableArray, errorCode: Int) {
+    func onGetSceneInfosResult(_ scenes: NSMutableArray, errorCode: Int) {
+        self.isEntering = false
+        
         DispatchQueue.main.async {
             self.indicatorView?.stopAnimating()
             self.indicatorView?.removeFromSuperview()
@@ -335,8 +362,11 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         guard let firstScene = scenes.compactMap({ $0 as? AgoraMetachatSceneInfo }).first(where: { $0.sceneId == currentSceneId }) else {
             return
         }
+        
+        currentSceneInfo = firstScene
+        
         let metachatKit = MetaChatEngine.sharedEngine.metachatKit
-        let totalSize = firstScene.totalSize / 1024
+        let totalSize = firstScene.totalSize / 1024 / 1024
         if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
             let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载\(totalSize)M数据包", preferredStyle:.alert)
             
@@ -354,13 +384,13 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         }
     }
     
-    func onDownloadSceneProgress(_ sceneInfo: AgoraMetachatSceneInfo?, progress: Int, state: AgoraMetachatDownloadStateType) {
+    func onDownloadSceneProgress(_ sceneId: Int, progress: Int, state: AgoraMetachatDownloadStateType) {
         DispatchQueue.main.async {
             self.downloadingProgress.progress = Float(progress)/100.0
         }
         
-        if state == .downloaded && sceneInfo != nil {
-            onSceneReady(sceneInfo!)
+        if state == .downloaded && currentSceneInfo != nil {
+            onSceneReady(currentSceneInfo!)
         }
     }
 }

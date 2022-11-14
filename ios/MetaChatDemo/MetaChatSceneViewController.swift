@@ -15,8 +15,7 @@ private let kNoviceGuideFileName = "Novice guide"
 // 游客模式
 private let kVisitorTipFileName = "Novice guide"
 
-
-class MetaChatSceneViewController: AgoraMetaViewController {
+class MetaChatSceneViewController: UIViewController {
     @IBOutlet weak var avatarBackV: UIView!
     @IBOutlet weak var avatarImageV: UIImageView!
     @IBOutlet weak var nameL: UILabel!
@@ -46,6 +45,11 @@ class MetaChatSceneViewController: AgoraMetaViewController {
     @IBOutlet weak var songListButton: UIButton!
     
     @IBOutlet weak var visitorTextView: UITextView!
+    
+    @IBOutlet weak var switchBtn: UIButton!
+    
+    /// 渲染的render view，多次进出场景需要保持同一renderView对象
+    static var renderView: (UIView & AgoraMetaViewProtocol)!
     
     private var ktvContainerSelectedIndex = 0; // ktv默认选中的index
     private var ktvChooseContainerIndex = 0; // 点歌默认选中的index
@@ -96,7 +100,6 @@ class MetaChatSceneViewController: AgoraMetaViewController {
     }
     
     deinit {
-//        leaveScene()
         DLog("===========MetaChatSceneViewController销毁了=======")
     }
     
@@ -104,23 +107,28 @@ class MetaChatSceneViewController: AgoraMetaViewController {
         super.viewDidLoad()
         setUI()
         addObserver()
-        perform(#selector(initUnity), with: nil, afterDelay: 0)
+        
+        var width = UIScreen.main.bounds.size.width
+        var height = UIScreen.main.bounds.size.height
+        if width < height {
+            let temp = width
+            width = height
+            height = temp
+        }
+        if MetaChatSceneViewController.renderView == nil {
+            MetaChatSceneViewController.renderView = MetaChatEngine.sharedEngine.metachatScene?.createRenderView(.unity, region: CGRect(x: 0, y: 0, width: width, height: height))
+        }
+        
+        self.view.insertSubview(MetaChatSceneViewController.renderView, at: 0)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        MetaChatEngine.sharedEngine.enterScene()
+        MetaChatEngine.sharedEngine.enterScene(view: MetaChatSceneViewController.renderView)
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        leaveScene()
-    }
-    
-    override func unityDidUnload() {
-        super.unityDidUnload()
-        
-//        self.dismiss(animated: true)
+        MetaChatSceneViewController.renderView.removeFromSuperview()
     }
     
     override var shouldAutorotate: Bool {
@@ -143,6 +151,7 @@ class MetaChatSceneViewController: AgoraMetaViewController {
         userSpeakerB.isHidden = false
         visitorTipBack.isHidden = true
         exitButton.isHidden = false
+//        switchBtn.isHidden = false
     }
     
     func addObserver() {
@@ -329,11 +338,25 @@ class MetaChatSceneViewController: AgoraMetaViewController {
     }
     
     @IBAction func exit(sender: UIButton) {
-        self.dismiss(animated: true)
+        MetaChatEngine.sharedEngine.leaveRtcChannel()
+        MetaChatEngine.sharedEngine.leaveScene()
+//        self.dismiss(animated: true)
+    }
+    
+    @IBAction func switchScene(sender: UIButton) {
+        exit(sender: UIButton())
     }
 }
 
 extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
+    func metachatScene(_ scene: AgoraMetachatScene, onReleasedScene errorCode: Int) {
+        DispatchQueue.main.async {
+            AgoraMetachatKit.destroy()
+            MetaChatEngine.sharedEngine.metachatKit = nil
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
     func metachatScene(_ scene: AgoraMetachatScene, onEnterSceneResult errorCode: Int) {
         DLog("进入场景===============")
         DispatchQueue.main.async {
@@ -346,9 +369,10 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
     }
     
     func metachatScene(_ scene: AgoraMetachatScene, onLeaveSceneResult errorCode: Int) {
-        MetaChatEngine.sharedEngine.resetMetachat()
-        DLog("离开场景========errorCode: \(errorCode)")
-        self.unloadUnity()
+        DispatchQueue.main.async {
+            MetaChatEngine.sharedEngine.resetMetachat()
+            DLog("离开场景========errorCode: \(errorCode)")
+        }
     }
     
     func metachatScene(_ scene: AgoraMetachatScene, onRecvMessageFromScene message: Data) {

@@ -51,6 +51,9 @@ class MetaChatEngine: NSObject {
     var playerName: String?
     var currentSceneInfo: AgoraMetachatSceneInfo?
     var metachatScene: AgoraMetachatScene?
+    var currentUserInfo: AgoraMetachatUserInfo?
+    var localUserAvatar: AgoraMetachatLocalUserAvatar?
+    var currentDressInfo: AgoraMetachatDressInfo?
     
     override init() {
         super.init()
@@ -74,57 +77,82 @@ class MetaChatEngine: NSObject {
     func createMetachatKit(userName: String, avatarUrl: String, delegate: AgoraMetachatEventDelegate?) {
         playerName = userName
                 
-        let userInfo = AgoraMetachatUserInfo.init()
-        userInfo.userId = KeyCenter.RTM_UID
-        userInfo.userName = userName
-        userInfo.userIconUrl = avatarUrl
+        currentUserInfo = AgoraMetachatUserInfo.init()
+        currentUserInfo?.userId = KeyCenter.RTM_UID
+        currentUserInfo?.userName = userName
+        currentUserInfo?.userIconUrl = avatarUrl
         
         let metaChatconfig = AgoraMetachatConfig()
         metaChatconfig.appId = KeyCenter.APP_ID
-        metaChatconfig.token = KeyCenter.RTM_TOKEN ?? ""
-        metaChatconfig.userInfo = userInfo
+        metaChatconfig.rtmToken = KeyCenter.RTM_TOKEN ?? ""
+        metaChatconfig.userId = KeyCenter.RTM_UID
         metaChatconfig.delegate = delegate
         
         let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
         metaChatconfig.localDownloadPath = paths.first!
         metaChatconfig.rtcEngine = rtcEngine
-        metachatKit = AgoraMetachatKit.sharedMetachat(with: metaChatconfig)
+        metachatKit = AgoraMetachatKit.sharedMetachatWithConfig(_: metaChatconfig)
+        
         createMVStream()
     }
 
-    func createScene(_ sceneInfo: AgoraMetachatSceneInfo, delegate: AgoraMetachatSceneEventDelegate) {
-        currentSceneInfo = sceneInfo
-        
-        metachatScene = metachatKit?.createScene(KeyCenter.CHANNEL_ID, delegate: delegate)
+    func createScene(_ delegate: MetaChatSceneViewController) {
+        let config = AgoraMetachatSceneConfig()
+        config.delegate = delegate
+        metachatKit?.createScene(config)
     }
     
     
-    func enterScene() {
+    func enterScene(view: UIView & AgoraMetaViewProtocol) {
         guard let sceneInfo = currentSceneInfo else {
             return
         }
         
-        let avatarConfig = AgoraMetachatUserAvatarConfig.init()
-        avatarConfig.avatarCode = sceneInfo.avatars[0].avatarCode;
-        avatarConfig.localVisible = true;
-        avatarConfig.remoteVisible = true;
-        avatarConfig.syncPosition = false;
-        metachatScene?.enter(sceneInfo, avatarConfig: avatarConfig)
+        let avatarInfo = AgoraMetachatAvatarModelInfo.init()
+        for info in sceneInfo.bundles {
+            if info.bundleType == .avatar {
+                avatarInfo.bundleCode = info.bundleCode;
+                break
+            }
+        }
+        avatarInfo.localVisible = true
+        avatarInfo.remoteVisible = true
+        avatarInfo.syncPosition = true
+        
+        let enterSceneConfig = AgoraMetachatEnterSceneConfig()
+        enterSceneConfig.roomName = KeyCenter.CHANNEL_ID
+        enterSceneConfig.sceneView = view
+        enterSceneConfig.sceneId = sceneInfo.sceneId
+        enterSceneConfig.extraCustomInfo = "".data(using: String.Encoding.utf8)
+        
+        localUserAvatar = metachatScene?.getLocalUserAvatar()
+        localUserAvatar?.setUserInfo(currentUserInfo)
+        localUserAvatar?.setModelInfo(avatarInfo)
+        
+        metachatScene?.enter(enterSceneConfig)
         
         metachatScene?.enableUserPositionNotification(true)
     }
     
     func updateIsVisitor(isVisitor: Bool) {
+        
         guard let sceneInfo = currentSceneInfo else {
             return
         }
-        
-        let avatarConfig = AgoraMetachatUserAvatarConfig.init()
-        avatarConfig.avatarCode = sceneInfo.avatars[0].avatarCode;
-        avatarConfig.localVisible = true;
-        avatarConfig.remoteVisible = true;
-        avatarConfig.syncPosition = !isVisitor;
-        metachatScene?.updateLocalAvatarConfig(avatarConfig)
+        let avatarInfo = AgoraMetachatAvatarModelInfo.init()
+        for info in sceneInfo.bundles {
+            if info.bundleType == .avatar {
+                avatarInfo.bundleCode = info.bundleCode;
+                break
+            }
+        }
+        avatarInfo.localVisible = true
+        avatarInfo.remoteVisible = true
+        avatarInfo.syncPosition = !isVisitor
+        localUserAvatar = metachatScene?.getLocalUserAvatar()
+        localUserAvatar?.setUserInfo(currentUserInfo)
+        localUserAvatar?.setModelInfo(avatarInfo)
+        localUserAvatar?.applyInfo()
     }
     
     func joinRtcChannel(success: @escaping () -> Void) {
@@ -183,9 +211,6 @@ class MetaChatEngine: NSObject {
         currentSceneInfo = nil
         
         playerName = nil
-        
-        AgoraMetachatKit.destroy()
-        metachatKit = nil
     }
     
     func openMic() {
@@ -272,7 +297,7 @@ class MetaChatEngine: NSObject {
     // 停止投屏
     func stopPushVideo(displayId:UInt32){
         tvPlayerMgr?.player?.stop()
-        metachatScene?.enableVideoDisplay(displayId, enable: false)
+        metachatScene?.enableVideoDisplay(String(displayId), enable: false)
     }
     
     // 发送消息
@@ -426,7 +451,7 @@ extension MetaChatEngine: AgoraRtcEngineDelegate {
 
 extension MetaChatEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
     
-    func agoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didReceive videoFrame: AgoraOutputVideoFrame) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didReceiveVideoFrame videoFrame: AgoraOutputVideoFrame) {
         guard let pixelBuffer = videoFrame.pixelBuffer, let data = LibyuvHelper.i420Buffer(of: pixelBuffer) else {
             return
         }
@@ -436,7 +461,7 @@ extension MetaChatEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
         vf.strideInPixels = Int32(videoFrame.width)
         vf.height = Int32(videoFrame.height)
         vf.dataBuf = data
-        metachatScene?.pushVideoFrame(toDisplay: 0, frame: vf)
+        metachatScene?.pushVideoFrame(toDisplay: "1", frame: vf)
         DLog("didReceive videoFrame:  width = \(videoFrame.width), height = \(videoFrame.height)", Thread.current,"time === ", Date.timeIntervalSinceReferenceDate)
     }
 }

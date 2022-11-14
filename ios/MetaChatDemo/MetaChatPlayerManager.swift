@@ -24,8 +24,7 @@ class MetaChatPlayerManager: NSObject {
     init(displayId: MetaChatDisplayID,resourceUrl url:String, metachatScene: AgoraMetachatScene?,rtcEngine: AgoraRtcEngineKit?, openCompleted: ((_ player: AgoraRtcMediaPlayerProtocol, _ isFirstOpen: Bool)->())? = nil) {
         super.init()
         
-        let id = UInt32(displayId.rawValue)
-        metachatScene?.enableVideoDisplay(id, enable: true)
+        metachatScene?.enableVideoDisplay("1", enable: true)
         let npcPlayer = rtcEngine?.createMediaPlayer(with: self)
         npcPlayer?.setLoopCount(-1)
         npcPlayer?.adjustPlayoutVolume(15)
@@ -53,7 +52,7 @@ class MetaChatPlayerManager: NSObject {
 
 extension MetaChatPlayerManager: AgoraRtcMediaPlayerDelegate {
     
-    func agoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo state: AgoraMediaPlayerState, error: AgoraMediaPlayerError) {
         if state == .openCompleted {
             playerKit.play()
             self.isOpenCompleted = true
@@ -66,7 +65,7 @@ extension MetaChatPlayerManager: AgoraRtcMediaPlayerDelegate {
         DLog("AgoraMediaPlayerError === \(error.rawValue), state == \(state.rawValue)")
     }
     
-    func agoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedToPosition position: Int) {
+    func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didChangedTo position: Int) {
         didChangedToPosition?(playerKit, position)
     }
 }
