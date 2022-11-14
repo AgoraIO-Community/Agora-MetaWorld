@@ -10,7 +10,7 @@ import io.agora.metachat.example.databinding.ItemTipsListBinding;
 
 public class TipsAdapter extends RecyclerView.Adapter<TipsAdapter.ViewHolder> {
 
-    private String[] localDataSet;
+    private final String[] localDataSet;
 
     /**
      * Provide a reference to the type of views that you are using

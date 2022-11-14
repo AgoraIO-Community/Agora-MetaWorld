@@ -4,12 +4,18 @@ import android.app.Application;
 
 public class MainApplication extends Application {
 
-    public static MainApplication instance;
+    public static MainApplication mGlobalApplication;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance = this;
+        mGlobalApplication = this;
+
+        init();
+    }
+
+    private void init() {
+
     }
 
 }

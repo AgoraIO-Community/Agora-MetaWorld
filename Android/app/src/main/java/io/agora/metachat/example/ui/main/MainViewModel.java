@@ -3,27 +3,31 @@ package io.agora.metachat.example.ui.main;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.util.Arrays;
 import java.util.List;
 
+import io.agora.metachat.AvatarModelInfo;
 import io.agora.metachat.IMetachatEventHandler;
+import io.agora.metachat.IMetachatScene;
+import io.agora.metachat.MetachatBundleInfo;
 import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserAvatarConfig;
+import io.agora.metachat.MetachatUserInfo;
+import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.MainApplication;
-import io.agora.metachat.example.MetaChatContext;
+import io.agora.metachat.example.metachat.MetaChatContext;
+import io.agora.metachat.example.utils.SingleLiveData;
 
 public class MainViewModel extends ViewModel implements IMetachatEventHandler {
 
-    private final MutableLiveData<String> avatar = new MutableLiveData<>();
-    private final MutableLiveData<String> nickname = new MutableLiveData<>();
-    private final MutableLiveData<String> sex = new MutableLiveData<>();
-    private final MutableLiveData<List<MetachatSceneInfo>> sceneList = new MutableLiveData<>();
-    private final MutableLiveData<MetachatSceneInfo> selectScene = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> requestDownloading = new MutableLiveData<>();
-    private final MutableLiveData<Integer> downloadingProgress = new MutableLiveData<>();
+    private final SingleLiveData<String> avatar = new SingleLiveData<>();
+    private final SingleLiveData<String> nickname = new SingleLiveData<>();
+    private final SingleLiveData<Integer> sex = new SingleLiveData<>();
+    private final SingleLiveData<List<MetachatSceneInfo>> sceneList = new SingleLiveData<>();
+    private final SingleLiveData<Long> selectScene = new SingleLiveData<>();
+    private final SingleLiveData<Boolean> requestDownloading = new SingleLiveData<>();
+    private final SingleLiveData<Integer> downloadingProgress = new SingleLiveData<>();
 
     @Override
     protected void onCleared() {
@@ -47,11 +51,11 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         this.nickname.postValue(nickname);
     }
 
-    public LiveData<String> getSex() {
+    public LiveData<Integer> getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Integer sex) {
         this.sex.postValue(sex);
     }
 
@@ -59,7 +63,7 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         return sceneList;
     }
 
-    public LiveData<MetachatSceneInfo> getSelectScene() {
+    public LiveData<Long> getSelectScene() {
         return selectScene;
     }
 
@@ -75,26 +79,34 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
         MetaChatContext metaChatContext = MetaChatContext.getInstance();
         metaChatContext.registerMetaChatEventHandler(this);
         boolean flag = metaChatContext.initialize(
-                MainApplication.instance,
-                nickname.getValue(),
-                avatar.getValue()
+                MainApplication.mGlobalApplication
         );
         if (flag) {
-            metaChatContext.getScenes();
+            metaChatContext.getSceneInfos();
         }
     }
 
     public void prepareScene(MetachatSceneInfo sceneInfo) {
         MetaChatContext metaChatContext = MetaChatContext.getInstance();
-        metaChatContext.prepareScene(sceneInfo, new MetachatUserAvatarConfig() {{
+        metaChatContext.prepareScene(sceneInfo, new AvatarModelInfo() {{
             // TODO choose one
-            mAvatarCode = sceneInfo.mAvatars[0].mAvatarCode;
+            MetachatBundleInfo[] bundles = sceneInfo.mBundles;
+            for (MetachatBundleInfo bundleInfo : bundles) {
+                if (bundleInfo.mBundleType == MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR) {
+                    mBundleCode = bundleInfo.mBundleCode;
+                    break;
+                }
+            }
             mLocalVisible = true;
             mRemoteVisible = true;
             mSyncPosition = true;
+        }}, new MetachatUserInfo() {{
+            mUserId = KeyCenter.RTM_UID;
+            mUserName = nickname.getValue() == null ? mUserId : nickname.getValue();
+            mUserIconUrl = avatar.getValue() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : avatar.getValue();
         }});
         if (metaChatContext.isSceneDownloaded(sceneInfo)) {
-            selectScene.postValue(sceneInfo);
+            selectScene.postValue(sceneInfo.mSceneId);
         } else {
             requestDownloading.postValue(true);
         }
@@ -109,6 +121,10 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
     }
 
     @Override
+    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+    }
+
+    @Override
     public void onConnectionStateChanged(int state, int reason) {
 
     }
@@ -119,21 +135,20 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
     }
 
     @Override
-    public void onGetScenesResult(MetachatSceneInfo[] scenes, int errorCode) {
+    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
         sceneList.postValue(Arrays.asList(scenes));
     }
 
     @Override
-    public void onDownloadSceneProgress(MetachatSceneInfo sceneInfo, int progress, int state) {
+    public void onDownloadSceneProgress(long mSceneId, int progress, int state) {
         Log.d("progress", String.valueOf(progress));
-        if(state == 3){
+        if (state == SceneDownloadState.METACHAT_SCENE_DOWNLOAD_STATE_FAILED) {
             downloadingProgress.postValue(-1);
             return;
         }
         downloadingProgress.postValue(progress);
-        if (state == 2) {
-            selectScene.postValue(sceneInfo);
+        if (state == SceneDownloadState.METACHAT_SCENE_DOWNLOAD_STATE_DOWNLOADED) {
+            selectScene.postValue(mSceneId);
         }
     }
-
 }

@@ -1,10 +1,17 @@
 package io.agora.metachat.example.ui.game;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.view.TextureView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -13,20 +20,27 @@ import java.util.Locale;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
-import io.agora.meta.AgoraMetaActivity;
-import io.agora.meta.AgoraMetaView;
+import io.agora.metachat.IMetachatEventHandler;
+import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
+import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.example.MainActivity;
-import io.agora.metachat.example.MetaChatContext;
+import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.rtc2.Constants;
 
-public class GameActivity extends AgoraMetaActivity implements View.OnClickListener, IMetachatSceneEventHandler {
+public class GameActivity extends Activity implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler {
 
     private GameActivityBinding binding;
+    private TextureView mTextureView = null;
+
+    private String nickname;
+    private int gender;
+
+
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
     private final ObservableBoolean enableSpeaker = new ObservableBoolean(true);
@@ -94,16 +108,45 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
         enableSpeaker.addOnPropertyChangedCallback(callback);
         isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
+        MetaChatContext.getInstance().registerMetaChatEventHandler(this);
+        //initUnity();
+        mTextureView = new TextureView(this);
+        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+                refreshByIntent(getIntent(), mTextureView);
+            }
 
-        initUnity();
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
 
-        refreshByIntent(getIntent());
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
+
+            }
+        });
+        FrameLayout localView = (FrameLayout) findViewById(R.id.unity);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1, -1);
+        localView.addView(mTextureView, 0, layoutParams);
+
+
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        refreshByIntent(intent);
+        if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
+        refreshByIntent(intent, mTextureView);
     }
 
     @Override
@@ -117,8 +160,8 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
     }
 
-    private void refreshByIntent(Intent intent) {
-        String nickname = intent.getStringExtra("nickname");
+    private void refreshByIntent(Intent intent, TextureView tv) {
+        nickname = intent.getStringExtra("nickname");
         if (nickname != null) {
             binding.card.nickname.setText(nickname);
         }
@@ -135,7 +178,7 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
 
         String roomName = intent.getStringExtra("roomName");
         if (roomName != null) {
-            MetaChatContext.getInstance().createAndEnterScene(roomName);
+            MetaChatContext.getInstance().createScene(this, roomName, tv);
         }
     }
 
@@ -167,26 +210,6 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onUnityPlayerLoaded(AgoraMetaView view) {
-        binding.unity.addView(view);
-    }
-
-    @Override
-    public void onUnityPlayerUnloaded() {
-        // 必须在onUnityPlayerUnloaded里调用
-        MetaChatContext.getInstance().destroy();
-
-        isEnterScene.set(false);
-
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onUnityPlayerQuitted() {
-    }
 
     @Override
     public void onEnterSceneResult(int errorCode) {
@@ -204,8 +227,27 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-        if (errorCode == 0) {
-            unloadUnity();
+    }
+
+    @Override
+    public void onReleasedScene(int status) {
+        if (status == 0) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MetaChatContext.getInstance().destroy();
+                    isEnterScene.set(false);
+                }
+            });
+
+
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+
+            Intent intent = new Intent(GameActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
         }
     }
 
@@ -217,5 +259,56 @@ public class GameActivity extends AgoraMetaActivity implements View.OnClickListe
     @Override
     public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
 
+    }
+
+    @Override
+    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+        //异步线程回调需在主线程处理
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MetaChatContext.getInstance().enterScene();
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionStateChanged(int state, int reason) {
+
+    }
+
+    @Override
+    public void onRequestToken() {
+
+    }
+
+    @Override
+    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
+
+    }
+
+    @Override
+    public void onDownloadSceneProgress(long SceneId, int progress, int state) {
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (MetaChatContext.getInstance().isInScene()) {
+            MetaChatContext.getInstance().resumeMedia();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (MetaChatContext.getInstance().isInScene()) {
+            MetaChatContext.getInstance().pauseMedia();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
     }
 }
