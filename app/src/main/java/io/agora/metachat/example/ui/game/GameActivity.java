@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
 import android.view.View;
@@ -187,8 +188,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
+                this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
         }
         refreshByIntent(intent, mTextureView);
     }
@@ -232,6 +240,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
+                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
                 MetaChatContext.getInstance().leaveScene();
                 break;
             case R.id.mode:
@@ -341,6 +350,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     protected void onResume() {
         super.onResume();
+
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
         }

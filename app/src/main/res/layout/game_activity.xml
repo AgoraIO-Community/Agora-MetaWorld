@@ -33,14 +33,13 @@
 
     <com.flyco.tablayout.CommonTabLayout
         android:id="@+id/dress_tl"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:background="#ffffff"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/save_btn"
+        app:layout_constraintBottom_toTopOf="@+id/viewpage_tab"
         app:tl_iconHeight="60dp"
         app:tl_iconWidth="60dp"
         app:tl_indicator_color="#2C97DE"
@@ -52,12 +51,12 @@
 
     <io.agora.metachat.example.ui.view.NoScrollViewPager
         android:id="@+id/viewpage_tab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dress_tl" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ImageView

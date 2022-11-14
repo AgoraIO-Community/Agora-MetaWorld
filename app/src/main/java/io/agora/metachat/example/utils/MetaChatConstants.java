@@ -10,6 +10,7 @@ public class MetaChatConstants {
     public static final int GENDER_MAN = 1;
     public static final int GENDER_WOMEN = 2;
 
+    public static final int SCENE_NONE = 0;
     public static final int SCENE_DRESS = 1;
     public static final int SCENE_GAME = 2;
 

@@ -66,7 +66,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
         metaChatSceneEventHandlerMap = new ConcurrentHashMap<>();
         isInScene = false;
-        currentScene = MetaChatConstants.SCENE_GAME;
+        currentScene = MetaChatConstants.SCENE_NONE;
         roleInfo = null;
     }
 
@@ -461,6 +461,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     public int getCurrentScene() {
         return currentScene;
+    }
+
+    public void setCurrentScene(int currentScene) {
+        this.currentScene = currentScene;
     }
 
     public void sendSceneMessage(String msg) {

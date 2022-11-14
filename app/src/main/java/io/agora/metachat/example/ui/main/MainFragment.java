@@ -3,6 +3,7 @@ package io.agora.metachat.example.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -128,12 +129,17 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (metachatSceneInfos.size() > 0) {
                 for (int a = 0; a < metachatSceneInfos.size(); a++) {
                     //8为内容中心测试的ID号
-                    if (metachatSceneInfos.get(a).getSceneId() == 8) {
+                    int targetSceneId = 8;
+                    if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+                        targetSceneId = 8;
+                    } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                        targetSceneId = 8;
+                    }
+                    if (metachatSceneInfos.get(a).getSceneId() == targetSceneId) {
                         mViewModel.prepareScene(metachatSceneInfos.get(a));
                         break;
                     }
                 }
-
             }
         });
         mViewModel.getSelectScene().observe(owner, sceneInfo -> {
@@ -142,12 +148,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 progressDialog = null;
             }
 
+
+
             Intent intent = new Intent(context, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             intent.putExtra("nickname", mViewModel.getNickname().getValue());
             intent.putExtra("avatar", mViewModel.getAvatar().getValue());
             intent.putExtra("roomName", KeyCenter.CHANNEL_ID);
-            intent.putExtra("gender",mViewModel.getSex().getValue());
+            intent.putExtra("gender", mViewModel.getSex().getValue());
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
@@ -202,6 +210,14 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getCurrentScene()) {
+            mViewModel.getScenes();
         }
     }
 }
