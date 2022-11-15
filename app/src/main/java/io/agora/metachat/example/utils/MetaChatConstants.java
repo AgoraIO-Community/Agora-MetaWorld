@@ -7,11 +7,13 @@ public class MetaChatConstants {
     public static final String MMKV_ID = "metachat";
     public static final String MMKV_ROLE_INFO = "role_info";
 
-    public static final int GENDER_MAN = 1;
-    public static final int GENDER_WOMEN = 2;
+    public static final int GENDER_MAN = 0;
+    public static final int GENDER_WOMEN = 1;
 
     public static final int SCENE_NONE = 0;
     public static final int SCENE_DRESS = 1;
     public static final int SCENE_GAME = 2;
+
+    public static final String KEY_UNITY_MESSAGE_DRESS_SETTING = "dressSetting";
 
 }

@@ -1,12 +1,11 @@
 package io.agora.metachat.example.ui.game;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
-import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -17,7 +16,6 @@ import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -25,10 +23,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
-import com.unity3d.splash.services.core.lifecycle.LifecycleListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -49,21 +45,29 @@ import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
+import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.SkinInfo;
 import io.agora.metachat.example.models.TabEntity;
 import io.agora.metachat.example.ui.view.CirclePageIndicator;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.Constants;
 
-public class GameActivity extends Activity implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler {
+public class GameActivity extends Activity implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler, SkinGridViewAdapter.SkinItemClick {
 
+    private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
     private TextureView mTextureView = null;
 
     private String nickname;
     private int gender;
     private final ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private static final int SKIN_PAGE_SIZE = 8;
+    private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
+    private int mCurrentTabIndex;
+    private ViewPager mCurrentTabViewPager;
+    private List<SkinGridViewAdapter> mTabItemAdapters;
+
+    private int mScreenWidth;
+    private int mScreenHeight;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -77,8 +81,8 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
                             binding.cancelBt.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.saveBtn.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.dressTl.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.viewpageTab.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.dressTab.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.dressViewpage.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
 
                             binding.back.setVisibility(View.GONE);
                             binding.card.getRoot().setVisibility(View.GONE);
@@ -95,11 +99,11 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
                             binding.cancelBt.setVisibility(View.GONE);
                             binding.saveBtn.setVisibility(View.GONE);
-                            binding.dressTl.setVisibility(View.GONE);
-                            binding.viewpageTab.setVisibility(View.GONE);
+                            binding.dressTab.setVisibility(View.GONE);
+                            binding.dressViewpage.setVisibility(View.GONE);
                         }
                         if (isEnterScene.get()) {
-                            SkinsData.initSkinsData(nickname, gender);
+                            MetaChatContext.getInstance().sendRoleDressInfo();
                         }
                     } else if (sender == enableMic) {
                         if (!MetaChatContext.getInstance().enableLocalAudio(enableMic.get())) {
@@ -155,7 +159,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
-        //initUnity();
         mTextureView = new TextureView(this);
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -182,6 +185,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1, -1);
         localView.addView(mTextureView, 0, layoutParams);
 
+        if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            mScreenHeight = dm.widthPixels;
+            mScreenWidth = dm.heightPixels;
+        } else {
+            DisplayMetrics dm = getResources().getDisplayMetrics();
+            mScreenWidth = dm.widthPixels;
+            mScreenHeight = dm.heightPixels;
+        }
 
     }
 
@@ -191,7 +203,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
             if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
-                this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
         } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
             if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
@@ -253,14 +265,24 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                 isBroadcaster.set(!isBroadcaster.get());
                 break;
             case R.id.users:
-                Toast.makeText(this, "暂不支持", Toast.LENGTH_LONG)
-                        .show();
+                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_DRESS);
+                MetaChatContext.getInstance().leaveScene();
                 break;
             case R.id.mic:
                 enableMic.set(!enableMic.get());
                 break;
             case R.id.speaker:
                 enableSpeaker.set(!enableSpeaker.get());
+                break;
+            case R.id.cancel_bt:
+                MetaChatContext.getInstance().cancelRoleDressInfo(nickname, gender);
+                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
+                MetaChatContext.getInstance().leaveScene();
+                break;
+            case R.id.save_btn:
+                MetaChatContext.getInstance().saveRoleDressInfo(nickname, gender);
+                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
+                MetaChatContext.getInstance().leaveScene();
                 break;
         }
     }
@@ -350,7 +372,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     protected void onResume() {
         super.onResume();
-
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
         }
@@ -376,70 +397,68 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         LayoutInflater lf = LayoutInflater.from(this);
         Map<View, String> viewDressTypeMap = new LinkedHashMap<>();
 
-
+        mTabEntities.clear();
+        mCurrentTabIndex = 0;
         View view;
         if (MetaChatConstants.GENDER_WOMEN == gender) {
-            for (Map.Entry<String, TabEntity> entityEntry : SkinsData.TAB_ENTITY_WOMEN.entrySet()) {
-                mTabEntities.add(entityEntry.getValue());
+            for (TabEntity tabEntity : SkinsData.TAB_ENTITY_WOMEN) {
+                mTabEntities.add(tabEntity);
 
                 view = lf.inflate(R.layout.viewpager_skin_layout, null);
-                viewDressTypeMap.put(view, entityEntry.getKey());
+                viewDressTypeMap.put(view, tabEntity.getDressType());
             }
 
         } else {
-            for (Map.Entry<String, TabEntity> entityEntry : SkinsData.TAB_ENTITY_MAN.entrySet()) {
-                mTabEntities.add(entityEntry.getValue());
+            for (TabEntity tabEntity : SkinsData.TAB_ENTITY_MAN) {
+                mTabEntities.add(tabEntity);
                 view = lf.inflate(R.layout.viewpager_skin_layout, null);
-                viewDressTypeMap.put(view, entityEntry.getKey());
+                viewDressTypeMap.put(view, tabEntity.getDressType());
             }
         }
-        binding.dressTl.setTabData(mTabEntities);
-
-        binding.viewpageTab.setScrollable(false);
 
 
-        SkinsData.initSkinsData(nickname, gender);
+        binding.dressTab.setTabData(mTabEntities);
+        binding.dressTab.setCurrentTab(mCurrentTabIndex);
+        binding.dressTab.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelect(int position) {
+                mCurrentTabIndex = position;
+                binding.dressViewpage.setCurrentItem(mCurrentTabIndex);
+            }
+
+            @Override
+            public void onTabReselect(int position) {
+
+            }
+        });
+
+        mTabItemAdapters = new ArrayList<>(mTabEntities.size());
 
         for (Map.Entry<View, String> entry : viewDressTypeMap.entrySet()) {
             initGridView(entry.getKey(), entry.getValue());
         }
 
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getApplicationContext(), new ArrayList<>(viewDressTypeMap.keySet()));
-        binding.viewpageTab.setAdapter(viewPagerAdapter);
+        binding.dressViewpage.setAdapter(viewPagerAdapter);
+        binding.dressViewpage.setScrollable(false);
 
+        binding.dressViewpage.setCurrentItem(mCurrentTabIndex);
 
-        binding.dressTl.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
-                binding.viewpageTab.setCurrentItem(position);
-            }
-
-            @Override
-            public void onTabReselect(int position) {
-                if (position == 0) {
-//                    Random mRandom = new Random();
-//                    mTabLayout.showMsg(0, mRandom.nextInt(100) + 1);
-//                    UnreadMsgUtils.show(mTabLayout_2.getMsgView(0), mRandom.nextInt(100) + 1);
-                }
-            }
-        });
-
-        binding.viewpageTab.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.dressViewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(int position) {
-                binding.dressTl.setCurrentTab(position);
+                Log.i(TAG, "onPageSelected position=" + position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
-
-        binding.viewpageTab.setCurrentItem(0);
     }
 
     /**
@@ -451,28 +470,68 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             return;
         }
 
+        List<SkinInfo> dataList = new ArrayList<>(list);
 
-        ViewPager mViewPager = (ViewPager) view.findViewById(R.id.viewpage_skin_item);
+        int selectIndex = 0;
+        RoleInfo roleInfo = MetaChatContext.getInstance().getRoleInfo();
+        if (null != roleInfo) {
+            if (SkinsData.KEY_WOMEN_CLOTHING.equalsIgnoreCase(viewDressType) ||
+                    SkinsData.KEY_MAN_CLOTHING.equalsIgnoreCase(viewDressType)) {
+                selectIndex = roleInfo.getTops() - 1;
+            } else if (SkinsData.KEY_WOMEN_HAIRPIN.equalsIgnoreCase(viewDressType) ||
+                    SkinsData.KEY_MAN_HAIRPIN.equalsIgnoreCase(viewDressType)) {
+                selectIndex = roleInfo.getHair() - 1;
+            }
+            if (selectIndex < 0) {
+                selectIndex = 0;
+            }
+        }
+
+
+        mCurrentTabViewPager = (ViewPager) view.findViewById(R.id.viewpage_skin_item);
         CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.indicator);
 
         //总的页数=总数/每页数量，并向上取整取整
-        int mTotalPage = (int) Math.ceil(list.size() * 1.0 / SKIN_PAGE_SIZE);
+        int totalPage = (int) Math.ceil(dataList.size() * 1.0 / SKIN_TAB_MAX_PAGE_SIZE);
         List<View> mViewPagerList = new ArrayList<>();
-        for (int i = 0; i < list.size(); i++) {
-            list.get(i).setCheck(false);
+        for (int i = 0; i < dataList.size(); i++) {
+            dataList.get(i).setCheck(i == selectIndex);
         }
-        for (int i = 0; i < mTotalPage; i++) {
+        SkinGridViewAdapter adapter;
+        for (int i = 0; i < totalPage; i++) {
             View pagerView = getLayoutInflater().inflate(R.layout.skin_gridview, null);
             //初始化gridview的控件并绑定
             final GridView gridView = (GridView) pagerView.findViewById(R.id.gridview);
-//            final GridView gridView = (GridView) View.inflate(this, R.layout.gridview, null);
-            SkinGridViewAdapter adapter = new SkinGridViewAdapter(this, list, i, SKIN_PAGE_SIZE);
+            adapter = new SkinGridViewAdapter(this, dataList, i, SKIN_TAB_MAX_PAGE_SIZE, this);
             gridView.setAdapter(adapter);
             //每一个GridView作为一个View对象添加到ViewPager集合中
             mViewPagerList.add(gridView);
+            mTabItemAdapters.add(adapter);
         }
         ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(this, mViewPagerList);
-        mViewPager.setAdapter(mViewPagerAdapter);
-        indicator.setViewPager(mViewPager);
+        mCurrentTabViewPager.setAdapter(mViewPagerAdapter);
+        indicator.setViewPager(mCurrentTabViewPager);
+    }
+
+    @Override
+    public void onSkinItemClick(int position) {
+        for (SkinGridViewAdapter adapter : mTabItemAdapters) {
+            adapter.notifyDataSetChanged();
+        }
+
+        TabEntity tabEntity = (TabEntity) mTabEntities.get(mCurrentTabIndex);
+        RoleInfo roleInfo = MetaChatContext.getInstance().getRoleInfo();
+        if (null != roleInfo) {
+            if (SkinsData.KEY_WOMEN_CLOTHING.equalsIgnoreCase(tabEntity.getDressType()) ||
+                    SkinsData.KEY_MAN_CLOTHING.equalsIgnoreCase(tabEntity.getDressType())) {
+                roleInfo.setTops(position + 1);
+            }
+            if (SkinsData.KEY_WOMEN_HAIRPIN.equalsIgnoreCase(tabEntity.getDressType()) ||
+                    SkinsData.KEY_MAN_HAIRPIN.equalsIgnoreCase(tabEntity.getDressType())) {
+                roleInfo.setHair(position + 1);
+            }
+
+            MetaChatContext.getInstance().sendRoleDressInfo();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package io.agora.metachat.example.models;
 
+import androidx.annotation.NonNull;
+
 /**
  * 衣服、裤子、头发、鞋子实体类
  */
@@ -97,5 +99,19 @@ public class SkinInfo {
 
     public void setType(GarmentType type) {
         this.type = type;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "SkinInfo{" +
+                "name='" + name + '\'' +
+                ", id=" + id +
+                ", iconId=" + iconId +
+                ", gender=" + gender +
+                ", price=" + price +
+                ", isCheck=" + isCheck +
+                ", type=" + type +
+                '}';
     }
 }

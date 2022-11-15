@@ -6,13 +6,17 @@ import android.view.TextureView;
 
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
 import io.agora.metachat.AvatarModelInfo;
+import io.agora.metachat.DressInfo;
 import io.agora.metachat.EnterSceneConfig;
 import io.agora.metachat.ILocalUserAvatar;
 import io.agora.metachat.IMetachatEventHandler;
@@ -25,6 +29,8 @@ import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.example.models.RoleInfo;
+import io.agora.metachat.example.models.UnityMessage;
+import io.agora.metachat.example.models.UnityRoleInfo;
 import io.agora.metachat.example.utils.AgoraMediaPlayer;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MMKVUtils;
@@ -33,7 +39,6 @@ import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
-import io.agora.rtm.RtmTokenBuilder;
 import io.agora.spatialaudio.ILocalSpatialAudioEngine;
 import io.agora.spatialaudio.LocalSpatialAudioConfig;
 import io.agora.spatialaudio.RemoteVoicePositionInfo;
@@ -209,11 +214,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
             localUserAvatar.setModelInfo(modelInfo);
+            if (null != roleInfo) {
+                DressInfo dressInfo = new DressInfo();
+                dressInfo.mExtraCustomInfo = (JSONObject.toJSONString(getUnityRoleInfo())).getBytes();
+                localUserAvatar.setDressInfo(dressInfo);
+            }
         }
         if (null != metaChatScene) {
-            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-                metaChatScene.enableUserPositionNotification(true);
-            }
+            metaChatScene.enableUserPositionNotification(MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene());
             metaChatScene.addEventHandler(MetaChatContext.getInstance());
             EnterSceneConfig config = new EnterSceneConfig();
             config.mSceneView = this.sceneView;
@@ -304,13 +312,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         }
     }
 
-    //@Override
-//    public void onDownloadSceneProgress(MetachatSceneInfo sceneInfo, int progress, int state) {
-//        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
-//            handler.onDownloadSceneProgress(sceneInfo, progress, state);
-//        }
-//    }
-
     @Override
     public void onEnterSceneResult(int errorCode) {
         Log.d(TAG, String.format("onEnterSceneResult %d", errorCode));
@@ -327,8 +328,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 // audio的mute状态交给ILocalSpatialAudioEngine统一管理
                 rtcEngine.muteAllRemoteAudioStreams(true);
             }
-
-            pushVideoFrameToDisplay();
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                pushVideoFrameToDisplay();
+            }
         }
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
@@ -428,6 +430,67 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void initRoleInfo(String name, int gender) {
+        initRoleInfoFromDb(name, gender);
+
+        if (null == roleInfo) {
+            currentScene = MetaChatConstants.SCENE_DRESS;
+
+            if (null == roleInfos) {
+                roleInfos = new ArrayList<>(1);
+            }
+
+            roleInfo = new RoleInfo();
+            roleInfo.setName(name);
+            roleInfo.setGender(gender);
+            //dress default id is 1
+            roleInfo.setHair(1);
+            roleInfo.setTops(1);
+            roleInfos.add(roleInfo);
+
+            MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
+        } else {
+            currentScene = MetaChatConstants.SCENE_GAME;
+        }
+    }
+
+
+    public RoleInfo getRoleInfo() {
+        return roleInfo;
+    }
+
+    public int getCurrentScene() {
+        return currentScene;
+    }
+
+    public void setCurrentScene(int currentScene) {
+        this.currentScene = currentScene;
+    }
+
+    public void sendRoleDressInfo() {
+        UnityMessage message = new UnityMessage();
+        message.setKey(MetaChatConstants.KEY_UNITY_MESSAGE_DRESS_SETTING);
+        message.setValue(getUnityRoleInfo());
+        sendSceneMessage((String) JSONObject.toJSONString(message));
+    }
+
+    public void saveRoleDressInfo(String name, int gender) {
+        Iterator<RoleInfo> it = roleInfos.iterator();
+        RoleInfo tempRoleInfo = null;
+        while (it.hasNext()) {
+            tempRoleInfo = it.next();
+            if (tempRoleInfo.getName().equalsIgnoreCase(name) && tempRoleInfo.getGender() == gender) {
+                it.remove();
+            }
+        }
+        roleInfos.add(0, roleInfo);
+        MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
+    }
+
+    public void cancelRoleDressInfo(String name, int gender) {
+        initRoleInfoFromDb(name, gender);
+    }
+
+    private void initRoleInfoFromDb(String name, int gender) {
         roleInfos = JSONArray.parseArray(MMKVUtils.getInstance().getValue(MetaChatConstants.MMKV_ROLE_INFO, ""), RoleInfo.class);
 
         if (roleInfos != null && roleInfos.size() != 0) {
@@ -440,31 +503,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 }
             }
         }
-
-        if (null == roleInfo) {
-            currentScene = MetaChatConstants.SCENE_DRESS;
-        } else {
-            currentScene = MetaChatConstants.SCENE_GAME;
-        }
-
-        //for game for test
-        currentScene = MetaChatConstants.SCENE_GAME;
-    }
-
-    public RoleInfo getRoleInfo() {
-        return roleInfo;
-    }
-
-    public List<RoleInfo> getRoleInfos() {
-        return roleInfos;
-    }
-
-    public int getCurrentScene() {
-        return currentScene;
-    }
-
-    public void setCurrentScene(int currentScene) {
-        this.currentScene = currentScene;
     }
 
     public void sendSceneMessage(String msg) {
@@ -474,12 +512,19 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         }
 
         if (metaChatScene.sendMessageToScene(msg.getBytes()) == 0) {
-            //successful
-            Log.w(TAG, "sendMessageToScene successful" + msg);
+            Log.i(TAG, "send " + msg + " successful");
         } else {
-            //fail
-            Log.w(TAG, "sendMessageToScene fail" + msg);
+            Log.e(TAG, "send " + msg + " fail");
         }
+    }
+
+    public UnityRoleInfo getUnityRoleInfo() {
+        UnityRoleInfo unityRoleInfo = new UnityRoleInfo();
+        unityRoleInfo.setGender(roleInfo.getGender());
+        unityRoleInfo.setHair(roleInfo.getHair());
+        unityRoleInfo.setTops(roleInfo.getTops());
+        return unityRoleInfo;
+
     }
 
 }

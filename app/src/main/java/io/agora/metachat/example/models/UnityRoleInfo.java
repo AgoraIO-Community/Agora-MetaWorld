@@ -2,17 +2,10 @@ package io.agora.metachat.example.models;
 
 import androidx.annotation.NonNull;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * 保存换装的数据
+ * unity消息RoleInfo
  */
-public class RoleInfo {
-    //名字
-    private String name;
+public class UnityRoleInfo {
     //性别
     private int gender;
     //头发
@@ -20,16 +13,9 @@ public class RoleInfo {
     //上衣
     private int tops;
 
-    public RoleInfo() {
+    public UnityRoleInfo() {
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getGender() {
         return gender;
@@ -59,8 +45,7 @@ public class RoleInfo {
     @Override
     public String toString() {
         return "RoleInfo{" +
-                "name='" + name + '\'' +
-                ", gender=" + gender +
+                "gender=" + gender +
                 ", hair=" + hair +
                 ", tops=" + tops +
                 '}';

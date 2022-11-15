@@ -1,9 +1,5 @@
 package io.agora.metachat.example.data;
 
-import android.content.Context;
-
-import androidx.annotation.Nullable;
-
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -18,6 +14,7 @@ import io.agora.metachat.example.models.GarmentType;
 import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.SkinInfo;
 import io.agora.metachat.example.models.TabEntity;
+import io.agora.metachat.example.models.UnityMessage;
 import io.agora.metachat.example.utils.MMKVUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
@@ -25,10 +22,12 @@ import io.agora.metachat.example.utils.MetaChatConstants;
  * 换装数据
  */
 public class SkinsData {
-
-
     public static final String KEY_WOMEN_CLOTHING = "women_clothing";
     public static final String KEY_MAN_CLOTHING = "man_clothing";
+
+    public static final String KEY_WOMEN_HAIRPIN = "women_hairpin";
+    public static final String KEY_MAN_HAIRPIN = "man_hairpin";
+
 
     public static final String KEY_WOMEN_SHOES = "women_shoes";
     public static final String KEY_MAN_SHOES = "man_shoes";
@@ -36,27 +35,21 @@ public class SkinsData {
     public static final String KEY_WOMEN_TROUSERS = "women_trousers";
     public static final String KEY_MAN_TROUSERS = "man_trousers";
 
-    public static final String KEY_WOMEN_HAIRPIN = "women_hairpin";
-    public static final String KEY_MAN_HAIRPIN = "man_hairpin";
 
     //顶部tab选中的状态图片
-    public static Map<String, TabEntity> TAB_ENTITY_WOMEN = new HashMap<String, TabEntity>() {
+    public static List<TabEntity> TAB_ENTITY_WOMEN = new ArrayList<TabEntity>() {
         {
-            put(KEY_WOMEN_CLOTHING, new TabEntity(R.mipmap.clothes_icon1, R.mipmap.clothes_icon));
-            put(KEY_WOMEN_SHOES, new TabEntity(R.mipmap.shoose_icon1, R.mipmap.shoose_icon));
-            put(KEY_WOMEN_TROUSERS, new TabEntity(R.mipmap.trousers_icon1, R.mipmap.trousers_icon));
-            put(KEY_WOMEN_HAIRPIN, new TabEntity(R.mipmap.hairpin_icon1, R.mipmap.hairpin_icon));
+            add(new TabEntity(KEY_WOMEN_CLOTHING, R.mipmap.clothes_icon1, R.mipmap.clothes_icon));
+            add(new TabEntity(KEY_WOMEN_HAIRPIN, R.mipmap.hairpin_icon1, R.mipmap.hairpin_icon));
         }
 
     };
 
     //顶部tab选中的状态图片
-    public static Map<String, TabEntity> TAB_ENTITY_MAN = new HashMap<String, TabEntity>() {
+    public static List<TabEntity> TAB_ENTITY_MAN = new ArrayList<TabEntity>() {
         {
-            put(KEY_MAN_CLOTHING, new TabEntity(R.mipmap.clothes_icon1, R.mipmap.clothes_icon));
-            put(KEY_MAN_SHOES, new TabEntity(R.mipmap.shoose_icon1, R.mipmap.shoose_icon));
-            put(KEY_MAN_TROUSERS, new TabEntity(R.mipmap.trousers_icon1, R.mipmap.trousers_icon));
-            put(KEY_MAN_HAIRPIN, new TabEntity(R.mipmap.hairpin_icon1, R.mipmap.hairpin_icon));
+            add(new TabEntity(KEY_MAN_CLOTHING, R.mipmap.clothes_icon1, R.mipmap.clothes_icon));
+            add(new TabEntity(KEY_MAN_HAIRPIN, R.mipmap.hairpin_icon1, R.mipmap.hairpin_icon));
         }
 
     };
@@ -69,11 +62,7 @@ public class SkinsData {
     private final static int[] manClothesIconArray = {
             R.mipmap.man_clothes1, R.mipmap.man_clothes2,
             R.mipmap.man_clothes3,};
-    //眼镜图片
-    private final static int[] glassesIconArray = {
-            R.mipmap.glasses1, R.mipmap.glasses2,
-            R.mipmap.glasses3, R.mipmap.glasses4, R.mipmap.glasses5, R.mipmap.glasses6, R.mipmap.glasses1, R.mipmap.glasses2,
-            R.mipmap.glasses3, R.mipmap.glasses4, R.mipmap.glasses5, R.mipmap.glasses6};
+
     //发卡图片
     private final static int[] womenHairpinIconArray = {
             R.mipmap.hairpin1, R.mipmap.hairpin2,};
@@ -81,6 +70,14 @@ public class SkinsData {
     //男士发卡图片
     private final static int[] manHairpinIconArray = {
             R.mipmap.hairpin3, R.mipmap.hairpin4,};
+
+
+    //眼镜图片
+    private final static int[] glassesIconArray = {
+            R.mipmap.glasses1, R.mipmap.glasses2,
+            R.mipmap.glasses3, R.mipmap.glasses4, R.mipmap.glasses5, R.mipmap.glasses6, R.mipmap.glasses1, R.mipmap.glasses2,
+            R.mipmap.glasses3, R.mipmap.glasses4, R.mipmap.glasses5, R.mipmap.glasses6};
+
     //女士鞋子图片
     private final static int[] womenShoesIconArray = {
             R.mipmap.shooes3, R.mipmap.shooes4,};
@@ -101,6 +98,11 @@ public class SkinsData {
     //男士衣服
     private final static List<SkinInfo> manClothingList = new ArrayList<>();
 
+    //女士发卡
+    private final static List<SkinInfo> womenHairpinList = new ArrayList<>();
+    //男士发卡
+    private final static List<SkinInfo> manHairpinList = new ArrayList<>();
+
     //女士鞋子
     private final static List<SkinInfo> womenShoesList = new ArrayList<>();
     //男士鞋子
@@ -111,10 +113,6 @@ public class SkinsData {
     //男士裤子
     private final static List<SkinInfo> manTrousersList = new ArrayList<>();
 
-    //女士发卡
-    private final static List<SkinInfo> womenHairpinList = new ArrayList<>();
-    //男士发卡
-    private final static List<SkinInfo> manHairpinList = new ArrayList<>();
 
     static {
         initWomenClothes();
@@ -128,40 +126,6 @@ public class SkinsData {
 
         initWomenHairpin();
         initManHairpin();
-    }
-
-    /**
-     * 初始化换装数据
-     */
-    public static void initSkinsData(String name, int gender) {
-        RoleInfo roleInfo = MetaChatContext.getInstance().getRoleInfo();
-        List<RoleInfo> roleInfos = MetaChatContext.getInstance().getRoleInfos();
-        if (roleInfo == null) {
-            List<SkinInfo> skinInfoList = new ArrayList<>();
-            if (gender == MetaChatConstants.GENDER_WOMEN) {
-                skinInfoList.add(womenClothingList.get(0));
-                skinInfoList.add(womenShoesList.get(0));
-                skinInfoList.add(womenTrousersList.get(0));
-                skinInfoList.add(womenHairpinList.get(0));
-            } else {
-                skinInfoList.add(manClothingList.get(0));
-                skinInfoList.add(manShoesList.get(0));
-                skinInfoList.add(manTrousersList.get(0));
-                skinInfoList.add(manHairpinList.get(0));
-            }
-
-            if (null == roleInfos) {
-                roleInfos = new ArrayList<>(1);
-            }
-
-            roleInfo = new RoleInfo(skinInfoList, name, gender);
-            roleInfos.add(roleInfo);
-
-            MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
-        }
-
-        String jsonObject = (String) JSONObject.toJSONString(roleInfo);
-        MetaChatContext.getInstance().sendSceneMessage(jsonObject);
     }
 
     /**

@@ -26,6 +26,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import coil.ImageLoaders;
@@ -37,7 +38,6 @@ import io.agora.metachat.example.adapter.SexAdapter;
 import io.agora.metachat.example.databinding.MainFragmentBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.metachat.example.ui.game.GameActivity;
-import io.agora.metachat.example.utils.MMKVUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
 public class MainFragment extends Fragment implements View.OnClickListener {
@@ -89,7 +89,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         });
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(5, TimeUnit.SECONDS).subscribe(o -> {
-            MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(), mViewModel.getSex().getValue());
+            MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
+                    mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
             mViewModel.getScenes();
         });
         return binding.getRoot();
@@ -147,8 +148,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
-
-
 
             Intent intent = new Intent(context, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -214,8 +213,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    public void onResume() {
+        super.onResume();
         if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getCurrentScene()) {
             mViewModel.getScenes();
         }
