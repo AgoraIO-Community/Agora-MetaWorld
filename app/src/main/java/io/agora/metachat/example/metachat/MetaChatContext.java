@@ -28,6 +28,7 @@ import io.agora.metachat.MetachatSceneConfig;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
+import io.agora.metachat.example.models.EnterSceneExtraInfo;
 import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.UnityMessage;
 import io.agora.metachat.example.models.UnityRoleInfo;
@@ -227,11 +228,18 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             config.mSceneView = this.sceneView;
             config.mRoomName = this.roomName;
             config.mSceneId = this.sceneInfo.mSceneId;
+            /*
+             *   "extraCustomInfo":{
+             *     "sceneIndex":0  //0为默认场景，在这里指咖啡厅，1为换装设置场景
+             *   }
+             */
+            EnterSceneExtraInfo extraInfo = new EnterSceneExtraInfo();
             if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-                config.mExtraCustomInfo = null;
+                extraInfo.setSceneIndex(MetaChatConstants.SCENE_DRESS);
             } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-                config.mExtraCustomInfo = null;
+                extraInfo.setSceneIndex(MetaChatConstants.SCENE_GAME);
             }
+            config.mExtraCustomInfo = JSONObject.toJSONString(extraInfo).getBytes();
 
             metaChatScene.enterScene(config);
         }
@@ -472,6 +480,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void sendRoleDressInfo() {
+        //注意该协议格式需要和unity协商一致
         UnityMessage message = new UnityMessage();
         message.setKey(MetaChatConstants.KEY_UNITY_MESSAGE_DRESS_SETTING);
         message.setValue(getUnityRoleInfo());
