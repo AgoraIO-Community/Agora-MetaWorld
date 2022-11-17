@@ -130,13 +130,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (metachatSceneInfos.size() > 0) {
                 for (int a = 0; a < metachatSceneInfos.size(); a++) {
                     //8为内容中心测试的ID号
-                    int targetSceneId = 8;
-                    if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-                        targetSceneId = 8;
-                    } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-                        targetSceneId = 8;
-                    }
-                    if (metachatSceneInfos.get(a).getSceneId() == targetSceneId) {
+                    if (metachatSceneInfos.get(a).getSceneId() == 8) {
                         mViewModel.prepareScene(metachatSceneInfos.get(a));
                         break;
                     }

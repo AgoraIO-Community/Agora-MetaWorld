@@ -200,16 +200,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
-        if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-        }
         refreshByIntent(intent, mTextureView);
     }
 
@@ -371,6 +361,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     protected void onResume() {
+        if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        }
         super.onResume();
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
@@ -534,4 +533,9 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             MetaChatContext.getInstance().sendRoleDressInfo();
         }
     }
+
+/*    @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }*/
 }

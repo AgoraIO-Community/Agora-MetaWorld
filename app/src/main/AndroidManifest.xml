@@ -42,7 +42,6 @@
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
             android:hardwareAccelerated="true"
             android:resizeableActivity="false"
-            android:screenOrientation="landscape"
             android:theme="@style/UnityThemeSelector" />
 
         <meta-data

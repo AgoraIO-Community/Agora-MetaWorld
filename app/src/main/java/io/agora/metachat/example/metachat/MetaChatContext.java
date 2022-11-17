@@ -227,6 +227,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             config.mSceneView = this.sceneView;
             config.mRoomName = this.roomName;
             config.mSceneId = this.sceneInfo.mSceneId;
+            if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+                config.mExtraCustomInfo = null;
+            } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                config.mExtraCustomInfo = null;
+            }
 
             metaChatScene.enterScene(config);
         }
