@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -63,11 +62,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     private final ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
     private int mCurrentTabIndex;
-    private ViewPager mCurrentTabViewPager;
     private List<SkinGridViewAdapter> mTabItemAdapters;
-
-    private int mScreenWidth;
-    private int mScreenHeight;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -184,17 +179,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         FrameLayout localView = (FrameLayout) findViewById(R.id.unity);
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1, -1);
         localView.addView(mTextureView, 0, layoutParams);
-
-        if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            mScreenHeight = dm.widthPixels;
-            mScreenWidth = dm.heightPixels;
-        } else {
-            DisplayMetrics dm = getResources().getDisplayMetrics();
-            mScreenWidth = dm.widthPixels;
-            mScreenHeight = dm.heightPixels;
-        }
-
     }
 
     @Override
@@ -299,12 +283,9 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     public void onReleasedScene(int status) {
         if (status == 0) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    MetaChatContext.getInstance().destroy();
-                    isEnterScene.set(false);
-                }
+            runOnUiThread(() -> {
+                MetaChatContext.getInstance().destroy();
+                isEnterScene.set(false);
             });
 
 
@@ -331,12 +312,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
         //异步线程回调需在主线程处理
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MetaChatContext.getInstance().enterScene();
-            }
-        });
+        runOnUiThread(() -> MetaChatContext.getInstance().enterScene());
     }
 
     @Override
@@ -487,7 +463,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         }
 
 
-        mCurrentTabViewPager = (ViewPager) view.findViewById(R.id.viewpage_skin_item);
+        ViewPager mCurrentTabViewPager = (ViewPager) view.findViewById(R.id.viewpage_skin_item);
         CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.indicator);
 
         //总的页数=总数/每页数量，并向上取整取整

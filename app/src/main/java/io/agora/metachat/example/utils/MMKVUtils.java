@@ -14,7 +14,7 @@ public class MMKVUtils {
     private static volatile MMKVUtils mmkvUtils;
     private static final String PREFERENCE_NAME = "metachat";
 
-    private MMKV mmkv;
+    private final MMKV mmkv;
 
     private MMKVUtils(String id) {
         mmkv = MMKV.mmkvWithID(id, MMKV.MULTI_PROCESS_MODE);

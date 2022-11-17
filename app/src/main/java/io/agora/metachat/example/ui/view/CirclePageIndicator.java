@@ -18,9 +18,9 @@ import androidx.viewpager.widget.ViewPager;
 public class CirclePageIndicator extends View {
 
     //点的半径
-    private int mDotRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
+    private final int mDotRadius = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
     //点与点的间隔
-    private int mDotGap = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
+    private final int mDotGap = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
 
 
     private ViewPager mViewPager;
@@ -56,9 +56,12 @@ public class CirclePageIndicator extends View {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (mViewPager.getAdapter() == null) {
+            return;
+        }
         int count = mViewPager.getAdapter().getCount();
         //宽度 = 点的直径 * 点的个数 + 点与点间隔 * (点的个数 - 1)
-        int width =  2 * mDotRadius * count + (count - 1) * mDotGap;
+        int width = 2 * mDotRadius * count + (count - 1) * mDotGap;
         //高度 = 点的直径
         int height = 2 * mDotRadius;
         setMeasuredDimension(width, height);
@@ -69,7 +72,7 @@ public class CirclePageIndicator extends View {
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
-    private ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
+    private final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.OnPageChangeListener() {
 
         @Override
         public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,20 +94,21 @@ public class CirclePageIndicator extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        if (mViewPager.getAdapter() == null) {
+            return;
+        }
         //点与点之间圆心的距离
-        int dotDistance = mDotGap + 2 *  mDotRadius;
+        int dotDistance = mDotGap + 2 * mDotRadius;
         //循环遍历不动点
         for (int i = 0; i < mViewPager.getAdapter().getCount(); i++) {
             float cx = mDotRadius + i * dotDistance;
-            float cy = mDotRadius;
             mDotPaint.setColor(mNormalColor);
-            canvas.drawCircle(cx, cy, mDotRadius, mDotPaint);
+            canvas.drawCircle(cx, (float) mDotRadius, mDotRadius, mDotPaint);
         }
         //绘制动点
         mDotPaint.setColor(mSelectedColor);
         //计算动点x轴的位置
-        float mMoveCx = mDotRadius + dotDistance * mPositionOffset + mPosition * dotDistance ;
-        float mMoveCy = mDotRadius;
-        canvas.drawCircle(mMoveCx, mMoveCy, mDotRadius, mDotPaint);
+        float mMoveCx = mDotRadius + dotDistance * mPositionOffset + mPosition * dotDistance;
+        canvas.drawCircle(mMoveCx, (float) mDotRadius, mDotRadius, mDotPaint);
     }
 }

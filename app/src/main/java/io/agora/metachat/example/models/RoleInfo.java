@@ -2,10 +2,6 @@ package io.agora.metachat.example.models;
 
 import androidx.annotation.NonNull;
 
-import com.alibaba.fastjson.annotation.JSONField;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 保存换装的数据

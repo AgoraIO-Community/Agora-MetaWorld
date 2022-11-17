@@ -3,7 +3,6 @@ package io.agora.metachat.example.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,7 +25,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import coil.ImageLoaders;
@@ -40,7 +38,7 @@ import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.metachat.example.ui.game.GameActivity;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
-public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
     private MainFragmentBinding binding;
@@ -55,7 +53,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = MainFragmentBinding.inflate(inflater, container, false);
-        binding.avatar.setOnClickListener(this);
         binding.nickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -88,17 +85,25 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
         });
         //防止多次频繁点击异常处理
-        RxView.clicks(binding.enter).throttleFirst(5, TimeUnit.SECONDS).subscribe(o -> {
+        RxView.clicks(binding.enter).throttleFirst(2, TimeUnit.SECONDS).subscribe(o -> {
             MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
                     mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
             mViewModel.getScenes();
         });
+
+        RxView.clicks(binding.avatar).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            CustomDialog.showAvatarPicker(requireContext(), charSequence -> {
+                mViewModel.setAvatar(charSequence.toString());
+                return null;
+            }, null, null);
+        });
+
         return binding.getRoot();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         LifecycleOwner owner = getViewLifecycleOwner();
         Context context = requireContext();
@@ -192,19 +197,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         binding = null;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.avatar:
-                CustomDialog.showAvatarPicker(requireContext(), charSequence -> {
-                    mViewModel.setAvatar(charSequence.toString());
-                    return null;
-                }, null, null);
-                break;
-            default:
-                break;
-        }
-    }
 
     @Override
     public void onResume() {

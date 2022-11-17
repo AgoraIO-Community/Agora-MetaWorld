@@ -13,7 +13,7 @@ import io.agora.metachat.example.databinding.ItemUserListBinding;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
-    private MetachatUserInfo[] localDataSet;
+    private final MetachatUserInfo[] localDataSet;
 
     /**
      * Provide a reference to the type of views that you are using

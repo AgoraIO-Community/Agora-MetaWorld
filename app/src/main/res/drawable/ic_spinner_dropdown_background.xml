@@ -3,7 +3,4 @@
     android:shape="rectangle">
     <solid android:color="#ffffffff" />
     <corners android:radius="16dp" />
-    <item android:name="android:shadowColor">#a000000</item>
-    <item android:name="android:shadowDx">0</item>
-    <item android:name="android:shadowDy">6</item>
 </shape>

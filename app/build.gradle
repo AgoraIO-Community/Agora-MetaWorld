@@ -5,7 +5,7 @@ plugins {
 }
 
 Properties properties = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
 properties.load(inputStream)
 
 android {

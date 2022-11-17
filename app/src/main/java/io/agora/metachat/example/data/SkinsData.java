@@ -1,21 +1,12 @@
 package io.agora.metachat.example.data;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.agora.metachat.example.R;
-import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.models.GarmentType;
-import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.SkinInfo;
 import io.agora.metachat.example.models.TabEntity;
-import io.agora.metachat.example.models.UnityMessage;
-import io.agora.metachat.example.utils.MMKVUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
 /**

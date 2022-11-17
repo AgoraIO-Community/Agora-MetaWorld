@@ -489,7 +489,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     public void saveRoleDressInfo(String name, int gender) {
         Iterator<RoleInfo> it = roleInfos.iterator();
-        RoleInfo tempRoleInfo = null;
+        RoleInfo tempRoleInfo;
         while (it.hasNext()) {
             tempRoleInfo = it.next();
             if (tempRoleInfo.getName().equalsIgnoreCase(name) && tempRoleInfo.getGender() == gender) {
