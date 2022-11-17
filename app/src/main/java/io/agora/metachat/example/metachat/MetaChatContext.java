@@ -261,8 +261,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             clientRoleType = role;
         }});
         modelInfo.mLocalVisible = true;
-        modelInfo.mSyncPosition = isBroadcaster;
-        modelInfo.mRemoteVisible = isBroadcaster;
+
+        if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            modelInfo.mRemoteVisible = isBroadcaster;
+            modelInfo.mSyncPosition = isBroadcaster;
+        } else if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+            modelInfo.mRemoteVisible = false;
+            modelInfo.mSyncPosition = false;
+        }
 
         if (null != localUserAvatar && Constants.ERR_OK == localUserAvatar.setModelInfo(modelInfo)) {
             ret += localUserAvatar.applyInfo();

@@ -99,8 +99,13 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
                 }
             }
             mLocalVisible = true;
-            mRemoteVisible = true;
-            mSyncPosition = MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene();
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                mRemoteVisible = true;
+                mSyncPosition = true;
+            } else if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+                mRemoteVisible = false;
+                mSyncPosition = false;
+            }
         }}, new MetachatUserInfo() {{
             mUserId = KeyCenter.RTM_UID;
             mUserName = nickname.getValue() == null ? mUserId : nickname.getValue();
