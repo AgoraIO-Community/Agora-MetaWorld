@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -183,6 +184,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         });
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         binding.unity.addView(mTextureView, 0, layoutParams);
+
     }
 
     @Override
@@ -527,5 +529,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenWidth = dm.widthPixels;
+        int screenHeight = dm.heightPixels;
+
+        ViewGroup.LayoutParams layoutParams = mTextureView.getLayoutParams();
+        layoutParams.height = screenHeight;
+        layoutParams.width = screenWidth;
+        mTextureView.setLayoutParams(layoutParams);
+        mTextureView.invalidate();
     }
 }

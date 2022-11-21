@@ -239,8 +239,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                 extraInfo.setSceneIndex(MetaChatConstants.SCENE_GAME);
             }
+            Log.i("assetManifest","json="+JSONObject.toJSONString(extraInfo));
             config.mExtraCustomInfo = JSONObject.toJSONString(extraInfo).getBytes();
-
+            Log.i("assetManifest","string="+new String(config.mExtraCustomInfo));
             metaChatScene.enterScene(config);
         }
     }
