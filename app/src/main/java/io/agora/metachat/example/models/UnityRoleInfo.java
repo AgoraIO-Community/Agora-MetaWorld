@@ -12,6 +12,10 @@ public class UnityRoleInfo {
     private int hair;
     //上衣
     private int tops;
+    //裤子
+    private int lower;
+    //鞋子
+    private int shoes;
 
     public UnityRoleInfo() {
     }
@@ -41,13 +45,31 @@ public class UnityRoleInfo {
         this.tops = tops;
     }
 
+    public int getLower() {
+        return lower;
+    }
+
+    public void setLower(int lower) {
+        this.lower = lower;
+    }
+
+    public int getShoes() {
+        return shoes;
+    }
+
+    public void setShoes(int shoes) {
+        this.shoes = shoes;
+    }
+
     @NonNull
     @Override
     public String toString() {
-        return "RoleInfo{" +
+        return "UnityRoleInfo{" +
                 "gender=" + gender +
                 ", hair=" + hair +
                 ", tops=" + tops +
+                ", lower=" + lower +
+                ", shoes=" + shoes +
                 '}';
     }
 }

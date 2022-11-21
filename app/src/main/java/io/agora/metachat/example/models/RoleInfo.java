@@ -16,6 +16,11 @@ public class RoleInfo {
     //上衣
     private int tops;
 
+    //裤子
+    private int lower;
+    //鞋子
+    private int shoes;
+
     public RoleInfo() {
     }
 
@@ -51,6 +56,22 @@ public class RoleInfo {
         this.tops = tops;
     }
 
+    public int getLower() {
+        return lower;
+    }
+
+    public void setLower(int lower) {
+        this.lower = lower;
+    }
+
+    public int getShoes() {
+        return shoes;
+    }
+
+    public void setShoes(int shoes) {
+        this.shoes = shoes;
+    }
+
     @NonNull
     @Override
     public String toString() {
@@ -59,6 +80,8 @@ public class RoleInfo {
                 ", gender=" + gender +
                 ", hair=" + hair +
                 ", tops=" + tops +
+                ", lower=" + lower +
+                ", shoes=" + shoes +
                 '}';
     }
 }

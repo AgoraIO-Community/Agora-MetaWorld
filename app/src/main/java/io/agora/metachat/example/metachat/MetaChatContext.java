@@ -464,6 +464,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             //dress default id is 1
             roleInfo.setHair(1);
             roleInfo.setTops(1);
+            roleInfo.setShoes(1);
+            roleInfo.setLower(1);
             roleInfos.add(roleInfo);
 
             MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
@@ -543,8 +545,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         unityRoleInfo.setGender(roleInfo.getGender());
         unityRoleInfo.setHair(roleInfo.getHair());
         unityRoleInfo.setTops(roleInfo.getTops());
+        unityRoleInfo.setLower(roleInfo.getLower());
+        unityRoleInfo.setShoes(roleInfo.getShoes());
         return unityRoleInfo;
-
     }
-
 }

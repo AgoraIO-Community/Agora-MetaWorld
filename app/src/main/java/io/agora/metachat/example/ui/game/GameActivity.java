@@ -3,6 +3,7 @@ package io.agora.metachat.example.ui.game;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.util.Log;
@@ -154,6 +155,10 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
+        initUnityView();
+    }
+
+    private void initUnityView() {
         mTextureView = new TextureView(this);
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
@@ -176,9 +181,8 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
             }
         });
-        FrameLayout localView = (FrameLayout) findViewById(R.id.unity);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(-1, -1);
-        localView.addView(mTextureView, 0, layoutParams);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        binding.unity.addView(mTextureView, 0, layoutParams);
     }
 
     @Override
@@ -506,12 +510,22 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                 roleInfo.setHair(position + 1);
             }
 
+            if (SkinsData.KEY_WOMEN_TROUSERS.equalsIgnoreCase(tabEntity.getDressType()) ||
+                    SkinsData.KEY_MAN_TROUSERS.equalsIgnoreCase(tabEntity.getDressType())) {
+                roleInfo.setLower(position + 1);
+            }
+
+            if (SkinsData.KEY_WOMEN_SHOES.equalsIgnoreCase(tabEntity.getDressType()) ||
+                    SkinsData.KEY_MAN_SHOES.equalsIgnoreCase(tabEntity.getDressType())) {
+                roleInfo.setShoes(position + 1);
+            }
+
             MetaChatContext.getInstance().sendRoleDressInfo();
         }
     }
 
-/*    @Override
-    public void setRequestedOrientation(int requestedOrientation) {
-        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-    }*/
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }

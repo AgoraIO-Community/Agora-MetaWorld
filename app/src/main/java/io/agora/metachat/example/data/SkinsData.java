@@ -19,7 +19,6 @@ public class SkinsData {
     public static final String KEY_WOMEN_HAIRPIN = "women_hairpin";
     public static final String KEY_MAN_HAIRPIN = "man_hairpin";
 
-
     public static final String KEY_WOMEN_SHOES = "women_shoes";
     public static final String KEY_MAN_SHOES = "man_shoes";
 
@@ -30,8 +29,10 @@ public class SkinsData {
     //顶部tab选中的状态图片
     public static List<TabEntity> TAB_ENTITY_WOMEN = new ArrayList<TabEntity>() {
         {
-            add(new TabEntity(KEY_WOMEN_CLOTHING, R.mipmap.clothes_icon1, R.mipmap.clothes_icon));
-            add(new TabEntity(KEY_WOMEN_HAIRPIN, R.mipmap.hairpin_icon1, R.mipmap.hairpin_icon));
+            add(new TabEntity(KEY_WOMEN_CLOTHING, R.drawable.tops_icon_checked, R.drawable.tops_icon));
+            add(new TabEntity(KEY_WOMEN_HAIRPIN, R.drawable.hair_icon_checked, R.drawable.hair_icon));
+            add(new TabEntity(KEY_WOMEN_SHOES, R.drawable.shoes_icon_checked, R.drawable.shoes_icon));
+            add(new TabEntity(KEY_WOMEN_TROUSERS, R.drawable.lower_icon_checked, R.drawable.lower_icon));
         }
 
     };
@@ -39,49 +40,42 @@ public class SkinsData {
     //顶部tab选中的状态图片
     public static List<TabEntity> TAB_ENTITY_MAN = new ArrayList<TabEntity>() {
         {
-            add(new TabEntity(KEY_MAN_CLOTHING, R.mipmap.clothes_icon1, R.mipmap.clothes_icon));
-            add(new TabEntity(KEY_MAN_HAIRPIN, R.mipmap.hairpin_icon1, R.mipmap.hairpin_icon));
+            add(new TabEntity(KEY_MAN_CLOTHING, R.drawable.tops_icon_checked, R.drawable.tops_icon));
+            add(new TabEntity(KEY_MAN_HAIRPIN, R.drawable.hair_icon_checked, R.drawable.hair_icon));
+            add(new TabEntity(KEY_MAN_SHOES, R.drawable.shoes_icon_checked, R.drawable.shoes_icon));
+            add(new TabEntity(KEY_MAN_TROUSERS, R.drawable.lower_icon_checked, R.drawable.lower_icon));
         }
 
     };
 
     //女士衣服图片
     private final static int[] womenClothesIconArray = {
-            R.mipmap.clothes1, R.mipmap.clothes2,
-            R.mipmap.clothes3,};
+            R.drawable.girl_tops1, R.drawable.girl_tops2, R.drawable.girl_tops3, R.drawable.girl_tops4,};
     //男士衣服图片
     private final static int[] manClothesIconArray = {
-            R.mipmap.man_clothes1, R.mipmap.man_clothes2,
-            R.mipmap.man_clothes3,};
+            R.drawable.girl_tops1, R.drawable.girl_tops2, R.drawable.girl_tops3, R.drawable.girl_tops4,};
 
     //发卡图片
     private final static int[] womenHairpinIconArray = {
-            R.mipmap.hairpin1, R.mipmap.hairpin2,};
+            R.drawable.girl_hair1, R.drawable.girl_hair2, R.drawable.girl_hair3, R.drawable.girl_hair4,};
 
     //男士发卡图片
     private final static int[] manHairpinIconArray = {
-            R.mipmap.hairpin3, R.mipmap.hairpin4,};
-
-
-    //眼镜图片
-    private final static int[] glassesIconArray = {
-            R.mipmap.glasses1, R.mipmap.glasses2,
-            R.mipmap.glasses3, R.mipmap.glasses4, R.mipmap.glasses5, R.mipmap.glasses6, R.mipmap.glasses1, R.mipmap.glasses2,
-            R.mipmap.glasses3, R.mipmap.glasses4, R.mipmap.glasses5, R.mipmap.glasses6};
+            R.drawable.girl_hair1, R.drawable.girl_hair2, R.drawable.girl_hair3, R.drawable.girl_hair4,};
 
     //女士鞋子图片
     private final static int[] womenShoesIconArray = {
-            R.mipmap.shooes3, R.mipmap.shooes4,};
+            R.drawable.girl_shoes1, R.drawable.girl_shoes2, R.drawable.girl_shoes3, R.drawable.girl_shoes4,};
     //男士鞋子
     private final static int[] manShoesIconArray = {
-            R.mipmap.shooes2, R.mipmap.shooes5,};
+            R.drawable.girl_shoes1, R.drawable.girl_shoes2, R.drawable.girl_shoes3, R.drawable.girl_shoes4,};
+
     //女士裤子图片
     private final static int[] womenTrousersIconArray = {
-            R.mipmap.trousers1, R.mipmap.trousers2,
-    };
+            R.drawable.girl_lower1, R.drawable.girl_lower2, R.drawable.girl_lower3, R.drawable.girl_lower4,};
     //男士裤子图片
     private final static int[] manTrousersIconArray = {
-            R.mipmap.trousers3, R.mipmap.trousers4,};
+            R.drawable.girl_lower1, R.drawable.girl_lower2, R.drawable.girl_lower3, R.drawable.girl_lower4,};
 
 
     //女士衣服
