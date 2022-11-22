@@ -84,6 +84,8 @@ public class MainFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
+        //默认女装
+        binding.spinner.setSelection(1, true);
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(2, TimeUnit.SECONDS).subscribe(o -> {
             MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),

@@ -239,9 +239,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                 extraInfo.setSceneIndex(MetaChatConstants.SCENE_GAME);
             }
-            Log.i("assetManifest","json="+JSONObject.toJSONString(extraInfo));
             config.mExtraCustomInfo = JSONObject.toJSONString(extraInfo).getBytes();
-            Log.i("assetManifest","string="+new String(config.mExtraCustomInfo));
             metaChatScene.enterScene(config);
         }
     }
@@ -492,8 +490,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         //注意该协议格式需要和unity协商一致
         UnityMessage message = new UnityMessage();
         message.setKey(MetaChatConstants.KEY_UNITY_MESSAGE_DRESS_SETTING);
-        message.setValue(getUnityRoleInfo());
-        sendSceneMessage((String) JSONObject.toJSONString(message));
+        message.setValue(JSONObject.toJSONString(getUnityRoleInfo()));
+        sendSceneMessage(JSONObject.toJSONString(message));
     }
 
     public void saveRoleDressInfo(String name, int gender) {
