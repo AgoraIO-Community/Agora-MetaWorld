@@ -212,6 +212,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void enterScene() {
+        Log.i("tage", "roleinfo=" + getUnityRoleInfo());
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
             localUserAvatar.setModelInfo(modelInfo);
@@ -547,5 +548,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         unityRoleInfo.setLower(roleInfo.getLower());
         unityRoleInfo.setShoes(roleInfo.getShoes());
         return unityRoleInfo;
+    }
+
+    public void resetRoleInfo() {
+        roleInfos = null;
+        roleInfo = null;
     }
 }

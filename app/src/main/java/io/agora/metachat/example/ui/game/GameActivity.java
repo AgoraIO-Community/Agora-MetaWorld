@@ -242,6 +242,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         switch (v.getId()) {
             case R.id.back:
                 MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
+                MetaChatContext.getInstance().resetRoleInfo();
                 MetaChatContext.getInstance().leaveScene();
                 break;
             case R.id.mode:
