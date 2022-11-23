@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,7 +170,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
             @Override
             public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-
             }
 
             @Override
@@ -179,7 +179,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
             @Override
             public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
-
             }
         });
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -189,6 +188,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     protected void onNewIntent(Intent intent) {
+        /*if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        }*/
         super.onNewIntent(intent);
         refreshByIntent(intent, mTextureView);
     }
@@ -209,6 +217,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         if (nickname != null) {
             binding.card.nickname.setText(nickname);
         }
+
 
         String avatar = intent.getStringExtra("avatar");
         if (avatar != null) {
@@ -343,15 +352,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     protected void onResume() {
-        if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-        }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onResume();
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
@@ -462,6 +463,12 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             } else if (SkinsData.KEY_WOMEN_HAIRPIN.equalsIgnoreCase(viewDressType) ||
                     SkinsData.KEY_MAN_HAIRPIN.equalsIgnoreCase(viewDressType)) {
                 selectIndex = roleInfo.getHair() - 1;
+            } else if (SkinsData.KEY_WOMEN_SHOES.equalsIgnoreCase(viewDressType) ||
+                    SkinsData.KEY_MAN_SHOES.equalsIgnoreCase(viewDressType)) {
+                selectIndex = roleInfo.getShoes() - 1;
+            } else if (SkinsData.KEY_WOMEN_TROUSERS.equalsIgnoreCase(viewDressType) ||
+                    SkinsData.KEY_MAN_TROUSERS.equalsIgnoreCase(viewDressType)) {
+                selectIndex = roleInfo.getLower() - 1;
             }
             if (selectIndex < 0) {
                 selectIndex = 0;
@@ -529,15 +536,5 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
-
-        ViewGroup.LayoutParams layoutParams = mTextureView.getLayoutParams();
-        layoutParams.height = screenHeight;
-        layoutParams.width = screenWidth;
-        mTextureView.setLayoutParams(layoutParams);
-        mTextureView.invalidate();
     }
 }

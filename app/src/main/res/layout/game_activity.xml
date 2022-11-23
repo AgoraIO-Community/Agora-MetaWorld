@@ -9,8 +9,10 @@
     <FrameLayout
         android:id="@+id/unity"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/dress_tab"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -36,12 +38,14 @@
     <com.flyco.tablayout.CommonTabLayout
         android:id="@+id/dress_tab"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:background="#ffffff"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/dress_viewpage"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:tl_iconHeight="60dp"
         app:tl_iconWidth="60dp"
         app:tl_indicator_color="#2C97DE"
@@ -54,7 +58,7 @@
     <io.agora.metachat.example.ui.view.NoScrollViewPager
         android:id="@+id/dress_viewpage"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="160dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

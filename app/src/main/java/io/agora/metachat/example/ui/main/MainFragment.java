@@ -3,6 +3,7 @@ package io.agora.metachat.example.ui.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -84,8 +85,6 @@ public class MainFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
         });
-        //默认女装
-        binding.spinner.setSelection(1, true);
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(2, TimeUnit.SECONDS).subscribe(o -> {
             MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),

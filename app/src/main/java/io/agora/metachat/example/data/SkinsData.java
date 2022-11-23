@@ -53,7 +53,7 @@ public class SkinsData {
             R.drawable.girl_tops1, R.drawable.girl_tops2, R.drawable.girl_tops3, R.drawable.girl_tops4,};
     //男士衣服图片
     private final static int[] manClothesIconArray = {
-            R.drawable.girl_tops1, R.drawable.girl_tops2, R.drawable.girl_tops3, R.drawable.girl_tops4,};
+            R.drawable.boy_tops1, R.drawable.boy_tops2,};
 
     //发卡图片
     private final static int[] womenHairpinIconArray = {
@@ -61,21 +61,21 @@ public class SkinsData {
 
     //男士发卡图片
     private final static int[] manHairpinIconArray = {
-            R.drawable.girl_hair1, R.drawable.girl_hair2, R.drawable.girl_hair3, R.drawable.girl_hair4,};
+            R.drawable.boy_hair1, R.drawable.boy_hair2,};
 
     //女士鞋子图片
     private final static int[] womenShoesIconArray = {
             R.drawable.girl_shoes1, R.drawable.girl_shoes2, R.drawable.girl_shoes3, R.drawable.girl_shoes4,};
     //男士鞋子
     private final static int[] manShoesIconArray = {
-            R.drawable.girl_shoes1, R.drawable.girl_shoes2, R.drawable.girl_shoes3, R.drawable.girl_shoes4,};
+            R.drawable.boy_shoes1, R.drawable.boy_shoes2,};
 
     //女士裤子图片
     private final static int[] womenTrousersIconArray = {
             R.drawable.girl_lower1, R.drawable.girl_lower2, R.drawable.girl_lower3, R.drawable.girl_lower4,};
     //男士裤子图片
     private final static int[] manTrousersIconArray = {
-            R.drawable.girl_lower1, R.drawable.girl_lower2, R.drawable.girl_lower3, R.drawable.girl_lower4,};
+            R.drawable.boy_lower1, R.drawable.boy_lower2,};
 
 
     //女士衣服
