@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,9 +89,13 @@ public class MainFragment extends Fragment {
         });
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(2, TimeUnit.SECONDS).subscribe(o -> {
-            MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
-                    mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
-            mViewModel.getScenes();
+            if (TextUtils.isEmpty(binding.nickname.getText().toString())) {
+                Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
+            } else {
+                MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
+                        mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
+                mViewModel.getScenes();
+            }
         });
 
         RxView.clicks(binding.avatar).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
