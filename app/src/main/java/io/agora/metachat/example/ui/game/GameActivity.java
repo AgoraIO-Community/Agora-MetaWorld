@@ -87,6 +87,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                             binding.users.setVisibility(View.GONE);
                             binding.mic.setVisibility(View.GONE);
                             binding.speaker.setVisibility(View.GONE);
+                            binding.dressSetting.setVisibility(View.GONE);
                         }
                         if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                             binding.back.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
@@ -94,6 +95,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                             binding.users.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.mic.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.speaker.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.dressSetting.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
 
                             binding.cancelBt.setVisibility(View.GONE);
                             binding.saveBtn.setVisibility(View.GONE);
@@ -255,8 +257,8 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                 isBroadcaster.set(!isBroadcaster.get());
                 break;
             case R.id.users:
-                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_DRESS);
-                MetaChatContext.getInstance().leaveScene();
+                Toast.makeText(this, "暂不支持", Toast.LENGTH_LONG)
+                        .show();
                 break;
             case R.id.mic:
                 enableMic.set(!enableMic.get());
@@ -272,6 +274,10 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             case R.id.save_btn:
                 MetaChatContext.getInstance().saveRoleDressInfo(nickname, gender);
                 MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
+                MetaChatContext.getInstance().leaveScene();
+                break;
+            case R.id.dress_setting:
+                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_DRESS);
                 MetaChatContext.getInstance().leaveScene();
                 break;
         }
