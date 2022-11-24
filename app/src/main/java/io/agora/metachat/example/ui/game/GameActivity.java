@@ -6,14 +6,11 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -32,8 +29,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import coil.ImageLoaders;
-import coil.request.ImageRequest;
 import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
@@ -51,6 +46,7 @@ import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.SkinInfo;
 import io.agora.metachat.example.models.TabEntity;
 import io.agora.metachat.example.ui.view.CirclePageIndicator;
+import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.Constants;
 
@@ -60,8 +56,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     private GameActivityBinding binding;
     private TextureView mTextureView = null;
 
-    private String nickname;
-    private int gender;
     private final ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
     private int mCurrentTabIndex;
@@ -92,6 +86,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                         if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                             binding.back.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.card.getRoot().setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.card.nickname.setText(MetaChatContext.getInstance().getRoleInfo().getName());
                             binding.users.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.mic.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.speaker.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
@@ -132,6 +127,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                                 Constants.CLIENT_ROLE_BROADCASTER : Constants.CLIENT_ROLE_AUDIENCE)) {
                             return;
                         }
+                        binding.card.nickname.setText(MetaChatContext.getInstance().getRoleInfo().getName());
                         binding.card.mode.setText(isBroadcaster.get() ? "语聊模式" : "游客模式");
                         binding.card.tips.setVisibility(isBroadcaster.get() ? View.GONE : View.VISIBLE);
                         binding.card.role.setImageDrawable(
@@ -167,7 +163,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                refreshByIntent(getIntent(), mTextureView);
+                createScene(mTextureView);
             }
 
             @Override
@@ -200,8 +196,9 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             }
         }*/
         super.onNewIntent(intent);
-        refreshByIntent(intent, mTextureView);
+        createScene(mTextureView);
     }
+
 
     @Override
     protected void onDestroy() {
@@ -214,29 +211,8 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
     }
 
-    private void refreshByIntent(Intent intent, TextureView tv) {
-        nickname = intent.getStringExtra("nickname");
-        if (nickname != null) {
-            binding.card.nickname.setText(nickname);
-        }
-
-
-        String avatar = intent.getStringExtra("avatar");
-        if (avatar != null) {
-            ImageRequest request = new ImageRequest.Builder(this)
-                    .data(avatar)
-                    .target(binding.card.avatar)
-                    .build();
-            ImageLoaders.create(this)
-                    .enqueue(request);
-        }
-
-        gender = intent.getIntExtra("gender", MetaChatConstants.GENDER_MAN);
-
-        String roomName = intent.getStringExtra("roomName");
-        if (roomName != null) {
-            MetaChatContext.getInstance().createScene(this, roomName, tv);
-        }
+    private void createScene(TextureView tv) {
+        MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, tv);
     }
 
     @Override
@@ -267,12 +243,14 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                 enableSpeaker.set(!enableSpeaker.get());
                 break;
             case R.id.cancel_bt:
-                MetaChatContext.getInstance().cancelRoleDressInfo(nickname, gender);
+                MetaChatContext.getInstance().cancelRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
+                        , MetaChatContext.getInstance().getRoleInfo().getGender());
                 MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
                 MetaChatContext.getInstance().leaveScene();
                 break;
             case R.id.save_btn:
-                MetaChatContext.getInstance().saveRoleDressInfo(nickname, gender);
+                MetaChatContext.getInstance().saveRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
+                        , MetaChatContext.getInstance().getRoleInfo().getGender());
                 MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
                 MetaChatContext.getInstance().leaveScene();
                 break;
@@ -389,7 +367,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         mTabEntities.clear();
         mCurrentTabIndex = 0;
         View view;
-        if (MetaChatConstants.GENDER_WOMEN == gender) {
+        if (MetaChatConstants.GENDER_WOMEN == MetaChatContext.getInstance().getRoleInfo().getGender()) {
             for (TabEntity tabEntity : SkinsData.TAB_ENTITY_WOMEN) {
                 mTabEntities.add(tabEntity);
 

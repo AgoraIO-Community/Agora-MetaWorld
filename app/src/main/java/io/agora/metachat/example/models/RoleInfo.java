@@ -11,6 +11,8 @@ public class RoleInfo {
     private String name;
     //性别
     private int gender;
+    //avatar
+    private String avatar;
     //头发
     private int hair;
     //上衣
@@ -38,6 +40,14 @@ public class RoleInfo {
 
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public int getHair() {
@@ -78,6 +88,7 @@ public class RoleInfo {
         return "RoleInfo{" +
                 "name='" + name + '\'' +
                 ", gender=" + gender +
+                ", avatar='" + avatar + '\'' +
                 ", hair=" + hair +
                 ", tops=" + tops +
                 ", lower=" + lower +

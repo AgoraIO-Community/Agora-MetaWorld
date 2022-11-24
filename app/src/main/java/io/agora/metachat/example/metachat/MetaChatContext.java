@@ -212,7 +212,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void enterScene() {
-        Log.i("tage", "roleinfo=" + getUnityRoleInfo());
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
             localUserAvatar.setModelInfo(modelInfo);

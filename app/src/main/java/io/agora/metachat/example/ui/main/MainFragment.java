@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,6 +95,7 @@ public class MainFragment extends Fragment {
             } else {
                 MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
                         mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
+                MetaChatContext.getInstance().getRoleInfo().setAvatar(mViewModel.getAvatar().getValue());
                 mViewModel.getScenes();
             }
         });
@@ -157,10 +159,6 @@ public class MainFragment extends Fragment {
 
             Intent intent = new Intent(context, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.putExtra("nickname", mViewModel.getNickname().getValue());
-            intent.putExtra("avatar", mViewModel.getAvatar().getValue());
-            intent.putExtra("roomName", KeyCenter.CHANNEL_ID);
-            intent.putExtra("gender", mViewModel.getSex().getValue());
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
