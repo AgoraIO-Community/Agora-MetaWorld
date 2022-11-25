@@ -470,7 +470,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         }
 
 
-        ViewPager mCurrentTabViewPager = (ViewPager) view.findViewById(R.id.viewpage_skin_item);
+        ViewPager mCurrentTabViewPager = view.findViewById(R.id.viewpage_skin_item);
         CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.indicator);
 
         //总的页数=总数/每页数量，并向上取整取整
@@ -483,7 +483,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         for (int i = 0; i < totalPage; i++) {
             View pagerView = getLayoutInflater().inflate(R.layout.skin_gridview, null);
             //初始化gridview的控件并绑定
-            final GridView gridView = (GridView) pagerView.findViewById(R.id.gridview);
+            final GridView gridView = pagerView.findViewById(R.id.gridview);
             adapter = new SkinGridViewAdapter(this, dataList, i, SKIN_TAB_MAX_PAGE_SIZE, this);
             gridView.setAdapter(adapter);
             //每一个GridView作为一个View对象添加到ViewPager集合中
