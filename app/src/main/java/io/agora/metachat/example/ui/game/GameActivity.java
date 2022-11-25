@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -60,6 +61,9 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
     private int mCurrentTabIndex;
     private List<SkinGridViewAdapter> mTabItemAdapters;
+
+    int screenWidth;
+    int screenHeight;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -156,6 +160,11 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
         initUnityView();
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        screenWidth = dm.widthPixels;
+        screenHeight = dm.heightPixels;
     }
 
     private void initUnityView() {
@@ -186,15 +195,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     protected void onNewIntent(Intent intent) {
-        /*if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-        }*/
         super.onNewIntent(intent);
         createScene(mTextureView);
     }
@@ -337,6 +337,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     protected void onResume() {
+        /*if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            }
+        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        }*/
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onResume();
         if (MetaChatContext.getInstance().isInScene()) {

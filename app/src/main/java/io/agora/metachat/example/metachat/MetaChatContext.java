@@ -257,6 +257,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         int ret = Constants.ERR_OK;
         boolean isBroadcaster = role == Constants.CLIENT_ROLE_BROADCASTER;
         ret += rtcEngine.updateChannelMediaOptions(new ChannelMediaOptions() {{
+            publishMicrophoneTrack = isBroadcaster;
             clientRoleType = role;
         }});
         modelInfo.mLocalVisible = true;
