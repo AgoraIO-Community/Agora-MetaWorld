@@ -3,10 +3,8 @@ package io.agora.metachat.example.ui.game;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -61,9 +59,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
     private int mCurrentTabIndex;
     private List<SkinGridViewAdapter> mTabItemAdapters;
-
-    int screenWidth;
-    int screenHeight;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -160,11 +155,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
         initUnityView();
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels;
     }
 
     private void initUnityView() {
@@ -336,17 +326,15 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     }
 
     @Override
-    protected void onResume() {
-        /*if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            }
-        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-            if (ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE != getRequestedOrientation()) {
-                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            }
-        }*/
+    protected void onStart() {
+        //强制锁屏在setRequestedOrientation实现
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
@@ -528,7 +516,13 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     }
 
     @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
+    public void setRequestedOrientation(int requestedOrientation) {
+        if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+        }
+        super.setRequestedOrientation(requestedOrientation);
     }
+
 }
