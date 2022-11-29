@@ -59,6 +59,8 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
     private int mCurrentTabIndex;
     private List<SkinGridViewAdapter> mTabItemAdapters;
+    private boolean mReCreateScene;
+    private boolean mSurfaceSizeChange;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -142,11 +144,16 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
                 }
             };
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //just for call setRequestedOrientation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onCreate(savedInstanceState);
         binding = GameActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        resetSceneState();
 
         isEnterScene.addOnPropertyChangedCallback(callback);
         enableMic.addOnPropertyChangedCallback(callback);
@@ -167,6 +174,8 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
             @Override
             public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+                mSurfaceSizeChange = true;
+                maybeCreateScene();
             }
 
             @Override
@@ -185,8 +194,13 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     protected void onNewIntent(Intent intent) {
+        mReCreateScene = true;
+        //just for call setRequestedOrientation
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         super.onNewIntent(intent);
-        createScene(mTextureView);
+
+        maybeCreateScene();
     }
 
 
@@ -202,6 +216,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     }
 
     private void createScene(TextureView tv) {
+        resetSceneState();
         MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, tv);
     }
 
@@ -268,6 +283,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
+        resetSceneState();
     }
 
     @Override
@@ -322,14 +338,6 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     public void onDownloadSceneProgress(long SceneId, int progress, int state) {
-
-    }
-
-    @Override
-    protected void onStart() {
-        //强制锁屏在setRequestedOrientation实现
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        super.onStart();
 
     }
 
@@ -525,4 +533,14 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         super.setRequestedOrientation(requestedOrientation);
     }
 
+    private void maybeCreateScene() {
+        if (mReCreateScene && mSurfaceSizeChange) {
+            createScene(mTextureView);
+        }
+    }
+
+    private void resetSceneState() {
+        mReCreateScene = false;
+        mSurfaceSizeChange = false;
+    }
 }
