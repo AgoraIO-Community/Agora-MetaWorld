@@ -56,7 +56,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     private TextureView mTextureView = null;
 
     private final ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private static final int SKIN_TAB_MAX_PAGE_SIZE = 8;
+    private static final int SKIN_TAB_MAX_PAGE_SIZE = 4;
     private int mCurrentTabIndex;
     private List<SkinGridViewAdapter> mTabItemAdapters;
     private boolean mReCreateScene;

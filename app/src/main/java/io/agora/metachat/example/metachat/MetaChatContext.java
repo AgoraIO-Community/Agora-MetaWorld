@@ -129,6 +129,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                         mEventHandler = MetaChatContext.this;
                     }};
                     ret += metaChatService.initialize(config);
+                    Log.i(TAG, "launcher version=" + metaChatService.getLauncherVersion(context));
                 }
 
                 AgoraMediaPlayer.getInstance().initMediaPlayer(rtcEngine);
