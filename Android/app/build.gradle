@@ -5,7 +5,7 @@ plugins {
 }
 
 Properties properties = new Properties()
-InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
 properties.load(inputStream)
 
 android {
@@ -15,8 +15,8 @@ android {
         applicationId "io.agora.metachat.example"
         minSdk 22
         targetSdk 31
-        versionCode 204
-        versionName "2.0.4"
+        versionCode 207
+        versionName "2.0.7"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -35,7 +35,6 @@ android {
             storePassword "123456"
         }
     }
-
 
 
     viewBinding {
@@ -84,8 +83,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    implementation 'com.tencent:mmkv:1.2.14'
+    implementation 'com.alibaba:fastjson:1.2.76'
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
-
+    implementation 'io.github.h07000223:flycoTabLayout:3.0.0'
 }
 
 static def releaseTime() {

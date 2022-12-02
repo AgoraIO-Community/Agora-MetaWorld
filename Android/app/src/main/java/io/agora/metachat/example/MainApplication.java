@@ -2,6 +2,8 @@ package io.agora.metachat.example;
 
 import android.app.Application;
 
+import com.tencent.mmkv.MMKV;
+
 public class MainApplication extends Application {
 
     public static MainApplication mGlobalApplication;
@@ -15,7 +17,7 @@ public class MainApplication extends Application {
     }
 
     private void init() {
-
+        MMKV.initialize(mGlobalApplication);
     }
 
 }

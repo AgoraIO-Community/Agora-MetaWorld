@@ -6,7 +6,4 @@
         android:color="#ff3f4553" />
     <solid android:color="#fff3ece4" />
     <corners android:radius="10dp" />
-    <item android:name="android:shadowColor">#1a000000</item>
-    <item android:name="android:shadowDx">0</item>
-    <item android:name="android:shadowDy">0</item>
 </shape>

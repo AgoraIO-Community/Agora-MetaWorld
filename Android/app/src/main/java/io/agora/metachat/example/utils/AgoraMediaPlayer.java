@@ -13,7 +13,7 @@ import io.agora.rtc2.RtcEngine;
 
 public class AgoraMediaPlayer implements IMediaPlayerObserver, IMediaPlayerVideoFrameObserver {
     private static final String TAG = AgoraMediaPlayer.class.getSimpleName();
-    private static AgoraMediaPlayer mAgoraMediaPlayer;
+    private volatile static AgoraMediaPlayer mAgoraMediaPlayer;
     private IMediaPlayer mMediaPlayer;
     private OnMediaVideoFramePushListener mOnMediaVideoFramePushListener;
 

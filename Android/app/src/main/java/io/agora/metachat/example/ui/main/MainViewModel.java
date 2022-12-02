@@ -17,6 +17,7 @@ import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.MainApplication;
 import io.agora.metachat.example.metachat.MetaChatContext;
+import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.metachat.example.utils.SingleLiveData;
 
 public class MainViewModel extends ViewModel implements IMetachatEventHandler {
@@ -98,12 +99,17 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
                 }
             }
             mLocalVisible = true;
-            mRemoteVisible = true;
-            mSyncPosition = true;
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                mRemoteVisible = true;
+                mSyncPosition = true;
+            } else if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+                mRemoteVisible = false;
+                mSyncPosition = false;
+            }
         }}, new MetachatUserInfo() {{
             mUserId = KeyCenter.RTM_UID;
-            mUserName = nickname.getValue() == null ? mUserId : nickname.getValue();
-            mUserIconUrl = avatar.getValue() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : avatar.getValue();
+            mUserName = MetaChatContext.getInstance().getRoleInfo().getName() == null ? mUserId : MetaChatContext.getInstance().getRoleInfo().getName();
+            mUserIconUrl = MetaChatContext.getInstance().getRoleInfo().getAvatar() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : MetaChatContext.getInstance().getRoleInfo().getAvatar();
         }});
         if (metaChatContext.isSceneDownloaded(sceneInfo)) {
             selectScene.postValue(sceneInfo.mSceneId);

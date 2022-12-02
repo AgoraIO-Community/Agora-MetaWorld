@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
-import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.adapter.SexAdapter;
@@ -38,7 +39,7 @@ import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.metachat.example.ui.game.GameActivity;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
-public class MainFragment extends Fragment implements View.OnClickListener {
+public class MainFragment extends Fragment {
 
     private MainViewModel mViewModel;
     private MainFragmentBinding binding;
@@ -53,7 +54,6 @@ public class MainFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         binding = MainFragmentBinding.inflate(inflater, container, false);
-        binding.avatar.setOnClickListener(this);
         binding.nickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -86,15 +86,30 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             }
         });
         //防止多次频繁点击异常处理
-        RxView.clicks(binding.enter).throttleFirst(5, TimeUnit.SECONDS).subscribe(o -> {
-            mViewModel.getScenes();
+        RxView.clicks(binding.enter).throttleFirst(2, TimeUnit.SECONDS).subscribe(o -> {
+            if (TextUtils.isEmpty(binding.nickname.getText().toString())) {
+                Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
+            } else {
+                MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
+                        mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
+                MetaChatContext.getInstance().getRoleInfo().setAvatar(mViewModel.getAvatar().getValue());
+                mViewModel.getScenes();
+            }
         });
+
+        RxView.clicks(binding.avatar).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            CustomDialog.showAvatarPicker(requireContext(), charSequence -> {
+                mViewModel.setAvatar(charSequence.toString());
+                return null;
+            }, null, null);
+        });
+
         return binding.getRoot();
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         LifecycleOwner owner = getViewLifecycleOwner();
         Context context = requireContext();
@@ -126,9 +141,7 @@ public class MainFragment extends Fragment implements View.OnClickListener {
             if (metachatSceneInfos.size() > 0) {
                 for (int a = 0; a < metachatSceneInfos.size(); a++) {
                     //8为内容中心测试的ID号
-                    int targetSceneId = 8;
-
-                    if (metachatSceneInfos.get(a).getSceneId() == targetSceneId) {
+                    if (metachatSceneInfos.get(a).getSceneId() == 8) {
                         mViewModel.prepareScene(metachatSceneInfos.get(a));
                         break;
                     }
@@ -141,13 +154,8 @@ public class MainFragment extends Fragment implements View.OnClickListener {
                 progressDialog = null;
             }
 
-
             Intent intent = new Intent(context, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            intent.putExtra("nickname", mViewModel.getNickname().getValue());
-            intent.putExtra("avatar", mViewModel.getAvatar().getValue());
-            intent.putExtra("roomName", KeyCenter.CHANNEL_ID);
-            intent.putExtra("gender", mViewModel.getSex().getValue());
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
@@ -191,22 +199,12 @@ public class MainFragment extends Fragment implements View.OnClickListener {
         binding = null;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.avatar:
-                CustomDialog.showAvatarPicker(requireContext(), charSequence -> {
-                    mViewModel.setAvatar(charSequence.toString());
-                    return null;
-                }, null, null);
-                break;
-            default:
-                break;
-        }
-    }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    public void onResume() {
+        super.onResume();
+        if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getCurrentScene()) {
+            mViewModel.getScenes();
+        }
     }
 }
