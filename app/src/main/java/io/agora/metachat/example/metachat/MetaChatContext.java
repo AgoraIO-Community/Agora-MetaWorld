@@ -426,6 +426,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         }
     }
 
+    @Override
+    public void onEnumerateVideoDisplaysResult(String[] displayIds) {
+
+    }
+
     public MetachatSceneInfo getSceneInfo() {
         return sceneInfo;
     }

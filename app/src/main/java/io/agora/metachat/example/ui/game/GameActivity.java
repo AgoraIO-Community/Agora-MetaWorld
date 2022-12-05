@@ -316,6 +316,11 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
     }
 
     @Override
+    public void onEnumerateVideoDisplaysResult(String[] displayIds) {
+
+    }
+
+    @Override
     public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
         //异步线程回调需在主线程处理
         runOnUiThread(() -> MetaChatContext.getInstance().enterScene());
