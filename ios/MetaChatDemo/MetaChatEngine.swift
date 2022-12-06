@@ -13,6 +13,7 @@ private let kAdvertisingURL = "http://agora.fronted.love/yyl.mov" // 宣传片�
 private let npcTableFileName = "tableNPC"
 private let npc1MoveFileName = "moveNPC1"
 private let npc2MoveFileName = "moveNPC2"
+var kSceneIndex: Int = 1
 
 enum MetaChatDisplayID:Int32 {
     case tv = 0
@@ -123,11 +124,15 @@ class MetaChatEngine: NSObject {
         enterSceneConfig.roomName = KeyCenter.CHANNEL_ID
         enterSceneConfig.sceneView = view
         enterSceneConfig.sceneId = sceneInfo.sceneId
-        enterSceneConfig.extraCustomInfo = "".data(using: String.Encoding.utf8)
+        let dict = ["sceneIndex": kSceneIndex]
+        let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
+        let extraInfo = String(data: data!, encoding: String.Encoding.utf8)
+        enterSceneConfig.extraCustomInfo = extraInfo!.data(using: String.Encoding.utf8)
         
         localUserAvatar = metachatScene?.getLocalUserAvatar()
         localUserAvatar?.setUserInfo(currentUserInfo)
         localUserAvatar?.setModelInfo(avatarInfo)
+        localUserAvatar?.setDressInfo(currentDressInfo)
         
         metachatScene?.enter(enterSceneConfig)
         

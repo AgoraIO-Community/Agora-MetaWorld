@@ -147,6 +147,7 @@ class MetaChatLoginViewController: UIViewController {
     
     var currentSceneInfo: AgoraMetachatSceneInfo?
     var isEntering: Bool = false
+    var fromMainScene: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -260,6 +261,13 @@ class MetaChatLoginViewController: UIViewController {
             self.downloadingBack.isHidden = true
             
             guard let sceneViewController = storyBoard.instantiateViewController(withIdentifier: "SceneViewController") as? MetaChatSceneViewController else { return }
+            if self.hasUserDressInfo(self.selSex) && self.fromMainScene == false {
+                kSceneIndex = 0
+            } else {
+                kSceneIndex = 1
+            }
+            sceneViewController.currentGender = self.selSex - 1
+            sceneViewController.delegate = self
             sceneViewController.modalPresentationStyle = .fullScreen
             MetaChatEngine.sharedEngine.createScene(sceneViewController)
             MetaChatEngine.sharedEngine.currentSceneInfo = sceneInfo
@@ -267,6 +275,17 @@ class MetaChatLoginViewController: UIViewController {
         }
         
 
+    }
+    
+    /// 本地是否存在换装信息
+    func hasUserDressInfo(_ selSex: Int) -> Bool {
+        let defaultStand = UserDefaults.standard
+        let key = (selSex - 1 == 1) ? "mc_userDressInfo_girl" : "mc_userDressInfo_boy"
+        let info = defaultStand.getObject(forKey: key) as [UserDressInfo]
+        if info.count > 0 && info[0].gender == (selSex - 1) {
+            return true
+        }
+        return false
     }
 }
 
@@ -391,6 +410,16 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         
         if state == .downloaded && currentSceneInfo != nil {
             onSceneReady(currentSceneInfo!)
+        }
+    }
+}
+
+/// 保存换装信息，并重新进入主场景
+extension MetaChatLoginViewController: handleDressInfoDelegate {
+    func storeDressInfo(_ fromMainScene: Bool) {
+        self.fromMainScene = fromMainScene
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.enterScene(sender: UIButton())
         }
     }
 }

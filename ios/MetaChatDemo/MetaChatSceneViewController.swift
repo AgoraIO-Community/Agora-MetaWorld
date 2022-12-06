@@ -15,6 +15,25 @@ private let kNoviceGuideFileName = "Novice guide"
 // 游客模式
 private let kVisitorTipFileName = "Novice guide"
 
+private let COLLECTION_CELL_ID = "dressID"
+private let kDressTypeMargin: CGFloat = 20
+private let kDressTypeWidth: CGFloat = 60
+private let kCellMargin: CGFloat = 10
+let SCREEN_WIDTH: CGFloat = UIScreen.main.bounds.size.width
+let SCREEN_HEIGHT: CGFloat = UIScreen.main.bounds.size.height
+
+struct UserDressInfo: Codable {
+    var gender: Int
+    var hair: Int
+    var tops: Int
+    var lower: Int
+    var shoes: Int
+}
+
+protocol handleDressInfoDelegate: NSObjectProtocol {
+    func storeDressInfo(_ fromMainScene: Bool)
+}
+
 class MetaChatSceneViewController: UIViewController {
     @IBOutlet weak var avatarBackV: UIView!
     @IBOutlet weak var avatarImageV: UIImageView!
@@ -48,6 +67,9 @@ class MetaChatSceneViewController: UIViewController {
     
     @IBOutlet weak var switchBtn: UIButton!
     
+    var delegate: handleDressInfoDelegate?
+    var currentGender: Int = 1
+    
     /// 渲染的render view，多次进出场景需要保持同一renderView对象
     static var renderView: (UIView & AgoraMetaViewProtocol)!
     
@@ -66,6 +88,30 @@ class MetaChatSceneViewController: UIViewController {
     
     private var ktvVC: KTVContainerViewController?
     
+    // dress setting
+    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var scrollView: UIScrollView!
+    @IBOutlet weak var containerDressView: UIView!
+    
+    /// 换装UI数据
+    lazy var dressType: [String] = ["hairpin_icon", "clothes_icon", "trousers_icon", "shoes_icon"]
+    lazy var dressTypeToDresses_girl: Dictionary<String, Any> = ["hairpin_icon": hairpins_girl, "clothes_icon": clothes_girl, "trousers_icon": trousers_girl, "shoes_icon": shoes_girl]
+    lazy var clothes_girl: [String] = ["girl_tops1", "girl_tops2", "girl_tops3", "girl_tops4"]
+    lazy var shoes_girl: [String] = ["girl_shoes1", "girl_shoes2", "girl_shoes3", "girl_shoes4"]
+    lazy var trousers_girl: [String] = ["girl_lower1", "girl_lower2", "girl_lower3", "girl_lower4"]
+    lazy var hairpins_girl: [String] = ["girl_hair1", "girl_hair2", "girl_hair3", "girl_hair4"]
+    
+    lazy var dressTypeToDresses_boy: Dictionary<String, Any> = ["hairpin_icon": hairpins_boy, "clothes_icon": clothes_boy, "trousers_icon": trousers_boy, "shoes_icon": shoes_boy]
+    lazy var clothes_boy: [String] = ["boy_tops1", "boy_tops2"]
+    lazy var shoes_boy: [String] = ["boy_shoes1", "boy_shoes2"]
+    lazy var trousers_boy: [String] = ["boy_lower1", "boy_lower2"]
+    lazy var hairpins_boy: [String] = ["boy_hair1", "boy_hair2"]
+    
+    var userDressInfo: UserDressInfo = UserDressInfo(gender: 0, hair: 0, tops: 0, lower: 0, shoes: 0)
+    var selectIndex: Int = 0
+    var selectIndexPath: [IndexPath] = Array(repeating: IndexPath(), count: 4)
+    
+    /// 设置主界面UI
     func setUI() {
         openMicB.setImage(UIImage.init(named: "onbtn"), for: .normal)
         openMicB.setImage(UIImage.init(named: "offbtn"), for: .selected)
@@ -99,6 +145,49 @@ class MetaChatSceneViewController: UIViewController {
         }
     }
     
+    /// 设置换装UI
+    func setupDressUI() {
+        setupScrollView()
+        changeIcon(2, isSelected: true)
+        
+        userDressInfo.gender = currentGender
+    }
+    
+    /// 设置scrollView
+    func setupScrollView() {
+        self.scrollView.backgroundColor = .white
+        var offsetX: CGFloat = kDressTypeMargin
+
+        for dress in dressType {
+
+            let imageView = UIImageView()
+            imageView.frame = CGRect(x: 0, y: 4, width: kDressTypeWidth, height: kDressTypeWidth - 8)
+
+            imageView.image = UIImage.init(named: dress)
+
+            var frame = imageView.frame
+            frame.origin.x = offsetX
+            imageView.frame = frame
+
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(imageViewClicked(withGesture:)))
+            imageView.addGestureRecognizer(tapGesture)
+            imageView.isUserInteractionEnabled = true
+
+            self.scrollView.addSubview(imageView)
+
+            offsetX += imageView.frame.size.width + kDressTypeMargin
+        }
+    }
+    
+    private func createRenderView() {
+        if MetaChatSceneViewController.renderView == nil {
+            MetaChatSceneViewController.renderView = MetaChatEngine.sharedEngine.metachatScene?.createRenderView(.unity, region: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
+            MetaChatSceneViewController.renderView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        }
+        
+        self.view.insertSubview(MetaChatSceneViewController.renderView, at: 0)
+    }
+    
     deinit {
         DLog("===========MetaChatSceneViewController销毁了=======")
     }
@@ -107,23 +196,13 @@ class MetaChatSceneViewController: UIViewController {
         super.viewDidLoad()
         setUI()
         addObserver()
-        
-        var width = UIScreen.main.bounds.size.width
-        var height = UIScreen.main.bounds.size.height
-        if width < height {
-            let temp = width
-            width = height
-            height = temp
-        }
-        if MetaChatSceneViewController.renderView == nil {
-            MetaChatSceneViewController.renderView = MetaChatEngine.sharedEngine.metachatScene?.createRenderView(.unity, region: CGRect(x: 0, y: 0, width: width, height: height))
-        }
-        
-        self.view.insertSubview(MetaChatSceneViewController.renderView, at: 0)
+        setupDressUI()
+        createRenderView()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        getUserDressInfo()
         MetaChatEngine.sharedEngine.enterScene(view: MetaChatSceneViewController.renderView)
     }
     
@@ -132,17 +211,18 @@ class MetaChatSceneViewController: UIViewController {
     }
     
     override var shouldAutorotate: Bool {
-        return false
+        return true
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscapeRight
+        return [.portrait, .landscapeRight, .landscapeLeft]
     }
     
     override var prefersStatusBarHidden: Bool {
         return true
     }
     
+    /// 显示主界面UI
     func showUI() {
         avatarBackV.isHidden = false
         openMicB.isHidden = false
@@ -151,7 +231,21 @@ class MetaChatSceneViewController: UIViewController {
         userSpeakerB.isHidden = false
         visitorTipBack.isHidden = true
         exitButton.isHidden = false
-//        switchBtn.isHidden = false
+        switchBtn.isHidden = false
+        containerDressView.isHidden = true
+    }
+    
+    /// 显示换装UI
+    func showDressUI() {
+        avatarBackV.isHidden = true
+        openMicB.isHidden = true
+        userListB.isHidden = true
+        userMicB.isHidden = true
+        userSpeakerB.isHidden = true
+        visitorTipBack.isHidden = true
+        exitButton.isHidden = false
+        switchBtn.isHidden = false
+        containerDressView.isHidden = false
     }
     
     func addObserver() {
@@ -188,7 +282,7 @@ class MetaChatSceneViewController: UIViewController {
         MetaChatEngine.sharedEngine.isSinging = true
     }
     
-    // 获取电视位置
+    /// 获取电视位置
     private func requestTVPosition(){
         let dic = [
             "type":1,
@@ -197,7 +291,7 @@ class MetaChatSceneViewController: UIViewController {
         MetaChatEngine.sharedEngine.sendMessage(dic: dic)
     }
     
-    // 获取NPC桌子位置
+    /// 获取NPC桌子位置
     private func requestNPCTablePosition(){
         let dic = [
             "type":1,
@@ -206,7 +300,7 @@ class MetaChatSceneViewController: UIViewController {
         MetaChatEngine.sharedEngine.sendMessage(dic: dic)
     }
     
-    // 加入房间
+    /// 加入房间
     private func joinChannel(){
         MetaChatEngine.sharedEngine.joinRtcChannel { [weak self] in
             guard let wSelf = self else {return}
@@ -214,14 +308,14 @@ class MetaChatSceneViewController: UIViewController {
         }
     }
     
-    // 打开npc播放器
+    /// 打开npc播放器
     private func openNPC(){
         MetaChatEngine.sharedEngine.createAndOpenNPCPlayer {[weak self] player in
             self?.requestNPCTablePosition()
         }
     }
     
-    // 打开电视
+    /// 打开电视
     private func setTVon(){
         MetaChatEngine.sharedEngine.createAndOpenTVPlayer { [weak self] player in
             self?.requestTVPosition()
@@ -230,12 +324,12 @@ class MetaChatSceneViewController: UIViewController {
         }
     }
     
-    // 电视恢复原始
+    /// 电视恢复原始
     private func resetTV() {
         MetaChatEngine.sharedEngine.resetTV()
     }
     
-    // 结束k歌
+    /// 结束k歌
     private func finishKTV(){
         songListButton.isHidden = true
         MetaChatEngine.sharedEngine.isSinging = false
@@ -244,7 +338,7 @@ class MetaChatSceneViewController: UIViewController {
         KTVDataManager.shared().clear()
     }
     
-    // 显示k歌页面
+    /// 显示k歌页面
     private func showKTV(){
         songListButton.isHidden = false
         MetaChatEngine.sharedEngine.isSinging = true
@@ -263,12 +357,11 @@ class MetaChatSceneViewController: UIViewController {
         present(navc, animated: true)
     }
     
-    // 离开场景
+    /// 离开场景
     private func leaveScene(){
         MetaChatEngine.sharedEngine.setTVoff()
         MetaChatEngine.sharedEngine.leaveRtcChannel()
         MetaChatEngine.sharedEngine.leaveScene()
-//        MetaChatEngine.sharedEngine.resetMetachat()
         KTVDataManager.shared().clear()
     }
     // MARK: -  新手引导
@@ -282,7 +375,7 @@ class MetaChatSceneViewController: UIViewController {
         showGuideVC(title: "Novice guide",fileName: kNoviceGuideFileName)
     }
     
-    // 显示新手引导
+    /// 显示新手引导
     private func showGuideVC(title:String,fileName:String) {
         let guideVC = GuideAlertViewController()
         guideVC.modalTransitionStyle = .crossDissolve
@@ -292,6 +385,72 @@ class MetaChatSceneViewController: UIViewController {
         self.present(guideVC, animated: true)
     }
     
+    /// MARK: -  换装设置
+    private func dressSetting() {
+        let dict = ["gender": userDressInfo.gender,
+                    "hair": userDressInfo.hair,
+                    "tops": userDressInfo.tops,
+                    "lower": userDressInfo.lower,
+                    "shoes": userDressInfo.shoes]
+        let value = try? JSONSerialization.data(withJSONObject: dict, options: [])
+        let str = String(data: value!, encoding: String.Encoding.utf8)
+        let dic = [
+            "key": "dressSetting",
+            "value": str as Any
+        ] as [String : Any]
+        MetaChatEngine.sharedEngine.sendMessage(dic: dic)
+    }
+    
+    /// 选择换装信息
+    private func selectDressInfo(typeIndex: Int, indexPath: IndexPath) {
+        switch typeIndex {
+            case 0: userDressInfo.hair = indexPath.row + 1
+            case 1: userDressInfo.tops = indexPath.row + 1
+            case 2: userDressInfo.lower = indexPath.row + 1
+            case 3: userDressInfo.shoes = indexPath.row + 1
+            default:
+                print("index error!")
+            break
+        }
+    }
+    
+    /// 保存换装信息
+    private func saveUserDressInfo() {
+        var fromMainScene = false
+        if kSceneIndex == 1 {
+            let defaultStand = UserDefaults.standard
+            let key = (currentGender == 1) ? "mc_userDressInfo_girl" : "mc_userDressInfo_boy"
+            defaultStand.set(Array: [userDressInfo], key: key)
+        } else {
+            fromMainScene = true
+        }
+        
+        self.exit(sender: UIButton())
+        if delegate != nil && ((delegate?.responds(to: Selector.init(("storeDressInfo")))) != nil) {
+            delegate?.storeDressInfo(fromMainScene)
+        }
+    }
+    
+    /// 获取本地换装信息
+    private func getUserDressInfo() {
+        let defaultStand = UserDefaults.standard
+        let key = (currentGender == 1) ? "mc_userDressInfo_girl" : "mc_userDressInfo_boy"
+        let info = defaultStand.getObject(forKey: key) as [UserDressInfo]
+        if info.count > 0 {
+            userDressInfo = info[0] as UserDressInfo
+            
+            let dict = ["gender": userDressInfo.gender,
+                        "hair": userDressInfo.hair,
+                        "tops": userDressInfo.tops,
+                        "lower": userDressInfo.lower,
+                        "shoes": userDressInfo.shoes]
+            let value = try? JSONSerialization.data(withJSONObject: dict, options: [])
+            let str = String(data: value!, encoding: String.Encoding.utf8)
+            let dressInfo = AgoraMetachatDressInfo()
+            dressInfo.extraCustomInfo = str!.data(using: String.Encoding.utf8)
+            MetaChatEngine.sharedEngine.currentDressInfo = dressInfo
+        }
+    }
     // MARK: -  UI actions
     
     @IBAction func openMicAction(sender: UIButton) {
@@ -340,15 +499,18 @@ class MetaChatSceneViewController: UIViewController {
     @IBAction func exit(sender: UIButton) {
         MetaChatEngine.sharedEngine.leaveRtcChannel()
         MetaChatEngine.sharedEngine.leaveScene()
-//        self.dismiss(animated: true)
     }
     
     @IBAction func switchScene(sender: UIButton) {
-        exit(sender: UIButton())
+        saveUserDressInfo()
     }
 }
 
 extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
+    func metachatScene(_ scene: AgoraMetachatScene, onEnumerateVideoDisplaysResult displayIds: NSMutableArray) {
+        
+    }
+    
     func metachatScene(_ scene: AgoraMetachatScene, onReleasedScene errorCode: Int) {
         DispatchQueue.main.async {
             AgoraMetachatKit.destroy()
@@ -361,9 +523,13 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
         DLog("进入场景===============")
         DispatchQueue.main.async {
             self.showUI()
+            if kSceneIndex == 1 {
+                self.dressSetting()
+                self.showDressUI()
+            }
             self.joinChannel()
             self.setTVon()
-            self.openNPC()
+//            self.openNPC()
             self.tryShowGuideVC()
         }
     }
@@ -413,4 +579,129 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
             MetaChatEngine.sharedEngine.localSpatial?.updateRemotePosition(UInt(uid) ?? 0, positionInfo: remotePositionInfo)
         }
     }
+}
+
+extension MetaChatSceneViewController {
+    @objc func imageViewClicked(withGesture gesture: UITapGestureRecognizer) {
+
+        guard let view = gesture.view,
+            let index: Int = self.scrollView.subviews.index(of: view)
+            else { return }
+
+        selectIndex = index
+        let indexPath = IndexPath(item: 0, section: 0)
+
+        self.collectionView.scrollToItem(at: indexPath, at: .init(rawValue: 0), animated: false)
+
+        for i in 0..<self.dressType.count {
+            let iv = self.scrollView.subviews[i]
+            if iv == gesture.view {
+                self.changeIcon(i, isSelected: true)
+            } else {
+                self.changeIcon(i, isSelected: false)
+            }
+        }
+        
+        self.collectionView.reloadData()
+    }
+    
+    func changeIcon(_ index: Int, isSelected: Bool) {
+        let iv = self.scrollView.subviews[index] as! UIImageView
+        if isSelected {
+            iv.image = UIImage.init(named: self.dressType[index] + "1")
+        } else {
+            iv.image = UIImage.init(named: self.dressType[index])
+        }
+    }
+}
+
+extension MetaChatSceneViewController : UICollectionViewDataSource {
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        let dressTypeToDresses = (currentGender == 1) ? self.dressTypeToDresses_girl : self.dressTypeToDresses_boy
+        let data = dressTypeToDresses[self.dressType[selectIndex]] as! Array<String>
+        return data.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: COLLECTION_CELL_ID, for: indexPath) as! DressCollectionCell
+        let dressTypeToDresses = (currentGender == 1) ? self.dressTypeToDresses_girl : self.dressTypeToDresses_boy
+        let data = dressTypeToDresses[self.dressType[selectIndex]] as! Array<String>
+        cell.dressImageView.image = UIImage.init(named: data[indexPath.row])
+        
+        cell.dressImageView.layer.borderColor = UIColor.clear.cgColor
+        cell.dressImageView.layer.borderWidth = 0.0
+        
+        if selectIndexPath.count > selectIndex && selectIndexPath[selectIndex] == indexPath {
+            cell.dressImageView.layer.borderColor = UIColor.lightGray.cgColor
+            cell.dressImageView.layer.borderWidth = 1.0
+        }
+        
+        return cell
+    }
+    
+}
+
+extension MetaChatSceneViewController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        if indexPath == selectIndexPath[selectIndex] {
+            let dressCell = collectionView.cellForItem(at: indexPath) as! DressCollectionCell
+            dressCell.dressImageView.layer.borderColor = UIColor.clear.cgColor
+            dressCell.dressImageView.layer.borderWidth = 0.0
+            
+            selectIndexPath[selectIndex] = IndexPath()
+            return
+        }
+        
+        if indexPath != selectIndexPath[selectIndex] && !(selectIndexPath[selectIndex].isEmpty) {
+            let tempIndexPath = selectIndexPath[selectIndex]
+            let dressCell = collectionView.cellForItem(at: tempIndexPath) as! DressCollectionCell
+            dressCell.dressImageView.layer.borderColor = UIColor.clear.cgColor
+            dressCell.dressImageView.layer.borderWidth = 0.0
+        }
+        
+        let dressCell = collectionView.cellForItem(at: indexPath) as! DressCollectionCell
+        dressCell.dressImageView.layer.borderColor = UIColor.lightGray.cgColor
+        dressCell.dressImageView.layer.borderWidth = 1.0
+        
+        selectIndexPath[selectIndex] = indexPath
+        
+        self.selectDressInfo(typeIndex: selectIndex, indexPath: indexPath)
+        self.dressSetting()
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        let dressCell = collectionView.cellForItem(at: indexPath) as! DressCollectionCell
+        dressCell.dressImageView.layer.borderColor = UIColor.clear.cgColor
+        dressCell.dressImageView.layer.borderWidth = 0.0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let cellWidth = (SCREEN_WIDTH - 3 * kCellMargin) / 4
+        return CGSize(width: cellWidth, height: cellWidth);
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return kCellMargin
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return kCellMargin
+    }
+}
+
+class DressCollectionCell: UICollectionViewCell {
+    
+    @IBOutlet weak var dressImageView: UIImageView!
+    
 }
