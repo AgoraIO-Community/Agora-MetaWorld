@@ -86,7 +86,7 @@ public class MainFragment extends Fragment {
             }
         });
         //防止多次频繁点击异常处理
-        RxView.clicks(binding.enter).throttleFirst(2, TimeUnit.SECONDS).subscribe(o -> {
+        RxView.clicks(binding.enter).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             if (TextUtils.isEmpty(binding.nickname.getText().toString())) {
                 Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
             } else {
