@@ -211,10 +211,6 @@ class MetaChatSceneViewController: UIViewController {
         MetaChatEngine.sharedEngine.enterScene(view: MetaChatSceneViewController.renderView)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        MetaChatSceneViewController.renderView.removeFromSuperview()
-    }
-    
     override var shouldAutorotate: Bool {
         return true
     }

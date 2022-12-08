@@ -73,22 +73,6 @@
 		F07B7300292C817A00ED399C /* KTVMusicHotType.m in Sources */ = {isa = PBXBuildFile; fileRef = F07B72F1292C817A00ED399C /* KTVMusicHotType.m */; };
 		F07B7301292C817A00ED399C /* KTVMusicResource.m in Sources */ = {isa = PBXBuildFile; fileRef = F07B72F6292C817A00ED399C /* KTVMusicResource.m */; };
 		F07B7302292C817A00ED399C /* KTVConsoleManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F07B72F7292C817A00ED399C /* KTVConsoleManager.m */; };
-		F0F66A3F293DD37400952D5A /* AgoraDav1d.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066736229221624008DD228 /* AgoraDav1d.xcframework */; };
-		F0F66A40293DD37400952D5A /* AgoraDav1d.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066736229221624008DD228 /* AgoraDav1d.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A41293DD37400952D5A /* Agorafdkaac.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066736029221624008DD228 /* Agorafdkaac.xcframework */; };
-		F0F66A42293DD37400952D5A /* Agorafdkaac.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066736029221624008DD228 /* Agorafdkaac.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A43293DD37400952D5A /* Agoraffmpeg.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066735D29221623008DD228 /* Agoraffmpeg.xcframework */; };
-		F0F66A44293DD37400952D5A /* Agoraffmpeg.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066735D29221623008DD228 /* Agoraffmpeg.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A45293DD37400952D5A /* AgoraRtcKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066735E29221624008DD228 /* AgoraRtcKit.xcframework */; };
-		F0F66A46293DD37400952D5A /* AgoraRtcKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066735E29221624008DD228 /* AgoraRtcKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A47293DD37400952D5A /* AgoraRtmKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066736129221624008DD228 /* AgoraRtmKit.xcframework */; };
-		F0F66A48293DD37400952D5A /* AgoraRtmKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066736129221624008DD228 /* AgoraRtmKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A49293DD37400952D5A /* AgoraRtmLoader.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066736429221624008DD228 /* AgoraRtmLoader.xcframework */; };
-		F0F66A4A293DD37400952D5A /* AgoraRtmLoader.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066736429221624008DD228 /* AgoraRtmLoader.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A4B293DD37400952D5A /* UnityFramework.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066736729221624008DD228 /* UnityFramework.xcframework */; };
-		F0F66A4C293DD37500952D5A /* UnityFramework.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066736729221624008DD228 /* UnityFramework.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F0F66A4E293DD3A100952D5A /* AgoraSoundTouch.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F066736529221624008DD228 /* AgoraSoundTouch.xcframework */; };
-		F0F66A4F293DD3A100952D5A /* AgoraSoundTouch.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F066736529221624008DD228 /* AgoraSoundTouch.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F0F66A5D293DD7A400952D5A /* boy_tops1.png in Resources */ = {isa = PBXBuildFile; fileRef = F0F66A52293DD7A400952D5A /* boy_tops1.png */; };
 		F0F66A5E293DD7A400952D5A /* boy_tops2.png in Resources */ = {isa = PBXBuildFile; fileRef = F0F66A53293DD7A400952D5A /* boy_tops2.png */; };
 		F0F66A5F293DD7A400952D5A /* boy_lower1.png in Resources */ = {isa = PBXBuildFile; fileRef = F0F66A55293DD7A400952D5A /* boy_lower1.png */; };
@@ -108,27 +92,6 @@
 		F3BA5F4228194F2200821E23 /* MetaChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */; };
 		F3D54E992819788C00C5F41A /* MetaChatSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		F0F66A4D293DD37500952D5A /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				F0F66A4F293DD3A100952D5A /* AgoraSoundTouch.xcframework in Embed Frameworks */,
-				F0F66A4C293DD37500952D5A /* UnityFramework.xcframework in Embed Frameworks */,
-				F0F66A44293DD37400952D5A /* Agoraffmpeg.xcframework in Embed Frameworks */,
-				F0F66A46293DD37400952D5A /* AgoraRtcKit.xcframework in Embed Frameworks */,
-				F0F66A42293DD37400952D5A /* Agorafdkaac.xcframework in Embed Frameworks */,
-				F0F66A4A293DD37400952D5A /* AgoraRtmLoader.xcframework in Embed Frameworks */,
-				F0F66A48293DD37400952D5A /* AgoraRtmKit.xcframework in Embed Frameworks */,
-				F0F66A40293DD37400952D5A /* AgoraDav1d.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2611B3EA28741A1E0053E24E /* LibyuvHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibyuvHelper.h; sourceTree = "<group>"; };
@@ -427,17 +390,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A815942C286F910400ACD6F1 /* Pods_MetaChatDemo.framework in Frameworks */,
-				F0F66A45293DD37400952D5A /* AgoraRtcKit.xcframework in Frameworks */,
 				E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */,
-				F0F66A49293DD37400952D5A /* AgoraRtmLoader.xcframework in Frameworks */,
 				E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */,
 				F355AB372823B98400656A67 /* libz.tbd in Frameworks */,
-				F0F66A4B293DD37400952D5A /* UnityFramework.xcframework in Frameworks */,
-				F0F66A47293DD37400952D5A /* AgoraRtmKit.xcframework in Frameworks */,
-				F0F66A4E293DD3A100952D5A /* AgoraSoundTouch.xcframework in Frameworks */,
-				F0F66A41293DD37400952D5A /* Agorafdkaac.xcframework in Frameworks */,
-				F0F66A3F293DD37400952D5A /* AgoraDav1d.xcframework in Frameworks */,
-				F0F66A43293DD37400952D5A /* Agoraffmpeg.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -991,7 +946,6 @@
 				F348D1552811637A00039743 /* Resources */,
 				2639A71E282E2A4D0037E056 /* ShellScript */,
 				9A5E90FC34F32E570FD93226 /* [CP] Embed Pods Frameworks */,
-				F0F66A4D293DD37500952D5A /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1045,7 +999,6 @@
 				F0F66A60293DD7A400952D5A /* boy_lower2.png in Resources */,
 				F348D1672811637B00039743 /* LaunchScreen.storyboard in Resources */,
 				F348D1642811637B00039743 /* Assets.xcassets in Resources */,
-				F06673CE29225FB0008DD228 /* 8.zip in Resources */,
 				F0197E26292E073800D55E52 /* girl_tops3.png in Resources */,
 				F348D1622811637A00039743 /* Main.storyboard in Resources */,
 				F0197E3E292E0A2200D55E52 /* hairpin_icon.png in Resources */,
