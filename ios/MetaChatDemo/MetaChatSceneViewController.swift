@@ -67,6 +67,11 @@ class MetaChatSceneViewController: UIViewController {
     
     @IBOutlet weak var switchBtn: UIButton!
     
+    @IBOutlet var cancelBtn: UIButton!
+    
+    @IBOutlet var storeBtn: UIButton!
+    
+    
     var delegate: handleDressInfoDelegate?
     var currentGender: Int = 1
     
@@ -232,6 +237,8 @@ class MetaChatSceneViewController: UIViewController {
         visitorTipBack.isHidden = true
         exitButton.isHidden = false
         switchBtn.isHidden = false
+        cancelBtn.isHidden = true
+        storeBtn.isHidden = true
         containerDressView.isHidden = true
     }
     
@@ -243,8 +250,10 @@ class MetaChatSceneViewController: UIViewController {
         userMicB.isHidden = true
         userSpeakerB.isHidden = true
         visitorTipBack.isHidden = true
-        exitButton.isHidden = false
-        switchBtn.isHidden = false
+        exitButton.isHidden = true
+        switchBtn.isHidden = true
+        cancelBtn.isHidden = false
+        storeBtn.isHidden = false
         containerDressView.isHidden = false
     }
     
@@ -372,7 +381,7 @@ class MetaChatSceneViewController: UIViewController {
             return
         }
         UserDefaults.standard.set(true, forKey: kGuideShowKey)
-        showGuideVC(title: "Novice guide",fileName: kNoviceGuideFileName)
+        showGuideVC(title: "游客模式",fileName: kNoviceGuideFileName)
     }
     
     /// 显示新手引导
@@ -465,7 +474,11 @@ class MetaChatSceneViewController: UIViewController {
             MetaChatEngine.sharedEngine.openMic()
             MetaChatEngine.sharedEngine.updateIsVisitor(isVisitor: false)
             sender.isSelected = true
-            userMicB.isHidden = false
+            if (kSceneIndex == 0) {
+                userMicB.isHidden = false
+            } else {
+                userMicB.isHidden = true
+            }
             modeL.text = "语聊模式"
             visitorIcon.isHidden = true
         }
@@ -488,7 +501,7 @@ class MetaChatSceneViewController: UIViewController {
     
     @IBAction func showVisitorTip(sender: UIButton) {
         if !openMicB.isSelected {
-            showGuideVC(title: "Visitor tips", fileName: kVisitorTipFileName)
+            showGuideVC(title: "游客模式", fileName: kVisitorTipFileName)
         }
     }
     
@@ -504,6 +517,16 @@ class MetaChatSceneViewController: UIViewController {
     @IBAction func switchScene(sender: UIButton) {
         saveUserDressInfo()
     }
+    
+    @IBAction func exitDressScene(_ sender: UIButton) {
+        self.exit(sender: UIButton())
+    }
+    
+    @IBAction func storeDressInfo(_ sender: UIButton) {
+        saveUserDressInfo()
+    }
+    
+    
 }
 
 extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
