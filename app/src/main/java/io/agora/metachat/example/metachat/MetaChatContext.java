@@ -516,7 +516,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         RoleInfo tempRoleInfo;
         while (it.hasNext()) {
             tempRoleInfo = it.next();
-            if (tempRoleInfo.getName().equalsIgnoreCase(name) && tempRoleInfo.getGender() == gender) {
+            //just only gender
+            if (/*tempRoleInfo.getName().equalsIgnoreCase(name) && */tempRoleInfo.getGender() == gender) {
                 it.remove();
             }
         }
@@ -534,7 +535,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         if (roleInfos != null && roleInfos.size() != 0) {
             for (int i = 0; i < roleInfos.size(); i++) {
                 if (null != roleInfos.get(i)) {
-                    if ((null != roleInfos.get(i).getName() && roleInfos.get(i).getName().equalsIgnoreCase(name)) && roleInfos.get(i).getGender() == gender) {
+                    //only just gender
+                    if (/*(null != roleInfos.get(i).getName() && roleInfos.get(i).getName().equalsIgnoreCase(name)) &&*/ roleInfos.get(i).getGender() == gender) {
                         roleInfo = roleInfos.get(i);
                         break;
                     }
