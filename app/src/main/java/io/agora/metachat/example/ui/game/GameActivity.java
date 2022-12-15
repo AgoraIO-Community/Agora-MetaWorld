@@ -283,9 +283,23 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
 
     private void createScene(TextureView tv) {
         resetSceneState();
+        resetViewVisibility();
         MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, tv);
     }
 
+    private void resetViewVisibility() {
+        binding.back.setVisibility(View.GONE);
+        binding.card.getRoot().setVisibility(View.GONE);
+        binding.users.setVisibility(View.GONE);
+        binding.mic.setVisibility(View.GONE);
+        binding.speaker.setVisibility(View.GONE);
+        binding.dressSetting.setVisibility(View.GONE);
+
+        binding.cancelBt.setVisibility(View.GONE);
+        binding.saveBtn.setVisibility(View.GONE);
+        binding.dressTab.setVisibility(View.GONE);
+        binding.dressViewpage.setVisibility(View.GONE);
+    }
 
     @Override
     public void onEnterSceneResult(int errorCode) {
@@ -304,7 +318,9 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-
+        runOnUiThread(() -> {
+            isEnterScene.set(false);
+        });
     }
 
     @Override
@@ -312,7 +328,6 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         if (status == 0) {
             runOnUiThread(() -> {
                 MetaChatContext.getInstance().destroy();
-                isEnterScene.set(false);
             });
 
 
