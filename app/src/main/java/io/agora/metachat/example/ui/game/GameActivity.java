@@ -250,6 +250,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
 
             @Override
             public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
+
             }
         });
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -298,11 +299,12 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
             enableSpeaker.set(true);
             isBroadcaster.set(true);
         });
+        resetSceneState();
     }
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-        resetSceneState();
+
     }
 
     @Override
