@@ -543,6 +543,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 }
             }
         }
+
+        if (null != roleInfo) {
+            roleInfo.setName(name);
+        }
     }
 
     public void sendSceneMessage(String msg) {
