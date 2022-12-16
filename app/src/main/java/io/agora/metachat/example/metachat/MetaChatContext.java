@@ -65,6 +65,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private ILocalUserAvatar localUserAvatar;
     private boolean isInScene;
     private int currentScene;
+    private int nextScene;
     private RoleInfo roleInfo;
     private List<RoleInfo> roleInfos;
 
@@ -73,6 +74,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         metaChatSceneEventHandlerMap = new ConcurrentHashMap<>();
         isInScene = false;
         currentScene = MetaChatConstants.SCENE_NONE;
+        nextScene = MetaChatConstants.SCENE_NONE;
         roleInfo = null;
     }
 
@@ -499,8 +501,16 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return currentScene;
     }
 
+    public int getNextScene() {
+        return nextScene;
+    }
+
     public void setCurrentScene(int currentScene) {
         this.currentScene = currentScene;
+    }
+
+    public void setNextScene(int nextScene) {
+        this.nextScene = nextScene;
     }
 
     public void sendRoleDressInfo() {

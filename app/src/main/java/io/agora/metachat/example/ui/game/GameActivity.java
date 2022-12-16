@@ -181,7 +181,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         RxView.clicks(binding.cancelBt).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             MetaChatContext.getInstance().cancelRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
                     , MetaChatContext.getInstance().getRoleInfo().getGender());
-            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_GAME);
             MetaChatContext.getInstance().leaveScene();
         });
 
@@ -189,12 +189,12 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         RxView.clicks(binding.saveBtn).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             MetaChatContext.getInstance().saveRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
                     , MetaChatContext.getInstance().getRoleInfo().getGender());
-            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_GAME);
             MetaChatContext.getInstance().leaveScene();
         });
 
         RxView.clicks(binding.dressSetting).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
-            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_DRESS);
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_DRESS);
             MetaChatContext.getInstance().leaveScene();
         });
 
@@ -330,7 +330,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
                 MetaChatContext.getInstance().destroy();
             });
 
-
+            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
             if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }

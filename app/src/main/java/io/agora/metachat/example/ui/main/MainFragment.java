@@ -199,11 +199,12 @@ public class MainFragment extends Fragment {
         binding = null;
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
-        if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getCurrentScene()) {
+        if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getNextScene()) {
+            MetaChatContext.getInstance().setCurrentScene(MetaChatContext.getInstance().getNextScene());
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_NONE);
             mViewModel.getScenes();
         }
     }
