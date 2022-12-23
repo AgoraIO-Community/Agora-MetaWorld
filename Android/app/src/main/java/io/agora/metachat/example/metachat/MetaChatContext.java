@@ -65,6 +65,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private ILocalUserAvatar localUserAvatar;
     private boolean isInScene;
     private int currentScene;
+    private int nextScene;
     private RoleInfo roleInfo;
     private List<RoleInfo> roleInfos;
 
@@ -73,6 +74,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         metaChatSceneEventHandlerMap = new ConcurrentHashMap<>();
         isInScene = false;
         currentScene = MetaChatConstants.SCENE_NONE;
+        nextScene = MetaChatConstants.SCENE_NONE;
         roleInfo = null;
     }
 
@@ -215,21 +217,29 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void enterScene() {
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
+            //该model的mBundleType为MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR类型
             localUserAvatar.setModelInfo(modelInfo);
             if (null != roleInfo) {
+                //设置服装信息
                 DressInfo dressInfo = new DressInfo();
                 dressInfo.mExtraCustomInfo = (JSONObject.toJSONString(getUnityRoleInfo())).getBytes();
                 localUserAvatar.setDressInfo(dressInfo);
             }
         }
         if (null != metaChatScene) {
+            //使能位置信息回调功能
             metaChatScene.enableUserPositionNotification(MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene());
+            //设置回调接口
             metaChatScene.addEventHandler(MetaChatContext.getInstance());
             EnterSceneConfig config = new EnterSceneConfig();
+            //sceneView必须为Texture类型，为渲染unity显示的view
             config.mSceneView = this.sceneView;
+            //rtc加入channel的ID
             config.mRoomName = this.roomName;
+            //内容中心对应的ID
             config.mSceneId = this.sceneInfo.mSceneId;
             /*
+             *仅为示例格式，具体格式以项目实际为准
              *   "extraCustomInfo":{
              *     "sceneIndex":0  //0为默认场景，在这里指咖啡厅，1为换装设置场景
              *   }
@@ -240,6 +250,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                 extraInfo.setSceneIndex(MetaChatConstants.SCENE_GAME);
             }
+            //加载的场景index
             config.mExtraCustomInfo = JSONObject.toJSONString(extraInfo).getBytes();
             metaChatScene.enterScene(config);
         }
@@ -256,6 +267,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     public boolean updateRole(int role) {
         int ret = Constants.ERR_OK;
+        //是否为broadcaster
         boolean isBroadcaster = role == Constants.CLIENT_ROLE_BROADCASTER;
         ret += rtcEngine.updateChannelMediaOptions(new ChannelMediaOptions() {{
             publishMicrophoneTrack = isBroadcaster;
@@ -426,6 +438,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         }
     }
 
+    @Override
+    public void onEnumerateVideoDisplaysResult(String[] displayIds) {
+
+    }
+
     public MetachatSceneInfo getSceneInfo() {
         return sceneInfo;
     }
@@ -484,8 +501,16 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         return currentScene;
     }
 
+    public int getNextScene() {
+        return nextScene;
+    }
+
     public void setCurrentScene(int currentScene) {
         this.currentScene = currentScene;
+    }
+
+    public void setNextScene(int nextScene) {
+        this.nextScene = nextScene;
     }
 
     public void sendRoleDressInfo() {
@@ -501,7 +526,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         RoleInfo tempRoleInfo;
         while (it.hasNext()) {
             tempRoleInfo = it.next();
-            if (tempRoleInfo.getName().equalsIgnoreCase(name) && tempRoleInfo.getGender() == gender) {
+            //just only gender
+            if (/*tempRoleInfo.getName().equalsIgnoreCase(name) && */tempRoleInfo.getGender() == gender) {
                 it.remove();
             }
         }
@@ -519,12 +545,17 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         if (roleInfos != null && roleInfos.size() != 0) {
             for (int i = 0; i < roleInfos.size(); i++) {
                 if (null != roleInfos.get(i)) {
-                    if ((null != roleInfos.get(i).getName() && roleInfos.get(i).getName().equalsIgnoreCase(name)) && roleInfos.get(i).getGender() == gender) {
+                    //only just gender
+                    if (/*(null != roleInfos.get(i).getName() && roleInfos.get(i).getName().equalsIgnoreCase(name)) &&*/ roleInfos.get(i).getGender() == gender) {
                         roleInfo = roleInfos.get(i);
                         break;
                     }
                 }
             }
+        }
+
+        if (null != roleInfo) {
+            roleInfo.setName(name);
         }
     }
 

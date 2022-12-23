@@ -1,10 +1,12 @@
 package io.agora.metachat.example.ui.game;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.TextureView;
@@ -21,12 +23,14 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
@@ -49,7 +53,7 @@ import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.Constants;
 
-public class GameActivity extends Activity implements View.OnClickListener, IMetachatSceneEventHandler, IMetachatEventHandler, SkinGridViewAdapter.SkinItemClick {
+public class GameActivity extends Activity implements IMetachatSceneEventHandler, IMetachatEventHandler, SkinGridViewAdapter.SkinItemClick {
 
     private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
@@ -162,6 +166,67 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
         initUnityView();
+
+        initListener();
+    }
+
+    @SuppressLint("CheckResult")
+    private void initListener() {
+        RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
+            MetaChatContext.getInstance().resetRoleInfo();
+            MetaChatContext.getInstance().leaveScene();
+        });
+
+        RxView.clicks(binding.cancelBt).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            MetaChatContext.getInstance().cancelRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
+                    , MetaChatContext.getInstance().getRoleInfo().getGender());
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_GAME);
+            MetaChatContext.getInstance().leaveScene();
+        });
+
+
+        RxView.clicks(binding.saveBtn).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            MetaChatContext.getInstance().saveRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
+                    , MetaChatContext.getInstance().getRoleInfo().getGender());
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_GAME);
+            MetaChatContext.getInstance().leaveScene();
+        });
+
+        RxView.clicks(binding.dressSetting).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_DRESS);
+            MetaChatContext.getInstance().leaveScene();
+        });
+
+        RxView.clicks(binding.speaker).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            enableSpeaker.set(!enableSpeaker.get());
+        });
+
+
+        RxView.clicks(binding.mic).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            enableMic.set(!enableMic.get());
+        });
+
+        RxView.clicks(binding.users).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            Toast.makeText(this, "暂不支持", Toast.LENGTH_LONG)
+                    .show();
+        });
+
+        RxView.clicks(binding.card.tips).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            if (!isBroadcaster.get()) {
+                CustomDialog.showTips(this);
+            }
+        });
+
+        RxView.clicks(binding.card.mode).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            if (!isBroadcaster.get()) {
+                CustomDialog.showTips(this);
+            }
+        });
+
+        RxView.clicks(binding.card.role).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            isBroadcaster.set(!isBroadcaster.get());
+        });
     }
 
     private void initUnityView() {
@@ -185,6 +250,7 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
             @Override
             public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
+
             }
         });
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -217,55 +283,23 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     private void createScene(TextureView tv) {
         resetSceneState();
+        resetViewVisibility();
         MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, tv);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.back:
-                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
-                MetaChatContext.getInstance().resetRoleInfo();
-                MetaChatContext.getInstance().leaveScene();
-                break;
-            case R.id.mode:
-            case R.id.tips:
-                if (!isBroadcaster.get()) {
-                    CustomDialog.showTips(this);
-                }
-                break;
-            case R.id.role:
-                isBroadcaster.set(!isBroadcaster.get());
-                break;
-            case R.id.users:
-                Toast.makeText(this, "暂不支持", Toast.LENGTH_LONG)
-                        .show();
-                break;
-            case R.id.mic:
-                enableMic.set(!enableMic.get());
-                break;
-            case R.id.speaker:
-                enableSpeaker.set(!enableSpeaker.get());
-                break;
-            case R.id.cancel_bt:
-                MetaChatContext.getInstance().cancelRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
-                        , MetaChatContext.getInstance().getRoleInfo().getGender());
-                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
-                MetaChatContext.getInstance().leaveScene();
-                break;
-            case R.id.save_btn:
-                MetaChatContext.getInstance().saveRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
-                        , MetaChatContext.getInstance().getRoleInfo().getGender());
-                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_GAME);
-                MetaChatContext.getInstance().leaveScene();
-                break;
-            case R.id.dress_setting:
-                MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_DRESS);
-                MetaChatContext.getInstance().leaveScene();
-                break;
-        }
-    }
+    private void resetViewVisibility() {
+        binding.back.setVisibility(View.GONE);
+        binding.card.getRoot().setVisibility(View.GONE);
+        binding.users.setVisibility(View.GONE);
+        binding.mic.setVisibility(View.GONE);
+        binding.speaker.setVisibility(View.GONE);
+        binding.dressSetting.setVisibility(View.GONE);
 
+        binding.cancelBt.setVisibility(View.GONE);
+        binding.saveBtn.setVisibility(View.GONE);
+        binding.dressTab.setVisibility(View.GONE);
+        binding.dressViewpage.setVisibility(View.GONE);
+    }
 
     @Override
     public void onEnterSceneResult(int errorCode) {
@@ -279,11 +313,14 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
             enableSpeaker.set(true);
             isBroadcaster.set(true);
         });
+        resetSceneState();
     }
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-        resetSceneState();
+        runOnUiThread(() -> {
+            isEnterScene.set(false);
+        });
     }
 
     @Override
@@ -291,10 +328,9 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
         if (status == 0) {
             runOnUiThread(() -> {
                 MetaChatContext.getInstance().destroy();
-                isEnterScene.set(false);
             });
 
-
+            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
             if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
@@ -312,6 +348,11 @@ public class GameActivity extends Activity implements View.OnClickListener, IMet
 
     @Override
     public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
+
+    }
+
+    @Override
+    public void onEnumerateVideoDisplaysResult(String[] displayIds) {
 
     }
 
