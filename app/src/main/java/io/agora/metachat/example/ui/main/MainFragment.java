@@ -179,6 +179,10 @@ public class MainFragment extends Fragment {
                 return;
             }
 
+            if (!progressDialog.isShowing()) {
+                progressDialog.show();
+            }
+
             ConstraintLayout constraintLayout = CustomDialog.getCustomView(progressDialog);
             ProgressBar progressBar = constraintLayout.findViewById(R.id.progressBar);
             TextView textView = constraintLayout.findViewById(R.id.textView);
@@ -200,12 +204,21 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getNextScene()) {
+            enableUI(false);
             MetaChatContext.getInstance().setCurrentScene(MetaChatContext.getInstance().getNextScene());
             MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_NONE);
             mViewModel.getScenes();
+        } else {
+            enableUI(true);
         }
+    }
+
+    private void enableUI(boolean enable) {
+        binding.nickname.setEnabled(enable);
+        binding.spinner.setEnabled(enable);
+        binding.enter.setEnabled(enable);
     }
 }

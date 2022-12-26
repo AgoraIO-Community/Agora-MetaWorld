@@ -349,10 +349,13 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         Log.d(TAG, String.format("onEnterSceneResult %d", errorCode));
         if (errorCode == 0) {
             isInScene = true;
+            if (null != metaChatScene) {
+                metaChatScene.setSceneParameters("{\"debugUnity\":true}");
+            }
             rtcEngine.joinChannel(
                     KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
                     new ChannelMediaOptions() {{
-                        //publishAudioTrack = true;
+                        publishMicrophoneTrack = true;
                         autoSubscribeAudio = true;
                         clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
                     }});
