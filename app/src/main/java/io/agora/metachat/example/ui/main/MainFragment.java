@@ -149,6 +149,9 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getSelectScene().observe(owner, sceneInfo -> {
+            if (!MetaChatContext.getInstance().isInitMetachat()) {
+                return;
+            }
             if (progressDialog != null) {
                 progressDialog.dismiss();
                 progressDialog = null;
@@ -159,8 +162,11 @@ public class MainFragment extends Fragment {
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
+            if (!MetaChatContext.getInstance().isInitMetachat()) {
+                return;
+            }
             if (aBoolean) {
-                CustomDialog.showDownloadingChooser(context, materialDialog -> {
+                DownloadingChooserDialog = CustomDialog.showDownloadingChooser(context, materialDialog -> {
                     mViewModel.downloadScene(MetaChatContext.getInstance().getSceneInfo());
 
                     return null;
@@ -168,6 +174,9 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getDownloadingProgress().observe(owner, integer -> {
+            if (!MetaChatContext.getInstance().isInitMetachat()) {
+                return;
+            }
             if (progressDialog == null) {
                 progressDialog = CustomDialog.showDownloadingProgress(context, materialDialog -> {
                     mViewModel.cancelDownloadScene(MetaChatContext.getInstance().getSceneInfo());
@@ -196,6 +205,7 @@ public class MainFragment extends Fragment {
     }
 
     private MaterialDialog progressDialog;
+    private MaterialDialog DownloadingChooserDialog;
 
     @Override
     public void onDestroyView() {
@@ -206,6 +216,17 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        if (!MetaChatContext.getInstance().isInitMetachat() && progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        if (!MetaChatContext.getInstance().isInitMetachat() && DownloadingChooserDialog != null && DownloadingChooserDialog.isShowing()) {
+            DownloadingChooserDialog.dismiss();
+            DownloadingChooserDialog = null;
+        }
+
+
         if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getNextScene()) {
             enableUI(false);
             MetaChatContext.getInstance().setCurrentScene(MetaChatContext.getInstance().getNextScene());

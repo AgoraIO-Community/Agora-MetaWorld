@@ -326,10 +326,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     public void onReleasedScene(int status) {
         if (status == 0) {
-            runOnUiThread(() -> {
-                MetaChatContext.getInstance().destroy();
-            });
-
+            MetaChatContext.getInstance().destroy();
             MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
             if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

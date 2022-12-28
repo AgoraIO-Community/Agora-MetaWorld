@@ -68,6 +68,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private int nextScene;
     private RoleInfo roleInfo;
     private List<RoleInfo> roleInfos;
+    private boolean needSaveDressInfo;
+    private boolean isInitMetachat;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
@@ -76,6 +78,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         currentScene = MetaChatConstants.SCENE_NONE;
         nextScene = MetaChatConstants.SCENE_NONE;
         roleInfo = null;
+        needSaveDressInfo = false;
+        isInitMetachat = false;
     }
 
     public static MetaChatContext getInstance() {
@@ -136,6 +140,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
                 AgoraMediaPlayer.getInstance().initMediaPlayer(rtcEngine);
                 AgoraMediaPlayer.getInstance().setOnMediaVideoFramePushListener(this);
+
+                isInitMetachat = true;
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -149,6 +155,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         metaChatService = null;
         RtcEngine.destroy();
         rtcEngine = null;
+        isInitMetachat = false;
     }
 
     public void registerMetaChatEventHandler(IMetachatEventHandler eventHandler) {
@@ -349,6 +356,12 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         Log.d(TAG, String.format("onEnterSceneResult %d", errorCode));
         if (errorCode == 0) {
             isInScene = true;
+
+            if (needSaveDressInfo) {
+                needSaveDressInfo = false;
+                MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
+            }
+
             if (null != metaChatScene) {
                 metaChatScene.setSceneParameters("{\"debugUnity\":true}");
             }
@@ -470,6 +483,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public void initRoleInfo(String name, int gender) {
+        roleInfo = null;
         initRoleInfoFromDb(name, gender);
 
         if (null == roleInfo) {
@@ -489,9 +503,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             roleInfo.setLower(1);
             roleInfos.add(roleInfo);
 
-            MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
+            needSaveDressInfo = true;
         } else {
             currentScene = MetaChatConstants.SCENE_GAME;
+            needSaveDressInfo = false;
         }
     }
 
@@ -588,5 +603,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void resetRoleInfo() {
         roleInfos = null;
         roleInfo = null;
+    }
+
+    public boolean isInitMetachat() {
+        return isInitMetachat;
     }
 }
