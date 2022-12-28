@@ -65,6 +65,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     private List<SkinGridViewAdapter> mTabItemAdapters;
     private boolean mReCreateScene;
     private boolean mSurfaceSizeChange;
+    private boolean mIsFront;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -239,6 +240,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
 
             @Override
             public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+                Log.i(TAG, "onSurfaceTextureSizeChanged");
                 mSurfaceSizeChange = true;
                 maybeCreateScene();
             }
@@ -382,6 +384,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     protected void onResume() {
         super.onResume();
+        mIsFront = true;
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
         }
@@ -393,6 +396,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     protected void onPause() {
         super.onPause();
+        mIsFront = false;
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().pauseMedia();
         }
@@ -572,7 +576,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     private void maybeCreateScene() {
-        if (mReCreateScene && mSurfaceSizeChange) {
+        if (mReCreateScene && mSurfaceSizeChange && mIsFront) {
             createScene(mTextureView);
         }
     }
