@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,12 @@ import io.agora.metachat.example.ui.game.GameActivity;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
 public class MainFragment extends Fragment {
+    private static final String TAG = MainFragment.class.getSimpleName();
 
     private MainViewModel mViewModel;
     private MainFragmentBinding binding;
+    private int downloadProgress;
+    private boolean isFront;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -104,7 +108,12 @@ public class MainFragment extends Fragment {
             }, null, null);
         });
 
+        initData();
         return binding.getRoot();
+    }
+
+    private void initData() {
+        downloadProgress = -1;
     }
 
     @Override
@@ -152,6 +161,10 @@ public class MainFragment extends Fragment {
             if (!MetaChatContext.getInstance().isInitMetachat()) {
                 return;
             }
+
+            if (-1 != downloadProgress) {
+                downloadProgress = -1;
+            }
             if (progressDialog != null) {
                 progressDialog.dismiss();
                 progressDialog = null;
@@ -177,14 +190,20 @@ public class MainFragment extends Fragment {
             if (!MetaChatContext.getInstance().isInitMetachat()) {
                 return;
             }
+            if (integer >= 0) {
+                downloadProgress = integer;
+            }
             if (progressDialog == null) {
                 progressDialog = CustomDialog.showDownloadingProgress(context, materialDialog -> {
+                    downloadProgress = -1;
                     mViewModel.cancelDownloadScene(MetaChatContext.getInstance().getSceneInfo());
                     return null;
                 });
             } else if (integer < 0) {
-                progressDialog.dismiss();
-                progressDialog = null;
+                if (isFront) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
                 return;
             }
 
@@ -241,5 +260,25 @@ public class MainFragment extends Fragment {
         binding.nickname.setEnabled(enable);
         binding.spinner.setEnabled(enable);
         binding.enter.setEnabled(enable);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isFront = true;
+        if (downloadProgress >= 0) {
+            Log.i(TAG, "onResume continue download");
+            MetaChatContext.getInstance().downloadScene(MetaChatContext.getInstance().getSceneInfo());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isFront = false;
+        if (downloadProgress >= 0) {
+            Log.i(TAG, "onPause cancel download");
+            MetaChatContext.getInstance().cancelDownloadScene(MetaChatContext.getInstance().getSceneInfo());
+        }
     }
 }
