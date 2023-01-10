@@ -325,6 +325,13 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onConnectionStateChanged(int state, int reason) {
+        Log.d(TAG, "onConnectionStateChanged state=" + state + ",reason=" + reason);
+        if (state == ConnectionState.METACHAT_CONNECTION_STATE_ABORTED) {
+            setCurrentScene(MetaChatConstants.SCENE_NONE);
+            resetRoleInfo();
+            leaveScene();
+        }
+
         for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
             handler.onConnectionStateChanged(state, reason);
         }
