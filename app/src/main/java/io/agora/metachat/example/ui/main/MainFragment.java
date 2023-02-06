@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
+import io.agora.metachat.example.BuildConfig;
 import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.adapter.SexAdapter;
@@ -149,8 +150,7 @@ public class MainFragment extends Fragment {
             // TODO choose one
             if (metachatSceneInfos.size() > 0) {
                 for (int a = 0; a < metachatSceneInfos.size(); a++) {
-                    //8为内容中心测试的ID号
-                    if (metachatSceneInfos.get(a).getSceneId() == 8) {
+                    if (metachatSceneInfos.get(a).getSceneId() == BuildConfig.SCENE_ID) {
                         mViewModel.prepareScene(metachatSceneInfos.get(a));
                         break;
                     }

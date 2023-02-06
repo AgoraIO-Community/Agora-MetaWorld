@@ -16,7 +16,8 @@ android {
         minSdk 22
         targetSdk 31
         versionCode 207401
-        versionName "207.401.0103.1"
+        versionName "207.401.0206.1"
+        flavorDimensions "versionCode"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -49,7 +50,7 @@ android {
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "Agora-MetaChat-${versionName}-${variant.buildType.name}-${releaseTime()}.apk"
+            outputFileName = "Agora-MetaChat-${variant.productFlavors[0].name}-${versionName}-${variant.buildType.name}-${releaseTime()}.apk"
         }
     }
 
@@ -59,6 +60,21 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+
+    productFlavors {
+        METACHAT_SDK_2_TEST {
+            buildConfigField "int", "SCENE_ID", "8"
+        }
+        META_FUSION_TEST {
+            buildConfigField "int", "SCENE_ID", "15"
+        }
+        METACHAT_IDOL_TEST {
+            buildConfigField "int", "SCENE_ID", "20"
+        }
+        METACHAT_SDK_2 {
+            buildConfigField "int", "SCENE_ID", "19"
+        }
     }
 }
 
