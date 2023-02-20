@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_song_order"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/mchat_transparent"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabGravity="center"
+        android:layout_marginStart="44dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabIndicatorHeight="0dp" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider_song_order"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="44dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:dividerColor="@color/mchat_white_10"
+        app:layout_constraintTop_toBottomOf="@id/tab_song_order" />
+
+    <io.agora.metachat.widget.NestedScrollableHost
+        android:id="@+id/scroll_song_order"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tab_song_order">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_song_order"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never" />
+    </io.agora.metachat.widget.NestedScrollableHost>
+</androidx.constraintlayout.widget.ConstraintLayout>

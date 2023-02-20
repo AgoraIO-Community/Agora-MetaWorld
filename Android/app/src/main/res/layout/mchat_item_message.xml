@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="10dp"
+    tools:background="@color/mchat_black">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_user_portrait"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/mchat_portrait0" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/mchat_bcbacb"
+        android:textSize="@dimen/mchat_sp_11"
+        app:layout_constraintStart_toEndOf="@id/iv_user_portrait"
+        app:layout_constraintTop_toTopOf="@id/iv_user_portrait"
+        tools:text="雷无桀" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_current_user"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="3dp"
+        android:background="@drawable/mchat_bg_rect_radius2_purple"
+        android:padding="2dp"
+        android:text="@string/mchat_me"
+        android:textColor="@color/mchat_bcbacb"
+        android:textSize="@dimen/mchat_sp_8"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        app:layout_constraintStart_toEndOf="@id/tv_nickname"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_send_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mchat_bcbacb"
+        android:textSize="@dimen/mchat_sp_11"
+        android:layout_marginStart="3dp"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        app:layout_constraintStart_toEndOf="@id/tv_current_user"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        app:layout_goneMarginStart="8dp"
+        tools:text="19:20" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="30dp"
+        android:gravity="start"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/mchat_white_85"
+        android:textSize="@dimen/mchat_sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_nickname"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname"
+        tools:text="圣剑啊，你看到那个敌人了吗？" />
+</androidx.constraintlayout.widget.ConstraintLayout>

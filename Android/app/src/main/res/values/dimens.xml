@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="mchat_sp_8">8sp</dimen>
+    <dimen name="mchat_sp_9">9sp</dimen>
+    <dimen name="mchat_sp_10">10sp</dimen>
+    <dimen name="mchat_sp_11">11sp</dimen>
+    <dimen name="mchat_sp_12">12sp</dimen>
+    <dimen name="mchat_sp_13">13sp</dimen>
+    <dimen name="mchat_sp_14">14sp</dimen>
+    <dimen name="mchat_sp_15">15sp</dimen>
+    <dimen name="mchat_sp_16">16sp</dimen>
+    <dimen name="mchat_sp_17">17sp</dimen>
+    <dimen name="mchat_sp_18">18sp</dimen>
+    <dimen name="mchat_sp_19">19sp</dimen>
+    <dimen name="mchat_sp_20">20sp</dimen>
+    <dimen name="mchat_sp_21">21sp</dimen>
+    <dimen name="mchat_sp_22">22sp</dimen>
+    <dimen name="mchat_sp_23">23sp</dimen>
+    <dimen name="mchat_sp_24">24sp</dimen>
+    <dimen name="mchat_sp_25">25sp</dimen>
+    <dimen name="mchat_sp_26">26sp</dimen>
+    <dimen name="mchat_sp_27">27sp</dimen>
+    <dimen name="mchat_sp_28">28sp</dimen>
+    <dimen name="mchat_sp_29">29sp</dimen>
+    <dimen name="mchat_sp_30">30sp</dimen>
+    <dimen name="mchat_sp_31">31sp</dimen>
+    <dimen name="mchat_sp_32">32sp</dimen>
+    <dimen name="mchat_sp_33">33sp</dimen>
+    <dimen name="mchat_sp_34">34sp</dimen>
+    <dimen name="mchat_sp_35">35sp</dimen>
+    <dimen name="mchat_sp_36">36sp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+</resources>

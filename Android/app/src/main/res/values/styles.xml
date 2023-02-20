@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="mchat_title_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="layout_constraintEnd_toEndOf">parent</item>
+        <item name="layout_constraintTop_toTopOf">parent</item>
+    </style>
+
+    <style name="mchat_btn_full">
+        <item name="android:layout_width">242dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:textColor">@color/mchat_white</item>
+        <item name="android:textSize">@dimen/mchat_sp_16</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/mchat_bg_def_btn_selector</item>
+    </style>
+
+    <style name="mchat_image_round">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="mchat_image_rect">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">25%</item>
+    </style>
+
+    <style name="mchat_semi_circle_style">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">66%</item>
+        <item name="cornerSizeBottomRight">66%</item>
+    </style>
+
+    <style name="mchat_progressbar_style">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:progressDrawable">@drawable/mchat_bg_pb_seekbar</item>
+        <item name="android:thumb">@drawable/mchat_ic_progress_thumb20</item>
+        <item name="android:max">100</item>
+    </style>
+
+    <!--  从下往上弹出 -->
+    <style name="mchat_anim_bottom_to_top" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/mchat_slide_in_bottom</item>
+        <item name="android:windowExitAnimation">@anim/mchat_slide_out_top</item>
+    </style>
+
+    <!--  从左往右弹出 -->
+    <style name="mchat_anim_left_to_right" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/mchat_slide_in_left</item>
+        <item name="android:windowExitAnimation">@anim/mchat_slide_out_left</item>
+    </style>
+
+    <!--  activity 背景全亮  -->
+    <style name="mchat_dim_dialog_styles" parent="@android:style/Theme.Dialog">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowSoftInputMode">stateVisible|adjustPan</item>
+    </style>
+</resources>

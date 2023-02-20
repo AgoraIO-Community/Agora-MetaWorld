@@ -1,0 +1,57 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="250dp"
+    android:layout_height="match_parent"
+    android:background="@drawable/mchat_bg_rect_radius10_grey">
+
+    <LinearLayout
+        android:id="@+id/layout_send_message"
+        android:layout_width="230dp"
+        android:layout_height="32dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/mchat_bg_rect_radius6_black15"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/mchat_transparent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="text"
+            android:paddingVertical="5dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="2dp"
+            android:singleLine="true"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            tools:text="圣剑啊，你看到那个敌人了吗？圣剑啊，你看到那个敌人了吗？圣剑啊，你看到那个敌人了吗" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/iv_send_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:src="@drawable/mchat_ic_send" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_message_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_send_message"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/mchat_item_message" />
+</androidx.constraintlayout.widget.ConstraintLayout>

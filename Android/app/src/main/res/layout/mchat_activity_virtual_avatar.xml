@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mchat_bg_avatar_role"
+    tools:context=".home.MChatVirtualAvatarActivity">
+
+    <LinearLayout
+        android:id="@+id/linear_avatar_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:padding="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/mchat_bg_oval_black25"
+            android:padding="5dp"
+            android:src="@drawable/mchat_ic_back_white" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/line_45"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.45" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_current_avatar"
+        android:layout_width="152dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/line_45"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@drawable/mchat_female0" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_choose_avatar_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/mchat_black_85"
+        android:textSize="@dimen/mchat_sp_14"
+        app:layout_constraintStart_toStartOf="@id/line_45"
+        app:layout_constraintTop_toTopOf="@id/iv_current_avatar"
+        tools:text="@string/mchat_choose_your_avatar" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_avatar_list"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/mchat_sp_20"
+        android:layout_marginEnd="55dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/line_45"
+        app:layout_constraintTop_toBottomOf="@id/tv_choose_avatar_tips"
+        app:spanCount="5"
+        tools:listitem="@layout/mchat_item_virtual_avatar_list" />
+
+    <LinearLayout
+        android:id="@+id/linear_enter_room"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/mchat_def_button_enter"
+        android:gravity="center"
+        android:paddingStart="18dp"
+        android:paddingEnd="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/rv_avatar_list"
+        app:layout_constraintStart_toStartOf="@id/rv_avatar_list">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_enter_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mchat_confirm_and_enter"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_16"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:layout_marginStart="6dp"
+            android:src="@drawable/mchat_ic_go" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

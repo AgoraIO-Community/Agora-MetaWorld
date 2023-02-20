@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp"
+    android:paddingBottom="10dp"
+    tools:background="@color/mchat_black">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_music_singer"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="44dp"
+        android:background="@color/mchat_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearance="@style/mchat_image_rect"
+        tools:src="@color/mchat_black_60" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_song_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="80dp"
+        android:ellipsize="end"
+        android:gravity="start"
+        android:lines="1"
+        android:textColor="@color/mchat_white"
+        android:textSize="@dimen/mchat_sp_14"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_music_singer"
+        app:layout_constraintTop_toTopOf="@id/iv_music_singer"
+        tools:text="最长的电影" />
+
+    <LinearLayout
+        android:id="@+id/layout_author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_music_singer">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_music_original"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mchat_bg_rect_radius4_stroke_green"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="1dp"
+            android:text="@string/mchat_music_original"
+            android:textColor="@color/mchat_2fb46d"
+            android:textSize="@dimen/mchat_sp_9"
+            android:layout_marginEnd="3dp"
+            app:layout_constraintStart_toEndOf="@id/iv_music_singer"
+            app:layout_constraintTop_toTopOf="@id/iv_music_singer" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_music_accompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mchat_bg_rect_radius4_stroke_orange"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="1dp"
+            android:layout_marginEnd="3dp"
+            android:text="@string/mchat_music_accompany"
+            android:textColor="@color/mchat_bc5a2b"
+            android:textSize="@dimen/mchat_sp_9"
+            app:layout_constraintStart_toEndOf="@id/iv_music_singer"
+            app:layout_constraintTop_toTopOf="@id/iv_music_singer" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_music_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/mchat_bg_rect_radius4_stroke_blue"
+            android:paddingHorizontal="3dp"
+            android:paddingVertical="1dp"
+            android:layout_marginEnd="3dp"
+            android:text="@string/mchat_music_score"
+            android:textColor="@color/mchat_main_color_16a7ff"
+            android:textSize="@dimen/mchat_sp_9"
+            app:layout_constraintStart_toEndOf="@id/iv_music_singer"
+            app:layout_constraintTop_toTopOf="@id/iv_music_singer" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_music_singer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Jay Chou"
+            android:textColor="@color/mchat_black_999"
+            android:textSize="@dimen/mchat_sp_12"
+            android:lines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/iv_music_singer"
+            app:layout_constraintTop_toTopOf="@id/iv_music_singer" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_music_operation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/iv_music_singer"
+        app:layout_constraintBottom_toBottomOf="@id/iv_music_singer"
+        android:src="@drawable/mchat_ic_plus_white"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="16dp"
+        app:layout_constraintEnd_toEndOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

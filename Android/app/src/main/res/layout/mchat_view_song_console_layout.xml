@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="360dp"
+    android:layout_height="match_parent"
+    android:background="@color/mchat_42454c">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_console_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:padding="15dp"
+                android:src="@drawable/mchat_ic_back_white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mchat_profile_settings"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_16"
+                app:layout_constraintBottom_toBottomOf="@id/iv_console_back"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/iv_console_back" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_original_singing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:gravity="center"
+                android:text="@string/mchat_original_singing"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_12"
+                app:layout_constraintStart_toStartOf="@id/iv_console_back"
+                app:layout_constraintTop_toBottomOf="@id/iv_console_back" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_original_singing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/mchat_transparent"
+                android:button="@drawable/mchat_ic_switch_bg"
+                android:checked="true"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/tv_original_singing" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/mchat_original_singing_tips"
+                android:textColor="@color/mchat_b7b7b7"
+                android:textSize="@dimen/mchat_sp_10"
+                app:layout_constraintStart_toEndOf="@id/checkbox_original_singing"
+                app:layout_constraintTop_toTopOf="@id/checkbox_original_singing" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_earphone_monitoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/mchat_earphone_monitoring"
+                android:textAlignment="gravity"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_12"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/checkbox_original_singing" />
+
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/checkbox_earphone_monitoring"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/mchat_transparent"
+                android:button="@drawable/mchat_ic_switch_bg"
+                android:checked="true"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/tv_earphone_monitoring" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/mchat_earphone_monitoring_tips"
+                android:textColor="@color/mchat_b7b7b7"
+                android:textSize="@dimen/mchat_sp_10"
+                app:layout_constraintStart_toEndOf="@id/checkbox_earphone_monitoring"
+                app:layout_constraintTop_toTopOf="@id/checkbox_earphone_monitoring" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_change_key_of_song"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="@string/mchat_change_key_of_song"
+                android:textAlignment="gravity"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_12"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/checkbox_earphone_monitoring" />
+
+            <include
+                android:id="@+id/include_console_pitch_select"
+                layout="@layout/mchat_pitch_select_layout"
+                android:layout_width="0dp"
+                android:layout_height="27dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/tv_change_key_of_song" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_song_volume"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/mchat_volume"
+                android:textAlignment="gravity"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_12"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/include_console_pitch_select" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekbar_volume"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="50dp"
+                android:contentDescription="@string/mchat_volume"
+                android:max="100"
+                android:progressDrawable="@drawable/mchat_bg_pb_seekbar"
+                android:thumb="@drawable/mchat_ic_seek_thumb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_song_volume"
+                tools:progress="0" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_accompaniment_music"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/mchat_accompaniment_music"
+                android:textAlignment="gravity"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_12"
+                app:layout_constraintStart_toStartOf="@+id/tv_original_singing"
+                app:layout_constraintTop_toBottomOf="@id/seekbar_volume" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekbar_accompaniment_music"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="35dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="50dp"
+                android:contentDescription="@string/mchat_volume"
+                android:max="100"
+                android:paddingHorizontal="10dp"
+                android:progressDrawable="@drawable/mchat_bg_pb_seekbar"
+                android:thumb="@drawable/mchat_ic_seek_thumb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_accompaniment_music"
+                tools:progress="10" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_song_scene"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:layout_marginVertical="10dp"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:paddingStart="44dp"
+                android:paddingEnd="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/seekbar_accompaniment_music"
+                tools:listitem="@layout/mchat_item_song_scence" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

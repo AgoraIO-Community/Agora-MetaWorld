@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/mchat_bg_toast_view"
+    android:orientation="vertical"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="14dp">
+
+    <ImageView
+        android:id="@+id/ivToast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="7dp"
+        android:src="@drawable/mchat_ic_toast_hint"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:maxWidth="172dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        tools:text="xxxxxxx" />
+</LinearLayout>

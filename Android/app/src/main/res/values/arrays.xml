@@ -1,7 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="sex_array">
-        <item>男</item>
-        <item>女</item>
+    <!-- 用户名，只有英文 -->
+    <string-array name="mchat_random_nickname">
+        <item>James</item>
+        <item>William</item>
+        <item>Lucas</item>
+        <item>Henry</item>
+        <item>Jack</item>
+        <item>Daniel</item>
+        <item>Michael</item>
+        <item>Logan</item>
+        <item>Owen</item>
+        <item>Ashley</item>
+        <item>Aaron</item>
+        <item>Cooper</item>
+        <item>Alex</item>
+        <item>Wesley</item>
+        <item>Adam</item>
+        <item>Bryson</item>
+        <item>Jasper</item>
+        <item>Jason</item>
+        <item>Cole</item>
+        <item>Ace</item>
+        <item>Ivan</item>
+        <item>Leon</item>
+        <item>Brandon</item>
+        <item>Joe</item>
+        <item>Jenny</item>
+        <item>Simon</item>
+        <item>Kylie</item>
+        <item>Kobe</item>
+        <item>Jay</item>
+        <item>Travis</item>
+        <item>Jared</item>
+        <item>Jefferey</item>
+        <item>Hassan</item>
+        <item>Dash</item>
+        <item>Mia</item>
+        <item>Isabella</item>
+        <item>Emily</item>
+        <item>Layla</item>
+        <item>Nora</item>
+        <item>Lily</item>
+        <item>Zoe</item>
+        <item>Stella</item>
+        <item>Elena</item>
+        <item>Claire</item>
+        <item>Alice</item>
+        <item>Bella</item>
+        <item>Cora</item>
+        <item>Eva</item>
+        <item>Iris</item>
+        <item>Maria</item>
+        <item>Lucia</item>
+        <item>Jasmine</item>
+        <item>Olive</item>
+        <item>Blake</item>
+        <item>Aspen</item>
+        <item>Myla</item>
+        <item>Hanna</item>
+        <item>Julie</item>
+        <item>Eve</item>
     </string-array>
+
+    <!-- 房间封面 -->
+    <array name="mchat_room_cover">
+        <item>@drawable/mchat_room_cover0</item>
+        <item>@drawable/mchat_room_cover1</item>
+        <item>@drawable/mchat_room_cover2</item>
+        <item>@drawable/mchat_room_cover3</item>
+    </array>
+
+    <!-- 用户头像 -->
+    <array name="mchat_portrait">
+        <item>@drawable/mchat_portrait0</item>
+        <item>@drawable/mchat_portrait1</item>
+        <item>@drawable/mchat_portrait2</item>
+        <item>@drawable/mchat_portrait3</item>
+        <item>@drawable/mchat_portrait4</item>
+        <item>@drawable/mchat_portrait5</item>
+        <item>@drawable/mchat_portrait6</item>
+        <item>@drawable/mchat_portrait7</item>
+        <item>@drawable/mchat_portrait8</item>
+        <item>@drawable/mchat_portrait9</item>
+        <item>@drawable/mchat_portrait10</item>
+        <item>@drawable/mchat_portrait11</item>
+        <item>@drawable/mchat_portrait12</item>
+        <item>@drawable/mchat_portrait13</item>
+        <item>@drawable/mchat_portrait14</item>
+        <item>@drawable/mchat_portrait15</item>
+        <item>@drawable/mchat_portrait16</item>
+        <item>@drawable/mchat_portrait17</item>
+    </array>
+
+    <!-- 用户徽章 -->
+    <array name="mchat_user_badge">
+        <item>@drawable/mchat_badge_level0</item>
+        <item>@drawable/mchat_badge_level1</item>
+        <item>@drawable/mchat_badge_level2</item>
+    </array>
+
+    <!-- 女性虚拟形象 -->
+    <array name="mchat_avatar_female">
+        <item>@drawable/mchat_female0</item>
+        <item>@drawable/mchat_female1</item>
+        <item>@drawable/mchat_female2</item>
+        <item>@drawable/mchat_female3</item>
+        <item>@drawable/mchat_female4</item>
+        <item>@drawable/mchat_female5</item>
+        <item>@drawable/mchat_female6</item>
+        <item>@drawable/mchat_female7</item>
+        <item>@drawable/mchat_female8</item>
+        <item>@drawable/mchat_female9</item>
+    </array>
+
+    <!-- 男性虚拟形象 -->
+    <array name="mchat_avatar_male">
+        <item>@drawable/mchat_male0</item>
+        <item>@drawable/mchat_male1</item>
+        <item>@drawable/mchat_male2</item>
+        <item>@drawable/mchat_male3</item>
+        <item>@drawable/mchat_male4</item>
+        <item>@drawable/mchat_male5</item>
+    </array>
 </resources>

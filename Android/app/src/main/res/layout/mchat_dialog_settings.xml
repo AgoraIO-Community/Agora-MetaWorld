@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/mchat_42454c">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_settings_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:padding="15dp"
+        android:src="@drawable/mchat_ic_back_white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mchat_profile_settings"
+        android:textColor="@color/mchat_white"
+        android:textSize="@dimen/mchat_sp_16"
+        app:layout_constraintBottom_toBottomOf="@id/iv_settings_back"
+        app:layout_constraintStart_toEndOf="@id/iv_settings_back"
+        app:layout_constraintTop_toTopOf="@id/iv_settings_back" />
+
+    <LinearLayout
+        android:id="@+id/layout_general_tab"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="65dp"
+        android:background="@drawable/mchat_bg_rect_radius9_purple"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="9dp"
+            android:src="@drawable/mchat_ic_general" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mchat_general"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_sound_tab"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_general_tab">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="9dp"
+            android:src="@drawable/mchat_ic_sound" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mchat_sound"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12" />
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_general_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/mchat_bg_rect_radius16_black20"
+        android:paddingHorizontal="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/layout_general_tab"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/mchat_general"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--   nickname     -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_nickname"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_general" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/et_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="100dp"
+            android:paddingVertical="10dp"
+            android:background="@color/mchat_transparent"
+            android:drawableEnd="@drawable/mchat_ic_edit"
+            android:drawablePadding="6dp"
+            android:singleLine="true"
+            android:maxLength="12"
+            android:imeOptions="actionDone|flagNoExtractUi"
+            android:inputType="text"
+            android:textColor="@color/mchat_white"
+            android:textCursorDrawable="@drawable/mchat_bg_edit_cursor_white"
+            app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_nickname"
+            tools:text="Nickname" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+        <!--   user portrait     -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_user_portrait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_portrait"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+        <LinearLayout
+            android:id="@+id/layout_user_portrait"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_portrait"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_user_portrait">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_user_portrait"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/mchat_portrait0" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/mchat_ic_down_arrow" />
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_portrait" />
+
+        <!--   user badge     -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_user_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_badge"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_portrait" />
+
+        <LinearLayout
+            android:id="@+id/layout_user_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="@id/tv_user_badge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_user_badge">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_user_badge"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/mchat_badge_level0" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/mchat_ic_down_arrow" />
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_user_badge" />
+
+        <LinearLayout
+            android:id="@+id/layout_quit_room"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/mchat_ic_quit" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/mchat_ic_down_arrow"
+                android:text="@string/mchat_room_quit"
+                android:textColor="@color/mchat_white"
+                android:textSize="@dimen/mchat_sp_14" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_sound_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="45dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/mchat_bg_rect_radius16_black20"
+        android:paddingHorizontal="30dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/layout_general_tab"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volume_settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/mchat_volume_setting"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="@string/mchat_volume_setting_tips"
+            android:textColor="@color/mchat_bc5a2b"
+            android:textSize="@dimen/mchat_sp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_volume_settings" />
+
+        <!-- tv -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volume_tv"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_vol_tv"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_volume_settings" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/pb_tv_vol"
+            style="@style/mchat_progressbar_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="60dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_volume_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_volume_tv"
+            app:layout_constraintTop_toTopOf="@+id/tv_volume_tv"
+            tools:progress="10" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volume_tv_vol"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintBottom_toBottomOf="@id/tv_volume_tv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_volume_tv"
+            tools:text="10" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_volume_tv" />
+
+        <!--     npc -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volume_npc"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_vol_npc"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintEnd_toEndOf="@id/tv_volume_tv"
+            app:layout_constraintStart_toStartOf="@id/tv_volume_tv"
+            app:layout_constraintTop_toBottomOf="@id/tv_volume_tv" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/pb_npc_vol"
+            style="@style/mchat_progressbar_style"
+            android:max="100"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="60dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_volume_npc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_volume_npc"
+            app:layout_constraintTop_toTopOf="@+id/tv_volume_npc"
+            tools:progress="25" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_volume_npc_vol"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintBottom_toBottomOf="@id/tv_volume_npc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_volume_npc"
+            tools:text="20" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_volume_npc" />
+
+        <!--     recv range -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_recv_range"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_vol_recv_range"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintEnd_toEndOf="@id/tv_volume_npc"
+            app:layout_constraintStart_toStartOf="@id/tv_volume_npc"
+            app:layout_constraintTop_toBottomOf="@id/tv_volume_npc" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/pb_recv_range"
+            style="@style/mchat_progressbar_style"
+            android:max="150"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="60dp"
+            app:layout_constraintBottom_toBottomOf="@id/tv_recv_range"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_recv_range"
+            app:layout_constraintTop_toTopOf="@+id/tv_recv_range"
+            tools:progress="50" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_recv_range_value"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintBottom_toBottomOf="@id/tv_recv_range"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_recv_range"
+            tools:text="30" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_recv_range" />
+
+        <!--     distance unit  -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_distance_unit"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="18dp"
+            android:text="@string/mchat_vol_distance_unit"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintEnd_toEndOf="@id/tv_recv_range"
+            app:layout_constraintStart_toStartOf="@id/tv_recv_range"
+            app:layout_constraintTop_toBottomOf="@id/tv_recv_range" />
+
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/pb_distance_unit"
+            style="@style/mchat_progressbar_style"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="60dp"
+            android:max="100"
+            app:layout_constraintBottom_toBottomOf="@id/tv_distance_unit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_distance_unit"
+            app:layout_constraintTop_toTopOf="@+id/tv_distance_unit"
+            tools:progress="86" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_distance_unit_value"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_12"
+            app:layout_constraintBottom_toBottomOf="@id/tv_distance_unit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_distance_unit"
+            tools:text="40" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/mchat_black_10"
+            app:layout_constraintTop_toBottomOf="@id/tv_distance_unit" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

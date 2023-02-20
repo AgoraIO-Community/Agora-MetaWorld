@@ -1,3 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MetaChatExample</string>
+    <string name="mchat_app_name">MateChat</string>
+    <string name="mchat_agora_io">Agora.io</string>
+    <string name="mchat_room_empty_data">No Chat Room Yet</string>
+    <string name="mchat_room_unavailable_tip">The room does not exist, refresh and try again</string>
+    <string name="mchat_room_incorrect_password">Incorrect Password</string>
+    <string name="mchat_join_room_failed">Join room failed</string>
+    <string name="mchat_loading">Loading…</string>
+    <string name="mchat_introduce">Welcome to Agora Meta demo. In this demo, you can experience various metaverse features of Agora provides. Please follow the guide to explore and learn more.</string>
+    <string name="mchat_join">Join</string>
+    <string name="mchat_room_id">Room ID：%s</string>
+    <string name="mchat_cancel">Cancel</string>
+    <string name="mchat_confirm">Confirm</string>
+    <string name="mchat_create_a_room">Create a room</string>
+    <string name="mchat_create">Create</string>
+    <string name="mchat_room_enter_password_tips">Enter 4 Digit Password</string>
+    <string name="mchat_room_create_error">Create Room Error</string>
+    <string name="mchat_room_name">Room Name</string>
+    <string name="mchat_random">Random</string>
+    <string name="mchat_room_create_room_name_hint">Set Room Name</string>
+    <string name="mchat_room_create_encrypt">Do you want to encrypt the room?</string>
+    <string name="mchat_public">Public</string>
+    <string name="mchat_encrypted">Encrypted</string>
+    <string name="mchat_room_set_password_tips">Please set the 4-digit room password</string>
+    <string name="mchat_room_create_empty_name">No Room Name</string>
+    <string name="mchat_update">Change</string>
+    <string name="mchat_badge">Team</string>
+    <string name="mchat_nickname">Nickname</string>
+    <string name="mchat_nickname_error_tips">must contain 2&#8211;12 characters</string>
+    <string name="mchat_enter_a_nickname">Please enter a nickname</string>
+    <string name="mchat_gender">Gender</string>
+    <string name="mchat_male">Male</string>
+    <string name="mchat_female">Female</string>
+    <string name="mchat_select_avatar">Select avatar</string>
+    <string name="mchat_select_your_profile_picture">Select your profile picture</string>
+    <string name="mchat_select_your_badge">Select your badge</string>
+    <string name="mchat_choose_your_avatar">%1$s, please choose your avatar</string>
+    <string name="mchat_confirm_and_enter">Confirm room and enter</string>
+    <string name="mchat_create_and_enter">Create room and enter</string>
+    <string name="mchat_beginner_guide">Beginner Guide</string>
+    <string name="mchat_novice_guide">Novice\nguide</string>
+    <string name="mchat_beginner_guide_title">Beginner Guide</string>
+    <string name="mchat_beginner_guide_precautions">How to use MetaChat:</string>
+    <string name="mchat_visitor_mode">Visitor mode</string>
+    <string name="mchat_audio_chat_mode">Audio chat mode</string>
+    <string name="mchat_visitor_mode_title">Visitor tips</string>
+    <string name="mchat_visitor_mode_precautions">Precautions for visitor mode:</string>
+    <string name="mchat_room_quit">Leave room</string>
+    <string name="mchat_room_disbanded">The room has been closed</string>
+    <string name="mchat_notice">Notice</string>
+    <string name="mchat_room_maximum_limit">The number of people has exceeded the maximum limit</string>
+    <string name="mchat_delete_room_alert_msg">Are you sure to delete the room?</string>
+    <string name="mchat_delete_room_notify_alert_title">The owner has delete the room, please confirm to leave the room</string>
+    <string name="mchat_download_title">Download tips</string>
+    <string name="mchat_download_content">If this is the first time you enter a room, you need to download the %1$s data package</string>
+    <string name="mchat_download_now">Download</string>
+    <string name="mchat_download_next_time">Next time</string>
+    <string name="mchat_downloading">Downloading</string>
+    <string name="mchat_permission_for_camera">Is this app allowed to use the camera?</string>
+    <string name="mchat_permission_for_microphone">Do you allow this app to use your microphone?</string>
+    <string name="mchat_choose_a_song">Choose a song</string>
+    <string name="mchat_selected">Selected</string>
+    <string name="mchat_all_songs">All</string>
+    <string name="mchat_recommend_songs">Recommend Songs</string>
+    <string name="mchat_tiktok_hot_songs">TikTok hot songs</string>
+    <string name="mchat_chinese_archaic_style_popular_songs">Chinese Archaic Style Popular Songs</string>
+    <string name="mchat_ktv_popular_songs">KTV Popular Songs</string>
+    <string name="mchat_christmas_songs">Christmas Songs</string>
+    <string name="mchat_console">Console</string>
+    <string name="mchat_original_singing">Original singing</string>
+    <string name="mchat_original_singing_tips">Click the button to switch the original singing and accompaniment</string>
+    <string name="mchat_earphone_monitoring">Earphone Monitoring</string>
+    <string name="mchat_earphone_monitoring_tips">Please insert the earphone to use the earreturn function</string>
+    <string name="mchat_change_key_of_song">Change Key of Song</string>
+    <string name="mchat_volume">Volume</string>
+    <string name="mchat_accompaniment_music">Enable Accompaniment Music</string>
+    <string name="mchat_recording_studio">Recording Studio</string>
+    <string name="mchat_concert">Concert</string>
+    <string name="mchat_ktv">KTV</string>
+    <string name="mchat_hollow_sound">Hollow Sound</string>
+    <string name="mchat_spatial_audio_background">Enable Spatial Audio Background</string>
+    <string name="mchat_vocal_distortion">Vocal Distortion</string>
+    <string name="mchat_vocal_air_attenuation_factor">Vocal Air Attenuation Factor</string>
+    <string name="mchat_user_view_setting">User View Setting</string>
+    <string name="mchat_1st_person_perspective_view">1st person perspective view</string>
+    <string name="mchat_3st_person_perspective_view">3st person perspective view</string>
+    <string name="mchat_omni_perspective_view">Omni-perspective view</string>
+    <string name="mchat_profile_settings">Settings</string>
+    <string name="mchat_general">General</string>
+    <string name="mchat_operation">Operation</string>
+    <string name="mchat_sound">Sound</string>
+    <string name="mchat_room">Room</string>
+    <string name="mchat_portrait">Portrait</string>
+    <string name="mchat_virtual_avatar">Avatar</string>
+    <string name="mchat_quit">Quit</string>
+    <string name="mchat_offline">Offline</string>
+    <string name="mchat_online">Online</string>
+    <string name="mchat_volume_setting">Volume settings</string>
+    <string name="mchat_volume_setting_tips">Note: This setting only tasks effect on the local device</string>
+    <string name="mchat_vol_tv">TV VOL</string>
+    <string name="mchat_vol_npc">NPC VOL</string>
+    <string name="mchat_vol_recv_range">Recv Range</string>
+    <string name="mchat_vol_distance_unit">Distance Unit</string>
+    <string name="mchat_exit_room">Exit Room?</string>
+    <string name="mchat_exit_room_tips">The room will close after you leave.</string>
+    <string name="mchat_me">Me</string>
+    <string name="mchat_start_karaoke">Start Karaoke</string>
+    <string name="mchat_song_list">Song list</string>
+    <string name="mchat_end_song">End Karaoke</string>
+    <string name="mchat_music_original">Original</string>
+    <string name="mchat_music_score">Score</string>
+    <string name="mchat_music_accompany">Accompany</string>
+    <string name="mchat_music_singing">singing</string>
+    <string name="mchat_music_source">The song is from Migu Music</string>
+    <string name="mchat_scene_error">Error state:%1$s,reason:%2$s </string>
+    <string name="mchat_exit">Exit</string>
+
+    <string-array name="mchat_room_name">
+        <item>Jenoah</item>
+        <item>York</item>
+        <item>Keila</item>
+        <item>Adelaide</item>
+        <item>Kima</item>
+        <item>Chyanne</item>
+        <item>Reno</item>
+        <item>Granville</item>
+        <item>Cyrene</item>
+        <item>Valencia</item>
+        <item>Enna</item>
+        <item>Nara</item>
+        <item>Asgard</item>
+        <item>Hogwarts</item>
+        <item>Gryffindor</item>
+        <item>Hufflepuff</item>
+        <item>Ravenclaw</item>
+        <item>Slytherin</item>
+        <item>Shangri-La</item>
+        <item>Alaska</item>
+    </string-array>
+
+    <string-array name="mchat_beginner_guide_content">
+        <item>Create your character, including picture, name and avatar.</item>
+        <item>Inside the room, walk around, chat or sing.</item>
+        <item>In visitor mode, your mic is off and you\'re invisible.</item>
+        <item>Pro tip: Near the TV is a karaoke station!</item>
+    </string-array>
+
+    <string-array name="mchat_visitor_mode_content">
+        <item>Visitors can see users participating in conversation in the scene, but they cannot interact with these users </item>
+        <item>Visitors are "invisible", and all other users can\'t see you</item>
+        <item>You can participate in conversation and interaction when you enable mic, and other users will see you</item>
+    </string-array>
 </resources>

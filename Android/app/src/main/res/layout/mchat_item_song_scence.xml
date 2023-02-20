@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="75dp"
+    android:layout_height="52dp"
+    android:layout_marginEnd="12dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_song_scene"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mchat_bg_recording_studio" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_song_scene_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/mchat_bg_rect_radius5_stroke_pure" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_song_scene_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="@dimen/mchat_sp_13"
+        android:gravity="center"
+        android:text="@string/mchat_recording_studio"
+        android:textColor="@color/mchat_white"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

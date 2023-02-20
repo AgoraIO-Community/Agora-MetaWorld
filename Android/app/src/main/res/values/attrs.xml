@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="mchat_title_view">
+        <attr name="mchat_ctv_leftImageSrc" format="reference" />
+        <attr name="mchat_ctv_hideLeftImage" format="boolean" />
+        <attr name="mchat_ctv_leftText" format="string" />
+        <attr name="mchat_ctv_centerText" format="string" />
+        <attr name="mchat_ctv_centerTextColor" format="color" />
+        <attr name="mchat_ctv_rightText" format="string" />
+        <attr name="mchat_ctv_rightImageSrc" format="reference" />
+        <attr name="mchat_ctv_hideRightImage" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="mchat_encryption_input_style">
+        <attr name="mchat_space" format="dimension" />
+        <attr name="mchat_strokeWidth" format="dimension" />
+        <attr name="mchat_checkedColor" format="color" />
+        <attr name="mchat_defaultColor" format="color" />
+        <attr name="mchat_textLength" format="integer" />
+        <attr name="mchat_backColor" format="color" />
+        <attr name="mchat_textColor" format="color" />
+        <attr name="mchat_circle" format="dimension" />
+        <attr name="mchat_round" format="dimension" />
+        <attr name="mchat_textSize" format="dimension" />
+        <attr name="mchat_isPwd" format="boolean" />
+        <attr name="mchat_waitInputColor" format="color" />
+        <attr name="mchat_isWaitInput" format="boolean" />
+    </declare-styleable>
+</resources>

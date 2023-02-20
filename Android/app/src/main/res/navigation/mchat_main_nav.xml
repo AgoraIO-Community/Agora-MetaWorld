@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mchat_main_nav.xml"
+    app:startDestination="@id/roomListFragment">
+
+    <fragment
+        android:id="@+id/roomListFragment"
+        android:name="io.agora.metachat.home.MChatRoomListFragment"
+        android:label="MChatRoomListFragment"
+        tools:layout="@layout/mchat_fragment_room_list">
+        <action
+            android:id="@+id/action_roomListFragment_to_crateRoomFragment"
+            app:destination="@id/crateRoomFragment"
+            app:enterAnim="@anim/mchat_slide_in_right"
+            app:exitAnim="@anim/mchat_slide_out_left"
+            app:popEnterAnim="@anim/mchat_slide_in_left"
+            app:popExitAnim="@anim/mchat_slide_out_right" />
+
+        <action
+            android:id="@+id/action_roomListFragment_to_crateRoleFragment"
+            app:destination="@id/crateRoleFragment"
+            app:enterAnim="@anim/mchat_slide_in_right"
+            app:exitAnim="@anim/mchat_slide_out_left"
+            app:popEnterAnim="@anim/mchat_slide_in_left"
+            app:popExitAnim="@anim/mchat_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crateRoomFragment"
+        android:name="io.agora.metachat.home.MChatCreateRoomFragment"
+        android:label="MChatCreateRoomFragment"
+        tools:layout="@layout/mchat_fragment_create_room">
+        <action
+            android:id="@+id/action_crateRoomFragment_to_crateRoleFragment"
+            app:destination="@id/crateRoleFragment"
+            app:enterAnim="@anim/mchat_slide_in_right"
+            app:exitAnim="@anim/mchat_slide_out_left"
+            app:popEnterAnim="@anim/mchat_slide_in_left"
+            app:popExitAnim="@anim/mchat_slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/crateRoleFragment"
+        android:name="io.agora.metachat.home.MChatCreateRoleFragment"
+        android:label="MChatCreateRoleFragment"
+        tools:layout="@layout/mchat_fragment_create_role" >
+
+        <action
+            android:id="@+id/action_crateRoleFragment_to_roomListFragment"
+            app:destination="@id/roomListFragment"
+            app:enterAnim="@anim/mchat_slide_in_right"
+            app:exitAnim="@anim/mchat_slide_out_left"
+            app:popEnterAnim="@anim/mchat_slide_in_left"
+            app:popExitAnim="@anim/mchat_slide_out_right" />
+    </fragment>
+</navigation>

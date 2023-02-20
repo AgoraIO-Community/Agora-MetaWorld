@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mchat_app_name">元语聊</string>
+    <string name="mchat_agora_io">Agora.io</string>
+    <string name="mchat_room_empty_data">暂无房间</string>
+    <string name="mchat_room_unavailable_tip">房间不存在，请刷新列表重试</string>
+    <string name="mchat_room_incorrect_password">密码错误，请重试</string>
+    <string name="mchat_join_room_failed">加入房间失败</string>
+    <string name="mchat_loading">加载中…</string>
+    <string name="mchat_introduce">欢迎来到声网Meta，在这个元宇宙世界中，你能体验到声网各项元宇宙技术，跟随引导一起来探索体验吧!</string>
+    <string name="mchat_join">加入</string>
+    <string name="mchat_room_id">房间号：%s</string>
+    <string name="mchat_cancel">取消</string>
+    <string name="mchat_confirm">确认</string>
+    <string name="mchat_create_a_room">创建房间</string>
+    <string name="mchat_create">创建</string>
+    <string name="mchat_room_enter_password_tips">请输入4位数密码</string>
+    <string name="mchat_room_create_error">创建房间失败</string>
+    <string name="mchat_room_name">房间名</string>
+    <string name="mchat_random">随机</string>
+    <string name="mchat_room_create_room_name_hint">设置房间名称</string>
+    <string name="mchat_room_create_encrypt">加密房间?</string>
+    <string name="mchat_public">公开</string>
+    <string name="mchat_encrypted">加密</string>
+    <string name="mchat_room_set_password_tips">请输入4位数字密码</string>
+    <string name="mchat_room_create_empty_name">房间名不能为空</string>
+    <string name="mchat_update">更换</string>
+    <string name="mchat_badge">徽章</string>
+    <string name="mchat_nickname">昵称</string>
+    <string name="mchat_enter_a_nickname">请输入昵称</string>
+    <string name="mchat_nickname_error_tips">必须包含2&#8211;12个字符</string>
+    <string name="mchat_gender">性别</string>
+    <string name="mchat_male">男</string>
+    <string name="mchat_female">女</string>
+    <string name="mchat_select_avatar">选择虚拟形象</string>
+    <string name="mchat_select_your_profile_picture">请选择头像</string>
+    <string name="mchat_select_your_badge">请选择徽章</string>
+    <string name="mchat_choose_your_avatar">%1$s，请选择您的虚拟形象</string>
+    <string name="mchat_confirm_and_enter">确认房间并进入</string>
+    <string name="mchat_create_and_enter">创建房间并进入</string>
+    <string name="mchat_beginner_guide">新手指导</string>
+    <string name="mchat_novice_guide">新手引导</string>
+    <string name="mchat_beginner_guide_title">新手指导</string>
+    <string name="mchat_beginner_guide_precautions">使用metachat demo 的操作如下：</string>
+    <string name="mchat_visitor_mode">游客模式</string>
+    <string name="mchat_audio_chat_mode">语聊模式</string>
+    <string name="mchat_visitor_mode_title">游客指导</string>
+    <string name="mchat_visitor_mode_precautions">游客模式注意事项：</string>
+    <string name="mchat_room_quit">退出房间</string>
+    <string name="mchat_notice">提示</string>
+    <string name="mchat_room_disbanded">该房间已解散</string>
+    <string name="mchat_delete_room_alert_msg">确定解散该房间吗？</string>
+    <string name="mchat_delete_room_notify_alert_title">房主已解散房间，请确认离开房间</string>
+    <string name="mchat_room_maximum_limit">房间人数已达到上限</string>
+    <string name="mchat_download_title">下载提示</string>
+    <string name="mchat_download_content">首次进入MetaChat场景需下载%1$s数据包</string>
+    <string name="mchat_download_now">立即下载</string>
+    <string name="mchat_download_next_time">下次再说</string>
+    <string name="mchat_downloading">下载中</string>
+    <string name="mchat_permission_for_camera">需要您的同意，才能访问相机</string>
+    <string name="mchat_permission_for_microphone">需要您的同意，才能访问麦克风</string>
+    <string name="mchat_choose_a_song">点歌</string>
+    <string name="mchat_selected">已点</string>
+    <string name="mchat_all_songs">全部</string>
+    <string name="mchat_recommend_songs">嗨歌推荐</string>
+    <string name="mchat_tiktok_hot_songs">抖音热歌</string>
+    <string name="mchat_chinese_archaic_style_popular_songs">古风热歌</string>
+    <string name="mchat_ktv_popular_songs">KTV必唱</string>
+    <string name="mchat_christmas_songs">圣诞歌曲</string>
+    <string name="mchat_console">控制台</string>
+    <string name="mchat_original_singing">原唱</string>
+    <string name="mchat_original_singing_tips">请点击按钮切换原唱和伴奏</string>
+    <string name="mchat_earphone_monitoring">耳返</string>
+    <string name="mchat_earphone_monitoring_tips">请使用耳机来体验耳返功能</string>
+    <string name="mchat_change_key_of_song">升降调</string>
+    <string name="mchat_volume">音量</string>
+    <string name="mchat_accompaniment_music">伴奏</string>
+    <string name="mchat_recording_studio">录音棚</string>
+    <string name="mchat_concert">演唱会</string>
+    <string name="mchat_ktv">KTV</string>
+    <string name="mchat_hollow_sound">空旷</string>
+    <string name="mchat_spatial_audio_background">空间音频</string>
+    <string name="mchat_vocal_distortion">人声模糊</string>
+    <string name="mchat_vocal_air_attenuation_factor">空气衰减</string>
+    <string name="mchat_user_view_setting">视角设置</string>
+    <string name="mchat_1st_person_perspective_view">第一人称</string>
+    <string name="mchat_3st_person_perspective_view">第三人称</string>
+    <string name="mchat_omni_perspective_view">上帝视角</string>
+    <string name="mchat_profile_settings">设置</string>
+    <string name="mchat_general">通用</string>
+    <string name="mchat_operation">操作</string>
+    <string name="mchat_sound">声音</string>
+    <string name="mchat_room">房间</string>
+    <string name="mchat_portrait">头像</string>
+    <string name="mchat_virtual_avatar">虚拟形象</string>
+    <string name="mchat_quit">退出</string>
+    <string name="mchat_offline">上麦</string>
+    <string name="mchat_online">下麦</string>
+    <string name="mchat_volume_setting">音量设置</string>
+    <string name="mchat_volume_setting_tips">注：本设置仅在本机生效</string>
+    <string name="mchat_vol_tv">电视</string>
+    <string name="mchat_vol_npc">圆桌NPC</string>
+    <string name="mchat_vol_recv_range">音效距离</string>
+    <string name="mchat_vol_distance_unit">衰减系数</string>
+    <string name="mchat_exit_room">离开房间？</string>
+    <string name="mchat_exit_room_tips">在你离开后房间将会关闭。</string>
+    <string name="mchat_me">我</string>
+    <string name="mchat_start_karaoke">我要K歌</string>
+    <string name="mchat_song_list">歌单</string>
+    <string name="mchat_end_song">离开K歌</string>
+    <string name="mchat_music_original">Original</string>
+    <string name="mchat_music_score">Score</string>
+    <string name="mchat_music_accompany">Accompany</string>
+    <string name="mchat_music_singing">演唱中</string>
+    <string name="mchat_music_source">歌曲来源咪咕音乐</string>
+    <string name="mchat_scene_error">Error state:%1$s,reason:%2$s </string>
+    <string name="mchat_exit">退出</string>
+
+    <string-array name="mchat_room_name">
+        <item>和你一起看月亮</item>
+        <item>治愈</item>
+        <item>一锤定音</item>
+        <item>有酒吗</item>
+        <item>早安序曲</item>
+        <item>近在远方</item>
+        <item>风中诗</item>
+        <item>那年风月</item>
+        <item>三万余年</item>
+        <item>七十二街</item>
+        <item>情怀如诗</item>
+        <item>简遇而安</item>
+        <item>十里笙歌</item>
+        <item>回风舞雪</item>
+        <item>梦初醒处</item>
+        <item>别来无恙</item>
+        <item>三里清风</item>
+        <item>烟雨万重</item>
+        <item>水洗晴空</item>
+        <item>轻风淡月</item>
+    </string-array>
+
+    <string-array name="mchat_beginner_guide_content">
+        <item>进入Demo场景前，您可以创建自己的虚拟角色，包括选择头像、昵称、虚拟形象</item>
+        <item>进入Demo场景后，您可以操作虚拟角色，在3D语聊房间中通过空间音频进行语聊、唱歌，也可以走到NPC的身边通过空间音频感受录制好的语料</item>
+        <item>若选择下麦，您将进入游客模式，游客是"隐形"的，您可以看到场景内参与语聊的用户但是无法与这些用户互动</item>
+        <item>若靠近电视机，您可以选择进入点歌台，歌曲和MV都由声网内容中心提供版权曲库，您可以进行点歌、切歌、查看榜单等操作</item>
+    </string-array>
+
+    <string-array name="mchat_visitor_mode_content">
+        <item>游客可以看到场景内参与语聊的用户但是无法与这些用户互动</item>
+        <item>游客上“隐形”的，其他所有用户都看不到您</item>
+        <item>上麦即可参与语聊和互动，其他用户便会看到您了</item>
+    </string-array>
+</resources>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/mchat_bg_rect_radius16_white"
+    android:paddingTop="30dp"
+    android:paddingBottom="25dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/mchat_room_enter_password_tips"
+        android:textColor="@color/mchat_040925"
+        android:textSize="@dimen/mchat_sp_16"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <io.agora.metachat.widget.MChatRoomEncryptionInputView
+        android:id="@+id/et_input_password"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="30dp"
+        android:inputType="number"
+        android:textCursorDrawable="@drawable/mchat_bg_edit_cursor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title"
+        app:mchat_backColor="@color/mchat_white"
+        app:mchat_checkedColor="@color/mchat_e4e3ed"
+        app:mchat_defaultColor="@color/mchat_e4e3ed"
+        app:mchat_isPwd="false"
+        app:mchat_isWaitInput="true"
+        app:mchat_round="8dp"
+        android:numeric="integer"
+        app:mchat_textColor="@color/mchat_040925"
+        app:mchat_textLength="4"
+        app:mchat_textSize="@dimen/mchat_sp_18"
+        app:mchat_waitInputColor="@color/mchat_main_color_009fff" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gl50"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mb_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="10dp"
+        android:paddingHorizontal="22dp"
+        android:paddingVertical="12dp"
+        android:text="@string/mchat_cancel"
+        android:textAllCaps="false"
+        android:textColor="@color/mchat_040925"
+        android:textSize="@dimen/mchat_sp_14"
+        android:textStyle="bold"
+        app:backgroundTint="@color/mchat_eff4ff"
+        app:cornerRadius="24dp"
+        app:layout_constraintEnd_toStartOf="@id/gl50"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_input_password" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mb_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="25dp"
+        android:paddingHorizontal="22dp"
+        android:paddingVertical="12dp"
+        android:text="@string/mchat_confirm"
+        android:textAllCaps="false"
+        android:textColor="@color/mchat_white"
+        android:textSize="@dimen/mchat_sp_14"
+        android:textStyle="bold"
+        app:backgroundTint="@color/mchat_main_color_156ef3"
+        app:cornerRadius="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/gl50"
+        app:layout_constraintTop_toTopOf="@id/mb_left"
+        app:layout_constraintBottom_toBottomOf="@id/mb_left"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

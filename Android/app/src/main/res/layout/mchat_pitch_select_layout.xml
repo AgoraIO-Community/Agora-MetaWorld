@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/karaoke_dialog_console_pitch_layout"
+    android:layout_width="match_parent"
+    android:layout_height="27dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pitch_select_down"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/mchat_bg_oval_black25"
+        android:padding="4dp"
+        android:src="@drawable/mchat_ic_minus_white" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/pitch_select_up"
+        android:layout_width="27dp"
+        android:layout_height="27dp"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/mchat_bg_oval_black25"
+        android:padding="4dp"
+        android:src="@drawable/mchat_ic_plus_white" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_toStartOf="@id/pitch_select_up"
+        android:layout_toEndOf="@id/pitch_select_down"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_minus_6"
+                android:layout_width="4dp"
+                android:layout_height="2.070dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_minus_5"
+                android:layout_width="4dp"
+                android:layout_height="4.14dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_minus_4"
+                android:layout_width="4dp"
+                android:layout_height="6.21dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_minus_3"
+                android:layout_width="4dp"
+                android:layout_height="8.28dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_minus_2"
+                android:layout_width="4dp"
+                android:layout_height="10.35dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_minus_1"
+                android:layout_width="4dp"
+                android:layout_height="12.42dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_original"
+                android:layout_width="4dp"
+                android:layout_height="14.49dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_1"
+                android:layout_width="4dp"
+                android:layout_height="16.56dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_2"
+                android:layout_width="4dp"
+                android:layout_height="18.63dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_3"
+                android:layout_width="4dp"
+                android:layout_height="20.70dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_4"
+                android:layout_width="4dp"
+                android:layout_height="22.77dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_5"
+                android:layout_width="4dp"
+                android:layout_height="24.84dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <View
+                android:id="@+id/pitch_6"
+                android:layout_width="4dp"
+                android:layout_height="27dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/mchat_pitch_select_bar_bg" />
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

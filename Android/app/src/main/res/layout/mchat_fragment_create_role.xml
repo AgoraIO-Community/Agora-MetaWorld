@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mchat_bg_create_role">
+
+    <io.agora.metachat.widget.MChatCommonTitleView
+        android:id="@+id/title_view"
+        style="@style/mchat_title_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mchat_ctv_centerText="@string/mchat_app_name"
+        app:mchat_ctv_centerTextColor="@color/mchat_white"
+        app:mchat_ctv_leftImageSrc="@drawable/mchat_ic_back_white"
+        tools:ignore="MissingConstraints" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_portrait"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_view"
+        app:shapeAppearance="@style/mchat_image_round"
+        tools:src="@drawable/mchat_portrait0" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/mchat_bg_rect_radius10_black60"
+        android:gravity="center"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="6dp"
+        android:text="@string/mchat_update"
+        android:textColor="@color/mchat_white"
+        android:textSize="@dimen/mchat_sp_10"
+        app:layout_constraintBottom_toBottomOf="@id/iv_portrait"
+        app:layout_constraintEnd_toEndOf="@id/iv_portrait"
+        app:layout_constraintStart_toStartOf="@id/iv_portrait" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="66dp"
+        android:text="@string/mchat_badge"
+        android:textColor="@color/mchat_c6c4de"
+        android:textSize="@dimen/mchat_sp_12"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_portrait" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_badge"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/mchat_bg_badge"
+        android:padding="3dp"
+        android:src="@drawable/mchat_badge_level0"
+        app:layout_constraintBottom_toBottomOf="@id/tv_badge"
+        app:layout_constraintStart_toEndOf="@id/tv_badge"
+        app:layout_constraintTop_toTopOf="@id/tv_badge" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_badge_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="5dp"
+        android:paddingVertical="15dp"
+        android:src="@drawable/mchat_ic_arrow"
+        app:layout_constraintBottom_toBottomOf="@id/iv_badge"
+        app:layout_constraintStart_toEndOf="@id/iv_badge"
+        app:layout_constraintTop_toTopOf="@id/iv_badge" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:text="@string/mchat_room_name"
+        android:textColor="@color/mchat_c6c4de"
+        android:textSize="@dimen/mchat_sp_12"
+        app:layout_constraintStart_toStartOf="@id/tv_badge"
+        app:layout_constraintTop_toBottomOf="@id/tv_badge" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_nickname_illegal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:gravity="center"
+        android:text="@string/mchat_nickname_error_tips"
+        android:textColor="@color/mchat_ff6969"
+        android:textSize="@dimen/mchat_sp_12"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/tv_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_nickname"
+        tools:visibility="visible" />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/et_nickname"
+        android:layout_width="0dp"
+        android:layout_height="54dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/mchat_bg_rect_radius12_light_grey"
+        android:hint="@string/mchat_enter_a_nickname"
+        android:maxLength="12"
+        android:maxLines="1"
+        android:paddingStart="18dp"
+        android:paddingEnd="36dp"
+        android:textColor="@color/mchat_1b0844"
+        android:textColorHint="@color/mchat_756c92"
+        android:textSize="@dimen/mchat_sp_15"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/tv_badge"
+        app:layout_constraintTop_toBottomOf="@id/tv_nickname" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_nickname_random"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="15dp"
+        android:src="@drawable/mchat_ic_random_name"
+        app:layout_constraintBottom_toBottomOf="@id/et_nickname"
+        app:layout_constraintEnd_toEndOf="@id/et_nickname"
+        app:layout_constraintTop_toTopOf="@id/et_nickname" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/mchat_gender"
+        android:textColor="@color/mchat_c6c4de"
+        android:textSize="@dimen/mchat_sp_12"
+        app:layout_constraintStart_toStartOf="@id/tv_badge"
+        app:layout_constraintTop_toBottomOf="@id/et_nickname" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guide_vertical50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <LinearLayout
+        android:id="@+id/linear_male"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/mchat_bg_rect_radius12_purple"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@id/guide_vertical50"
+        app:layout_constraintStart_toStartOf="@id/et_nickname"
+        app:layout_constraintTop_toBottomOf="@id/tv_gender"
+        tools:background="@drawable/mchat_bg_rect_radius12_purple_stroke_red">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mchat_ic_male" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/mchat_male"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_15" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_female"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/mchat_bg_rect_radius12_purple"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@id/et_nickname"
+        app:layout_constraintStart_toStartOf="@id/guide_vertical50"
+        app:layout_constraintTop_toBottomOf="@id/tv_gender">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/mchat_ic_female" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="@string/mchat_female"
+            android:textColor="@color/mchat_white"
+            android:textSize="@dimen/mchat_sp_15" />
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_select_avatar"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginBottom="120dp"
+        android:src="@drawable/mchat_ic_go_larger"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+<!--    <androidx.appcompat.widget.AppCompatTextView-->
+<!--        android:id="@+id/tv_enter_room"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="90dp"-->
+<!--        android:text="@string/mchat_select_avatar"-->
+<!--        android:textColor="@color/mchat_f9f9f9_85"-->
+<!--        android:textSize="@dimen/mchat_sp_14"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:text="@string/mchat_agora_io"
+        android:textColor="@color/mchat_white_85"
+        android:textSize="@dimen/mchat_sp_14"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

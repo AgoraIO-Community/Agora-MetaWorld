@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="5dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_guide_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/mchat_4b31ad"
+        android:textSize="@dimen/mchat_sp_12"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:layout_marginStart="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="使用metachat demo 的操作如下：" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_guide_number"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/mchat_guide_1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_guide_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="18dp"
+        android:gravity="start"
+        android:lineSpacingExtra="3dp"
+        android:textColor="@color/mchat_3c4267"
+        android:textSize="@dimen/mchat_sp_12"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/iv_guide_number"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="游客可以看到场景内参与语聊的用户但是无法与这些用户互动" />
+</androidx.constraintlayout.widget.ConstraintLayout>

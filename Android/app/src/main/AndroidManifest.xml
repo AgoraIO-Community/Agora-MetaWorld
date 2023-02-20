@@ -1,41 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="io.agora.metachat.example">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
 
     <application
-        android:name=".MainApplication"
+        android:name=".MChatApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/mchat_ic_launcher"
+        android:label="@string/mchat_app_name"
+        android:networkSecurityConfig="@xml/app_net_config"
+        android:roundIcon="@mipmap/mchat_ic_launcher"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MetaChatExample">
+        android:theme="@style/Theme.AgoraMateChat"
+        tools:targetApi="31">
+
         <activity
-            android:name=".MainActivity"
+            android:name=".home.MChatMainActivity"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+<!--        <activity-->
+<!--            android:name=".home.MChatVirtualAvatarActivity"-->
+<!--            android:exported="false"-->
+<!--            android:screenOrientation="landscape"-->
+<!--            android:theme="@style/Theme.MetaChatScene" />-->
+
         <activity
-            android:name=".ui.game.GameActivity"
+            android:name=".game.MChatGameActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
-            android:hardwareAccelerated="false"
-            android:resizeableActivity="false"
+            android:exported="false"
+            android:hardwareAccelerated="true"
             android:screenOrientation="landscape"
-            android:theme="@style/UnityThemeSelector" />
+            android:theme="@style/Theme.MetaChatScene" />
     </application>
 
 </manifest>
