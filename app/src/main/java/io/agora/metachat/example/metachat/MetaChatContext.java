@@ -615,4 +615,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public boolean isInitMetachat() {
         return isInitMetachat;
     }
+
+    public int getSceneId() {
+        return MetaChatConstants.SCENE_ID_SDK_2_TEST;
+    }
 }
