@@ -24,12 +24,7 @@ object MChatConstant {
         const val SCENE_DRESS = 1
     }
 
-    /**
-     * https://test.cdn.sbnh.cn/9ad87c1738bf0485b7f243ee5cfb409f.mp4
-     * http://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/fulldemoStatic/15c116aca7590992f261143935d6f2cb.mov
-     */
-    const val VIDEO_URL = "http://agora.fronted.love/yyl.mov"
-    const val DEFAULT_PORTRAIT = "https://accpic.sd-rtn.com/pic/test/png/2.png"
+    const val VIDEO_URL = "https://download.agora.io/demo/test/agora_meta_ads.mov"
 
     private const val badgeUrl0 =
         "http://accktvpic.oss-cn-beijing.aliyuncs.com/pic/meta/demo/metaChat/login_badge_0.png"
