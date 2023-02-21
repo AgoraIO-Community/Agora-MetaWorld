@@ -65,6 +65,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     private List<SkinGridViewAdapter> mTabItemAdapters;
     private boolean mReCreateScene;
     private boolean mSurfaceSizeChange;
+    private boolean mIsFront;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -234,13 +235,18 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                createScene(mTextureView);
+                mReCreateScene = true;
+                mSurfaceSizeChange = true;
+                maybeCreateScene();
             }
 
             @Override
             public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+                Log.i(TAG, "onSurfaceTextureSizeChanged");
                 mSurfaceSizeChange = true;
-                maybeCreateScene();
+                if (MetaChatConstants.SCENE_NONE == MetaChatContext.getInstance().getNextScene()) {
+                    maybeCreateScene();
+                }
             }
 
             @Override
@@ -282,6 +288,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     private void createScene(TextureView tv) {
+        Log.i(TAG, "createScene");
         resetSceneState();
         resetViewVisibility();
         MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, tv);
@@ -326,15 +333,17 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     public void onReleasedScene(int status) {
         if (status == 0) {
-            runOnUiThread(() -> {
-                MetaChatContext.getInstance().destroy();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MetaChatContext.getInstance().destroy();
+                }
             });
 
             MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
             if (ActivityInfo.SCREEN_ORIENTATION_PORTRAIT != getRequestedOrientation()) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
-
             Intent intent = new Intent(GameActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
@@ -385,17 +394,26 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i(TAG, "onResume");
+        mIsFront = true;
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().resumeMedia();
         }
         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
             initDressTab();
         }
+        maybeCreateScene();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        Log.i(TAG, "onPause");
+        mIsFront = false;
+        //切换场景时候surface变更状态保留，重新进场景等待surface变更状态
+        if (MetaChatContext.getInstance().getNextScene() == MetaChatConstants.SCENE_NONE) {
+            mSurfaceSizeChange = false;
+        }
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().pauseMedia();
         }
@@ -575,7 +593,8 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     private void maybeCreateScene() {
-        if (mReCreateScene && mSurfaceSizeChange) {
+        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront);
+        if (mReCreateScene && mSurfaceSizeChange && mIsFront) {
             createScene(mTextureView);
         }
     }

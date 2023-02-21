@@ -34,6 +34,7 @@ public class AgoraMediaPlayer implements IMediaPlayerObserver, IMediaPlayerVideo
 
     public void initMediaPlayer(RtcEngine rtcEngine) {
         mMediaPlayer = rtcEngine.createMediaPlayer();
+        mMediaPlayer.adjustPlayoutVolume(20);
         mMediaPlayer.registerPlayerObserver(this);
         mMediaPlayer.registerVideoFrameObserver(this);
     }
