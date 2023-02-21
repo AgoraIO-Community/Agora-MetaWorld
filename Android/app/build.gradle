@@ -15,8 +15,9 @@ android {
         applicationId "io.agora.metachat.example"
         minSdk 22
         targetSdk 31
-        versionCode 211
-        versionName "2.1.1"
+        versionCode 207401
+        versionName "207.401.0221.1"
+        flavorDimensions "versionCode"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

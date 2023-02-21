@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +41,12 @@ import io.agora.metachat.example.ui.game.GameActivity;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
 public class MainFragment extends Fragment {
+    private static final String TAG = MainFragment.class.getSimpleName();
 
     private MainViewModel mViewModel;
     private MainFragmentBinding binding;
+    private int downloadProgress;
+    private boolean isFront;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -104,7 +108,12 @@ public class MainFragment extends Fragment {
             }, null, null);
         });
 
+        initData();
         return binding.getRoot();
+    }
+
+    private void initData() {
+        downloadProgress = -1;
     }
 
     @Override
@@ -140,8 +149,7 @@ public class MainFragment extends Fragment {
             // TODO choose one
             if (metachatSceneInfos.size() > 0) {
                 for (int a = 0; a < metachatSceneInfos.size(); a++) {
-                    //8为内容中心测试的ID号
-                    if (metachatSceneInfos.get(a).getSceneId() == 8) {
+                    if (metachatSceneInfos.get(a).getSceneId() == MetaChatContext.getInstance().getSceneId()) {
                         mViewModel.prepareScene(metachatSceneInfos.get(a));
                         break;
                     }
@@ -149,6 +157,13 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getSelectScene().observe(owner, sceneInfo -> {
+            if (!MetaChatContext.getInstance().isInitMetachat()) {
+                return;
+            }
+
+            if (-1 != downloadProgress) {
+                downloadProgress = -1;
+            }
             if (progressDialog != null) {
                 progressDialog.dismiss();
                 progressDialog = null;
@@ -159,8 +174,11 @@ public class MainFragment extends Fragment {
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
+            if (!MetaChatContext.getInstance().isInitMetachat()) {
+                return;
+            }
             if (aBoolean) {
-                CustomDialog.showDownloadingChooser(context, materialDialog -> {
+                DownloadingChooserDialog = CustomDialog.showDownloadingChooser(context, materialDialog -> {
                     mViewModel.downloadScene(MetaChatContext.getInstance().getSceneInfo());
 
                     return null;
@@ -168,15 +186,28 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getDownloadingProgress().observe(owner, integer -> {
+            if (!MetaChatContext.getInstance().isInitMetachat()) {
+                return;
+            }
+            if (integer >= 0) {
+                downloadProgress = integer;
+            }
             if (progressDialog == null) {
                 progressDialog = CustomDialog.showDownloadingProgress(context, materialDialog -> {
+                    downloadProgress = -1;
                     mViewModel.cancelDownloadScene(MetaChatContext.getInstance().getSceneInfo());
                     return null;
                 });
             } else if (integer < 0) {
-                progressDialog.dismiss();
-                progressDialog = null;
+                if (isFront) {
+                    progressDialog.dismiss();
+                    progressDialog = null;
+                }
                 return;
+            }
+
+            if (!progressDialog.isShowing()) {
+                progressDialog.show();
             }
 
             ConstraintLayout constraintLayout = CustomDialog.getCustomView(progressDialog);
@@ -192,6 +223,7 @@ public class MainFragment extends Fragment {
     }
 
     private MaterialDialog progressDialog;
+    private MaterialDialog DownloadingChooserDialog;
 
     @Override
     public void onDestroyView() {
@@ -200,12 +232,52 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+        if (!MetaChatContext.getInstance().isInitMetachat() && progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+            progressDialog = null;
+        }
+
+        if (!MetaChatContext.getInstance().isInitMetachat() && DownloadingChooserDialog != null && DownloadingChooserDialog.isShowing()) {
+            DownloadingChooserDialog.dismiss();
+            DownloadingChooserDialog = null;
+        }
+
+
         if (MetaChatConstants.SCENE_NONE != MetaChatContext.getInstance().getNextScene()) {
+            enableUI(false);
             MetaChatContext.getInstance().setCurrentScene(MetaChatContext.getInstance().getNextScene());
             MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_NONE);
             mViewModel.getScenes();
+        } else {
+            enableUI(true);
+        }
+    }
+
+    private void enableUI(boolean enable) {
+        binding.nickname.setEnabled(enable);
+        binding.spinner.setEnabled(enable);
+        binding.enter.setEnabled(enable);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isFront = true;
+        if (downloadProgress >= 0) {
+            Log.i(TAG, "onResume continue download");
+            MetaChatContext.getInstance().downloadScene(MetaChatContext.getInstance().getSceneInfo());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isFront = false;
+        if (downloadProgress >= 0) {
+            Log.i(TAG, "onPause cancel download");
+            MetaChatContext.getInstance().cancelDownloadScene(MetaChatContext.getInstance().getSceneInfo());
         }
     }
 }

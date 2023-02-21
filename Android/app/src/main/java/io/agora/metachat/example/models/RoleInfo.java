@@ -24,6 +24,8 @@ public class RoleInfo {
     private int shoes;
 
     public RoleInfo() {
+        name = "";
+        gender = -1;
     }
 
     public String getName() {
