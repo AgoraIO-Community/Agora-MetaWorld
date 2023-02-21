@@ -41,6 +41,7 @@
 		E7E263DE282ABD08002FE8DB /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = E7E2636A282ABD07002FE8DB /* LICENSE */; };
 		E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DA282ABD08002FE8DB /* libcrypto.a */; };
 		E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E7E263DC282ABD08002FE8DB /* libssl.a */; };
+		F00DB07B29A466E6008B8F89 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F00DB07A29A466E5008B8F89 /* SceneDelegate.swift */; };
 		F0197E25292E073800D55E52 /* girl_tops1.png in Resources */ = {isa = PBXBuildFile; fileRef = F0197E12292E073800D55E52 /* girl_tops1.png */; };
 		F0197E26292E073800D55E52 /* girl_tops3.png in Resources */ = {isa = PBXBuildFile; fileRef = F0197E13292E073800D55E52 /* girl_tops3.png */; };
 		F0197E27292E073800D55E52 /* girl_tops2.png in Resources */ = {isa = PBXBuildFile; fileRef = F0197E14292E073800D55E52 /* girl_tops2.png */; };
@@ -296,6 +297,7 @@
 		E7E263D8282ABD08002FE8DB /* asn1err.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = asn1err.h; sourceTree = "<group>"; };
 		E7E263DA282ABD08002FE8DB /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcrypto.a; sourceTree = "<group>"; };
 		E7E263DC282ABD08002FE8DB /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libssl.a; sourceTree = "<group>"; };
+		F00DB07A29A466E5008B8F89 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F0197E12292E073800D55E52 /* girl_tops1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = girl_tops1.png; sourceTree = "<group>"; };
 		F0197E13292E073800D55E52 /* girl_tops3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = girl_tops3.png; sourceTree = "<group>"; };
 		F0197E14292E073800D55E52 /* girl_tops2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = girl_tops2.png; sourceTree = "<group>"; };
@@ -902,6 +904,7 @@
 				2611B3F028741AAA0053E24E /* LibYuv */,
 				F3BA5F3F28191B1D00821E23 /* KeyCenter.swift */,
 				F348D15A2811637A00039743 /* AppDelegate.swift */,
+				F00DB07A29A466E5008B8F89 /* SceneDelegate.swift */,
 				F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */,
 				F348D15E2811637A00039743 /* MetaChatLoginViewController.swift */,
 				F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */,
@@ -1120,6 +1123,7 @@
 				A82D3E572893B6D600B6E082 /* MetaChatTokenCreater.mm in Sources */,
 				F3BA5F4228194F2200821E23 /* MetaChatEngine.swift in Sources */,
 				A883324028868E5700BC2FEE /* NSString+MetaChat.m in Sources */,
+				F00DB07B29A466E6008B8F89 /* SceneDelegate.swift in Sources */,
 				F348D15F2811637A00039743 /* MetaChatLoginViewController.swift in Sources */,
 				A8833225287FF50500BC2FEE /* KTVCosoleStyleCell.m in Sources */,
 				A88331E2287C0BD000BC2FEE /* KTVContainerViewController.swift in Sources */,

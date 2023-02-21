@@ -180,7 +180,7 @@ class MetaChatLoginViewController: UIViewController {
     }
     
     override var shouldAutorotate: Bool {
-        return true
+        return false
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -249,9 +249,24 @@ class MetaChatLoginViewController: UIViewController {
         view.addSubview(indicatorView!)
         indicatorView?.startAnimating()
         
+        let defaultStand = UserDefaults.standard
+        let key = "isAppEnterScene"
+        let isEnter = defaultStand.bool(forKey: key)
+        if !isEnter {
+            defaultStand.set(true, forKey: key)
+        }
+        
         MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
                         
         MetaChatEngine.sharedEngine.metachatKit?.getSceneInfos()
+        
+        if self.hasUserDressInfo(self.selSex) && self.fromMainScene == false {
+            kSceneIndex = 0
+            switchOrientation(isPortrait: false, isFullScreen: isEnter)
+        } else {
+            kSceneIndex = 1
+            switchOrientation(isPortrait: true, isFullScreen: isEnter)
+        }
     }
     
     func onSceneReady(_ sceneInfo: AgoraMetachatSceneInfo) {
@@ -261,11 +276,6 @@ class MetaChatLoginViewController: UIViewController {
             self.downloadingBack.isHidden = true
             
             guard let sceneViewController = storyBoard.instantiateViewController(withIdentifier: "SceneViewController") as? MetaChatSceneViewController else { return }
-            if self.hasUserDressInfo(self.selSex) && self.fromMainScene == false {
-                kSceneIndex = 0
-            } else {
-                kSceneIndex = 1
-            }
             sceneViewController.currentGender = self.selSex - 1
             sceneViewController.delegate = self
             sceneViewController.modalPresentationStyle = .fullScreen
@@ -364,11 +374,10 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         }
         
         if errorCode != 0 {
-            let alertController = UIAlertController.init(title: "get Scenes failed:errorcode:\(errorCode)", message:nil , preferredStyle:.alert)
-            
-            alertController.addAction(UIAlertAction.init(title: "确定", style: .cancel, handler: nil))
-
             DispatchQueue.main.async {
+                let alertController = UIAlertController.init(title: "get Scenes failed:errorcode:\(errorCode)", message:nil , preferredStyle:.alert)
+                
+                alertController.addAction(UIAlertAction.init(title: "确定", style: .cancel, handler: nil))
                 self.present(alertController, animated: true)
             }
             return
@@ -387,15 +396,19 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         let metachatKit = MetaChatEngine.sharedEngine.metachatKit
         let totalSize = firstScene.totalSize / 1024 / 1024
         if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
-            let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载\(totalSize)M数据包", preferredStyle:.alert)
-            
-            alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
-            alertController.addAction(UIAlertAction.init(title: "立即下载", style: .default, handler: { UIAlertAction in
-                metachatKit?.downloadScene(self.currentSceneId)
-                self.downloadingBack.isHidden = false
-            }))
-            
             DispatchQueue.main.async {
+                
+                let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载\(totalSize)M数据包", preferredStyle:.alert)
+                
+                alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
+                alertController.addAction(UIAlertAction.init(title: "立即下载", style: .default, handler: { UIAlertAction in
+                    metachatKit?.downloadScene(self.currentSceneId)
+                    self.downloadingBack.isHidden = false
+                }))
+                
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.isFullScreen = false
+                
                 self.present(alertController, animated: true)
             }
         }else {
@@ -410,6 +423,8 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         
         if state == .downloaded && currentSceneInfo != nil {
             onSceneReady(currentSceneInfo!)
+        } else if state == .failed {
+            DLog("download failed.  state == \(state.rawValue)")
         }
     }
 }

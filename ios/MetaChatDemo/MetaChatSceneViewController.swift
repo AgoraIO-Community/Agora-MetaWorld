@@ -94,7 +94,7 @@ class MetaChatSceneViewController: UIViewController {
     private var ktvVC: KTVContainerViewController?
     
     // dress setting
-    @IBOutlet weak var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var containerDressView: UIView!
     
@@ -152,10 +152,25 @@ class MetaChatSceneViewController: UIViewController {
     
     /// 设置换装UI
     func setupDressUI() {
+        setupCollcetionView()
         setupScrollView()
         changeIcon(2, isSelected: true)
         
         userDressInfo.gender = currentGender
+    }
+    
+    /// 设置collectionView
+    func setupCollcetionView() {
+        let layout = UICollectionViewFlowLayout.init()
+        layout.itemSize = CGSize.init(width: 90, height: 90)
+        layout.scrollDirection = .vertical
+        self.collectionView = UICollectionView(frame: .init(x: 0, y: 60, width: SCREEN_WIDTH, height: 200), collectionViewLayout: layout)
+        self.collectionView.backgroundColor = .white
+        self.containerDressView.addSubview(self.collectionView)
+        self.collectionView.dataSource = self
+        self.collectionView.delegate = self
+        
+        self.collectionView.register(DressCollectionCell.self, forCellWithReuseIdentifier: COLLECTION_CELL_ID)
     }
     
     /// 设置scrollView
@@ -188,6 +203,11 @@ class MetaChatSceneViewController: UIViewController {
         if MetaChatSceneViewController.renderView == nil {
             MetaChatSceneViewController.renderView = MetaChatEngine.sharedEngine.metachatScene?.createRenderView(.unity, region: CGRect(x: 0, y: 0, width: SCREEN_WIDTH, height: SCREEN_HEIGHT))
             MetaChatSceneViewController.renderView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        } else {
+            if (MetaChatSceneViewController.renderView.frame.size.width != self.view.frame.size.width || MetaChatSceneViewController.renderView.frame.size.height != self.view.frame.size.height) {
+                MetaChatSceneViewController.renderView.frame.size.width = self.view.frame.size.width
+                MetaChatSceneViewController.renderView.frame.size.height = self.view.frame.size.height
+            }
         }
         
         self.view.insertSubview(MetaChatSceneViewController.renderView, at: 0)
@@ -212,11 +232,15 @@ class MetaChatSceneViewController: UIViewController {
     }
     
     override var shouldAutorotate: Bool {
-        return true
+        return false
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return [.portrait, .landscapeRight, .landscapeLeft]
+        if (kSceneIndex == 0) {
+            return [.landscapeRight]
+        } else {
+            return [.portrait]
+        }
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -450,9 +474,9 @@ class MetaChatSceneViewController: UIViewController {
                         "lower": userDressInfo.lower,
                         "shoes": userDressInfo.shoes]
             let value = try? JSONSerialization.data(withJSONObject: dict, options: [])
-            let str = String(data: value!, encoding: String.Encoding.utf8)
+//            let str = String(data: value!, encoding: String.Encoding.utf8)
             let dressInfo = AgoraMetachatDressInfo()
-            dressInfo.extraCustomInfo = str!.data(using: String.Encoding.utf8)
+            dressInfo.extraCustomInfo = value//str!.data(using: String.Encoding.utf8)
             MetaChatEngine.sharedEngine.currentDressInfo = dressInfo
         }
     }
@@ -516,6 +540,9 @@ class MetaChatSceneViewController: UIViewController {
     
     @IBAction func exitDressScene(_ sender: UIButton) {
         self.exit(sender: UIButton())
+        if delegate != nil && ((delegate?.responds(to: Selector.init(("storeDressInfo")))) != nil) {
+            delegate?.storeDressInfo(false)
+        }
     }
     
     @IBAction func storeDressInfo(_ sender: UIButton) {
@@ -534,6 +561,7 @@ extension MetaChatSceneViewController: AgoraMetachatSceneEventDelegate {
         DispatchQueue.main.async {
             AgoraMetachatKit.destroy()
             MetaChatEngine.sharedEngine.metachatKit = nil
+            self.switchOrientation(isPortrait: true, isFullScreen: true)
             self.dismiss(animated: true, completion: nil)
         }
     }
@@ -701,26 +729,36 @@ extension MetaChatSceneViewController: UICollectionViewDelegate, UICollectionVie
         dressCell.dressImageView.layer.borderWidth = 0.0
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let cellWidth = (SCREEN_WIDTH - 3 * kCellMargin) / 4
-        return CGSize(width: cellWidth, height: cellWidth);
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        let cellWidth = (SCREEN_WIDTH - 3 * kCellMargin) / 4
+//        return CGSize(width: cellWidth, height: cellWidth);
+//    }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return kCellMargin
-    }
-
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return kCellMargin
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+//        return UIEdgeInsets.init(top: 0, left: 0, bottom: 0, right: 0)
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+//        return kCellMargin
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return kCellMargin
+//    }
 }
 
 class DressCollectionCell: UICollectionViewCell {
     
-    @IBOutlet weak var dressImageView: UIImageView!
+    var dressImageView: UIImageView!
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        dressImageView = UIImageView.init(frame: .init(x: 10, y: 10, width: 70, height: 70))
+        addSubview(dressImageView)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
 }
