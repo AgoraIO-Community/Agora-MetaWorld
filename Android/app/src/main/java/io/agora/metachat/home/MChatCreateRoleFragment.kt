@@ -268,6 +268,7 @@ class MChatCreateRoleFragment : BaseUiFragment<MchatFragmentCreateRoleBinding>()
             binding.etNickname.setBackgroundResource(R.drawable.mchat_bg_rect_radius12_light_gray_stroke_red)
             return
         }
+        MChatKeyCenter.nickname = nickname
         showLoading(false)
         mChatViewModel.getScenes()
     }
