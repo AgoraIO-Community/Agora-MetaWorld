@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="mchat_app_name">MateChat</string>
+    <string name="mchat_app_name">MetaChat</string>
     <string name="mchat_agora_io">Agora.io</string>
     <string name="mchat_room_empty_data">No Chat Room Yet</string>
     <string name="mchat_room_unavailable_tip">The room does not exist, refresh and try again</string>
@@ -25,7 +25,7 @@
     <string name="mchat_room_set_password_tips">Please set the 4-digit room password</string>
     <string name="mchat_room_create_empty_name">No Room Name</string>
     <string name="mchat_update">Change</string>
-    <string name="mchat_badge">Team</string>
+    <string name="mchat_badge">Badge</string>
     <string name="mchat_nickname">Nickname</string>
     <string name="mchat_nickname_error_tips">must contain 2&#8211;12 characters</string>
     <string name="mchat_enter_a_nickname">Please enter a nickname</string>
@@ -43,10 +43,10 @@
     <string name="mchat_beginner_guide_title">Beginner Guide</string>
     <string name="mchat_beginner_guide_precautions">How to use MetaChat:</string>
     <string name="mchat_visitor_mode">Visitor mode</string>
-    <string name="mchat_audio_chat_mode">Audio chat mode</string>
+    <string name="mchat_audio_chat_mode">Chat mode</string>
     <string name="mchat_visitor_mode_title">Visitor tips</string>
     <string name="mchat_visitor_mode_precautions">Precautions for visitor mode:</string>
-    <string name="mchat_room_quit">Leave room</string>
+    <string name="mchat_room_quit">Quit room</string>
     <string name="mchat_room_disbanded">The room has been closed</string>
     <string name="mchat_notice">Notice</string>
     <string name="mchat_room_maximum_limit">The number of people has exceeded the maximum limit</string>

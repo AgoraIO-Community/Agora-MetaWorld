@@ -81,7 +81,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
-        android:text="@string/mchat_room_name"
+        android:text="@string/mchat_nickname"
         android:textColor="@color/mchat_c6c4de"
         android:textSize="@dimen/mchat_sp_12"
         app:layout_constraintStart_toStartOf="@id/tv_badge"
@@ -209,11 +209,11 @@
         android:id="@+id/iv_select_avatar"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:layout_marginBottom="120dp"
         android:src="@drawable/mchat_ic_go_larger"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linear_female"/>
 
 <!--    <androidx.appcompat.widget.AppCompatTextView-->
 <!--        android:id="@+id/tv_enter_room"-->
