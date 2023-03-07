@@ -93,6 +93,10 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
             ToastTools.showTips(R.string.mchat_room_create_empty_name)
             return
         }
+        if (roomName.contains(" ")) {
+            ToastTools.showTips(R.string.mchat_room_create_cannot_use_spaces)
+            return
+        }
         // 名字是否相同
         var containsName = false
         for (item in chatRoomList ?: mutableListOf()) {
