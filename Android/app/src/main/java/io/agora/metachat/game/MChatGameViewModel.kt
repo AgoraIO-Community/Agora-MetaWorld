@@ -79,7 +79,7 @@ class MChatGameViewModel : ViewModel() {
             }
             _isEnterScene.postValue(true)
             _onlineMic.postValue(true)
-            _muteRemote.postValue(true)
+            sendMuteRemoteEvent(false)
             _muteLocal.postValue(true)
             resetSceneState()
         }
@@ -149,7 +149,10 @@ class MChatGameViewModel : ViewModel() {
 
     // 远端静音
     fun sendMuteRemoteEvent() {
-        val mute = _muteRemote.value != true
+        sendMuteRemoteEvent(_muteRemote.value != true)
+    }
+
+    fun sendMuteRemoteEvent(mute: Boolean) {
         val result = mchatContext.muteAllRemoteAudioStreams(mute)
         LogTools.e("远端静音    sendMuteRemoteEvent    result = $result")
         if (!result) {
