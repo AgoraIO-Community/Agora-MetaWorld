@@ -85,6 +85,8 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 强制横屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
         window.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
