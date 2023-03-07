@@ -261,7 +261,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             }
         }
         gameViewModel.muteRemoteObservable().observe(this) {
-            binding.ivMuteRemoteFlag.isVisible = !it
+            binding.ivMuteRemoteFlag.isVisible = it
         }
         gameViewModel.muteLocalObservable().observe(this) {
             binding.ivMuteLocalFlag.isVisible = !it
