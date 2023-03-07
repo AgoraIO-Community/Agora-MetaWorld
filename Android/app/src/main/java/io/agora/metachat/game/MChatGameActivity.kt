@@ -212,16 +212,16 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     private fun showKaraokeDialog() {
-        if (karaokeDialog == null) {
-            karaokeDialog = MChatKaraokeDialog(karaokeManager, object : OnKaraokeDialogListener {
-                override fun onMusicInserted(insert: Boolean, detail: MusicDetail) {
-                }
+        karaokeDialog?.dismiss()
+        karaokeManager = MChatKaraokeManager(chatContext)
+        karaokeDialog = MChatKaraokeDialog(karaokeManager, object : OnKaraokeDialogListener {
+            override fun onMusicInserted(insert: Boolean, detail: MusicDetail) {
+            }
 
-                override fun onConsoleOpened() {
+            override fun onConsoleOpened() {
 
-                }
-            })
-        }
+            }
+        })
         karaokeDialog?.show(supportFragmentManager, "karaoke dialog")
     }
 
