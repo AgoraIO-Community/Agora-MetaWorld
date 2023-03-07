@@ -390,6 +390,10 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
 
     // unity listener
     private var unityCmdListener = object : SceneCmdListener {
+
+        private var lastTvVolume = 0
+        private var lastNpcVolume = 0
+
         override fun onObjectPositionAcquired(position: SceneMessageReceivePositions) {
             val p = position.position ?: floatArrayOf(0.0f, 0.0f, 0.0f)
 
@@ -407,6 +411,14 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         }
 
         override fun onKaraokeStarted() {
+            // 设置电视音量为0，并记录音量用于退出KTV模式时恢复音量
+            lastTvVolume = chatContext.chatMediaPlayer()?.tvVolume ?: 0
+            chatContext.chatMediaPlayer()?.setPlayerVolume(0)
+
+            // 设置NPC音量为0，并记录音量用于退出KTV模式时恢复音量
+            lastNpcVolume = chatContext.chatNpcManager()?.npcVolume ?: 0
+            chatContext.chatNpcManager()?.setNpcVolume(0)
+
             karaokeManager?.startKaraoke()
             chatContext.chatNpcManager()?.stopAll()
             MChatServiceProtocol.getImplInstance().sendStartKaraoke { }
@@ -419,6 +431,10 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         }
 
         override fun onKaraokeStopped() {
+            // 恢复音量
+            chatContext.chatMediaPlayer()?.setPlayerVolume(lastTvVolume)
+            chatContext.chatNpcManager()?.setNpcVolume(lastNpcVolume)
+
             karaokeManager?.stopKaraoke()
             chatContext.chatNpcManager()?.playAll()
             MChatServiceProtocol.getImplInstance().sendStopKaraoke { }
