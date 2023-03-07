@@ -15,6 +15,7 @@ import io.agora.metachat.R
 import io.agora.metachat.baseui.BaseUiFragment
 import io.agora.metachat.databinding.MchatFragmentCreateRoomBinding
 import io.agora.metachat.global.MChatConstant
+import io.agora.metachat.service.MChatRoomModel
 import io.agora.metachat.tools.LogTools
 import io.agora.metachat.tools.ToastTools
 import io.agora.metachat.widget.OnIntervalClickListener
@@ -31,6 +32,8 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
         private const val defaultCover = R.drawable.mchat_room_cover0
     }
 
+    private lateinit var mChatViewModel: MChatRoomCreateViewModel
+    private var chatRoomList: List<MChatRoomModel>? = null
     private var roomCoverIndex = 0
 
     /**room cover*/
@@ -46,6 +49,7 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        mChatViewModel = ViewModelProvider(this).get(MChatRoomCreateViewModel::class.java)
         initData()
         initView()
     }
@@ -77,12 +81,28 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
                 showKeyboard(binding.etPassword)
             }
         }
+        mChatViewModel.roomListObservable().observe(viewLifecycleOwner) {
+            LogTools.d("获取房间列表：meta chat room list size:${it?.size}")
+            chatRoomList = it
+        }
     }
 
     private fun onClickCreate(view: View) {
         val roomName = binding.etRoomName.text.toString().trim { it <= ' ' }
         if (roomName.isEmpty()) {
             ToastTools.showTips(R.string.mchat_room_create_empty_name)
+            return
+        }
+        // 名字是否相同
+        var containsName = false
+        for (item in chatRoomList ?: mutableListOf()) {
+            if (item.roomName == roomName) {
+                containsName = true
+                break
+            }
+        }
+        if (containsName) {
+            ToastTools.showTips(R.string.mchat_room_create_equals_name)
             return
         }
         val isPrivate = binding.rgRoomPermissions.checkedRadioButtonId == R.id.rb_private
@@ -119,6 +139,7 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
             val insetsController = WindowCompat.getInsetsController(it.window, it.window.decorView)
             insetsController.isAppearanceLightStatusBars = true
         }
+        mChatViewModel.fetchRoomList()
         super.onResume()
     }
 
