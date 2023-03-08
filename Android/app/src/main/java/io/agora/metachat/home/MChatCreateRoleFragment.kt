@@ -26,6 +26,7 @@ import io.agora.metachat.home.dialog.MChatDownloadDialog
 import io.agora.metachat.home.dialog.MChatPortraitDialog
 import io.agora.metachat.tools.DeviceTools
 import io.agora.metachat.tools.LogTools
+import io.agora.metachat.tools.ToastTools
 import io.agora.metachat.widget.OnIntervalClickListener
 import java.util.*
 
@@ -262,12 +263,17 @@ class MChatCreateRoleFragment : BaseUiFragment<MchatFragmentCreateRoleBinding>()
 
     private fun onClickEnterRoom(view: View) {
         val nickname = binding.etNickname.text?.toString() ?: ""
+        if (nickname.contains(" ")) {
+            ToastTools.showTips(R.string.mchat_room_create_cannot_use_spaces)
+            return
+        }
         if (nickname.length <= 1) {
             nicknameIllegal = true
             binding.tvNicknameIllegal.isVisible = true
             binding.etNickname.setBackgroundResource(R.drawable.mchat_bg_rect_radius12_light_gray_stroke_red)
             return
         }
+        MChatKeyCenter.nickname = nickname
         showLoading(false)
         mChatViewModel.getScenes()
     }

@@ -85,6 +85,8 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 强制横屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
         window.setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -210,16 +212,16 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     private fun showKaraokeDialog() {
-        if (karaokeDialog == null) {
-            karaokeDialog = MChatKaraokeDialog(karaokeManager, object : OnKaraokeDialogListener {
-                override fun onMusicInserted(insert: Boolean, detail: MusicDetail) {
-                }
+        karaokeDialog?.dismiss()
+        karaokeManager = MChatKaraokeManager(chatContext)
+        karaokeDialog = MChatKaraokeDialog(karaokeManager, object : OnKaraokeDialogListener {
+            override fun onMusicInserted(insert: Boolean, detail: MusicDetail) {
+            }
 
-                override fun onConsoleOpened() {
+            override fun onConsoleOpened() {
 
-                }
-            })
-        }
+            }
+        })
         karaokeDialog?.show(supportFragmentManager, "karaoke dialog")
     }
 
@@ -259,7 +261,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             }
         }
         gameViewModel.muteRemoteObservable().observe(this) {
-            binding.ivMuteRemoteFlag.isVisible = !it
+            binding.ivMuteRemoteFlag.isVisible = it
         }
         gameViewModel.muteLocalObservable().observe(this) {
             binding.ivMuteLocalFlag.isVisible = !it
@@ -388,6 +390,10 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
 
     // unity listener
     private var unityCmdListener = object : SceneCmdListener {
+
+        private var lastTvVolume = 0
+        private var lastNpcVolume = 0
+
         override fun onObjectPositionAcquired(position: SceneMessageReceivePositions) {
             val p = position.position ?: floatArrayOf(0.0f, 0.0f, 0.0f)
 
@@ -405,6 +411,14 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         }
 
         override fun onKaraokeStarted() {
+            // 设置电视音量为0，并记录音量用于退出KTV模式时恢复音量
+            lastTvVolume = chatContext.chatMediaPlayer()?.tvVolume ?: 0
+            chatContext.chatMediaPlayer()?.setPlayerVolume(0)
+
+            // 设置NPC音量为0，并记录音量用于退出KTV模式时恢复音量
+            lastNpcVolume = chatContext.chatNpcManager()?.npcVolume ?: 0
+            chatContext.chatNpcManager()?.setNpcVolume(0)
+
             karaokeManager?.startKaraoke()
             chatContext.chatNpcManager()?.stopAll()
             MChatServiceProtocol.getImplInstance().sendStartKaraoke { }
@@ -417,6 +431,10 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         }
 
         override fun onKaraokeStopped() {
+            // 恢复音量
+            chatContext.chatMediaPlayer()?.setPlayerVolume(lastTvVolume)
+            chatContext.chatNpcManager()?.setNpcVolume(lastNpcVolume)
+
             karaokeManager?.stopKaraoke()
             chatContext.chatNpcManager()?.playAll()
             MChatServiceProtocol.getImplInstance().sendStopKaraoke { }

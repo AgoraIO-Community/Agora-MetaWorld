@@ -194,7 +194,12 @@ class MChatGroupIMManager private constructor() : EMConnectionListener, EMMessag
      * 离开群组，普通用户退出群组，房主离开则解散群组
      */
     fun leaveGroupTask(leaveCallback: (error: Int) -> Unit) {
-        if (checkEmptyGroup()) return
+        if (checkEmptyGroup()) {
+            LogTools.d(TAG, "liu    checkEmptyGroup:$groupId")
+            reset()
+            leaveCallback.invoke(MChatServiceProtocol.ERR_LEAVE_GROUP_ERROR)
+            return
+        }
         if (isRoomOwner()) { // 房主
             EMClient.getInstance().groupManager().asyncDestroyGroup(groupId, object : EMCallBack {
                 override fun onSuccess() {

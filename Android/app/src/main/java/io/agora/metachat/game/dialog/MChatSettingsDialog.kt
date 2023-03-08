@@ -222,7 +222,6 @@ class MChatSettingsDialog constructor() : BaseFragmentDialog<MchatDialogSettings
 
     // 通用点击
     private fun onClickGeneralTab(view: View) {
-        if (curSelected == GENERAL) return
         curSelected = GENERAL
         binding?.apply {
             layoutGeneralTab.setBackgroundResource(R.drawable.mchat_bg_rect_radius9_purple)
@@ -234,7 +233,6 @@ class MChatSettingsDialog constructor() : BaseFragmentDialog<MchatDialogSettings
 
     // 声音点击
     private fun onClickSoundTab(view: View) {
-        if (curSelected == SOUND) return
         curSelected = SOUND
         binding?.apply {
             layoutGeneralTab.setBackgroundColor(Color.TRANSPARENT)
