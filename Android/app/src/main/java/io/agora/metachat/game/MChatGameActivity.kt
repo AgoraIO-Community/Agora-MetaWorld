@@ -69,9 +69,9 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     private var mTextureView: TextureView? = null
     private lateinit var gameViewModel: MChatGameViewModel
 
-    private val roomId by lazy { intent.getStringExtra(MChatConstant.Params.KEY_ROOM_ID) ?: "" }
+    private var roomId = ""
 
-    private val TAG = MChatGameActivity.javaClass.simpleName;
+    private val TAG = "MChatGameActivity"
     // karaoke manager
     private var karaokeManager: MChatKaraokeManager? = null
 
@@ -87,7 +87,8 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.e(TAG, "onCreate")
+        roomId = intent.getStringExtra(MChatConstant.Params.KEY_ROOM_ID) ?: ""
+        Log.e(TAG, "onCreate    roomId = $roomId")
         // 强制横屏
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
@@ -102,7 +103,8 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onNewIntent(intent: Intent?) {
-        Log.e(TAG, "onNewIntent")
+        roomId = intent?.getStringExtra(MChatConstant.Params.KEY_ROOM_ID) ?: ""
+        Log.e(TAG, "onNewIntent    roomId = $roomId")
         gameViewModel.mReCreateScene = true
         //just for call setRequestedOrientation
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -111,7 +113,10 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             val result = gameViewModel.maybeCreateScene(this@MChatGameActivity, roomId, it)
             if (result) resetViewVisibility()
         }
+        gameViewModel.resetSceneState()
         initView()
+        requestPermission()
+        gameObservable()
     }
 
     private fun initView() {
@@ -280,7 +285,9 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             MChatMainActivity.startActivity(this@MChatGameActivity)
         }
         gameViewModel.leaveRoomObservable().observe(this) {
+            Log.e("liu0310","leaveRoom    3")
             if (it) {
+                Log.e("liu0310","leaveRoom    4")
                 chatContext.leaveScene()
             }
         }
