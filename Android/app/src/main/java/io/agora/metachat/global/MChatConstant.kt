@@ -52,14 +52,14 @@ object MChatConstant {
         // 电视默认音量25，最大100
         const val DEFAULT_TV_VOLUME: Int = 25
 
-        // 圆桌默认音量25，最大100
-        const val DEFAULT_NPC_VOLUME: Int = 25
+        // 圆桌默认音量5，最大100
+        const val DEFAULT_NPC_VOLUME: Int = 5
 
-        // 默认音效距离5.0,最大15
-        const val DEFAULT_RECV_RANGE: Float = 5.0F
+        // 默认音效距离15.0,最大15
+        const val DEFAULT_RECV_RANGE: Float = 15.0F
 
-        // 默认衰减系数8.6,最大10
-        const val DEFAULT_DISTANCE_UNIT: Float = 8.6F
+        // 默认衰减系数10.0,最大10
+        const val DEFAULT_DISTANCE_UNIT: Float = 10.0F
 
         // video frame display id
         const val VIDEO_DISPLAY_ID: String = "1"
