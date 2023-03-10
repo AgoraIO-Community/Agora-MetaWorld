@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.TypedArray
 import android.graphics.SurfaceTexture
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.view.TextureView.SurfaceTextureListener
 import androidx.activity.result.ActivityResultLauncher
@@ -70,6 +71,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
 
     private val roomId by lazy { intent.getStringExtra(MChatConstant.Params.KEY_ROOM_ID) ?: "" }
 
+    private val TAG = MChatGameActivity.javaClass.simpleName;
     // karaoke manager
     private var karaokeManager: MChatKaraokeManager? = null
 
@@ -85,6 +87,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.e(TAG, "onCreate")
         // 强制横屏
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
         val insetsController = WindowCompat.getInsetsController(window, window.decorView)
@@ -99,6 +102,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onNewIntent(intent: Intent?) {
+        Log.e(TAG, "onNewIntent")
         gameViewModel.mReCreateScene = true
         //just for call setRequestedOrientation
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -107,9 +111,11 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             val result = gameViewModel.maybeCreateScene(this@MChatGameActivity, roomId, it)
             if (result) resetViewVisibility()
         }
+        initView()
     }
 
     private fun initView() {
+        Log.e(TAG, "initView")
         portraitArray = resources.obtainTypedArray(R.array.mchat_portrait)
         binding.tvNickname.text = MChatKeyCenter.nickname
         binding.ivUserPortrait.setImageResource(
@@ -372,6 +378,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
 
     override fun onPause() {
         super.onPause()
+        Log.e(TAG, "onPause")
         if (chatContext.isInScene()) {
             chatContext.chatMediaPlayer()?.pause()
         }
@@ -379,9 +386,15 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
 
     override fun onResume() {
         super.onResume()
+        Log.e(TAG, "onResume")
         if (chatContext.isInScene()) {
             chatContext.chatMediaPlayer()?.resume()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e(TAG, "onDestroy")
     }
 
     override fun onBackPressed() {
