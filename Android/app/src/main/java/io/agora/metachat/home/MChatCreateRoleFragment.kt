@@ -262,11 +262,7 @@ class MChatCreateRoleFragment : BaseUiFragment<MchatFragmentCreateRoleBinding>()
     }
 
     private fun onClickEnterRoom(view: View) {
-        val nickname = binding.etNickname.text?.toString() ?: ""
-        if (nickname.contains(" ")) {
-            ToastTools.showTips(R.string.mchat_room_create_cannot_use_spaces)
-            return
-        }
+        val nickname = binding.etNickname.text?.toString()?.trim() ?: ""
         if (nickname.length <= 1) {
             nicknameIllegal = true
             binding.tvNicknameIllegal.isVisible = true
