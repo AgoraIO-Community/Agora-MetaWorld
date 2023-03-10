@@ -26,6 +26,7 @@
     <string name="mchat_room_create_empty_name">No Room Name</string>
     <string name="mchat_room_create_cannot_use_spaces">Names cannot use Spaces</string>
     <string name="mchat_room_create_equals_name">The room name cannot be the same</string>
+    <string name="mchat_room_create_equals_ownerid">You have already created a room. You cannot create a room again</string>
     <string name="mchat_update">Change</string>
     <string name="mchat_badge">Badge</string>
     <string name="mchat_nickname">Nickname</string>
