@@ -467,6 +467,9 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             // 恢复音量
             chatContext.chatMediaPlayer()?.setPlayerVolume(lastTvVolume)
             chatContext.chatNpcManager()?.setNpcVolume(lastNpcVolume)
+            // 关闭耳返效果
+            karaokeManager?.enableInEarMonitoring(false)
+            MChatServiceProtocol.getImplInstance().disableEarphoneMonitoring {  }
 
             karaokeManager?.stopKaraoke()
             chatContext.chatNpcManager()?.playAll()
