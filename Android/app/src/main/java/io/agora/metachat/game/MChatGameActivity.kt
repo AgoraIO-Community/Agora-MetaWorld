@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.SurfaceTexture
 import android.os.Bundle
@@ -72,6 +73,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     private var roomId = ""
 
     private val TAG = "MChatGameActivity"
+
     // karaoke manager
     private var karaokeManager: MChatKaraokeManager? = null
 
@@ -285,9 +287,9 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             MChatMainActivity.startActivity(this@MChatGameActivity)
         }
         gameViewModel.leaveRoomObservable().observe(this) {
-            Log.e("liu0310","leaveRoom    3")
+            Log.e("liu0310", "leaveRoom    3")
             if (it) {
-                Log.e("liu0310","leaveRoom    4")
+                Log.e("liu0310", "leaveRoom    4")
                 chatContext.leaveScene()
             }
         }
@@ -397,7 +399,18 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         if (chatContext.isInScene()) {
             chatContext.chatMediaPlayer()?.resume()
         }
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
+
+    // 强制竖屏
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        Log.e("liu0313", "onConfigurationChanged    " + newConfig.orientation)
+        if (newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        }
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

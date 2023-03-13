@@ -47,7 +47,7 @@
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
             android:exported="false"
             android:hardwareAccelerated="true"
-            android:screenOrientation="landscape"
+            android:screenOrientation="sensor"
             android:theme="@style/Theme.MetaChatScene" />
     </application>
 
