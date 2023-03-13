@@ -2,6 +2,7 @@ package io.agora.metachat.home
 
 import android.content.res.TypedArray
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import io.agora.metachat.databinding.MchatFragmentCreateRoomBinding
 import io.agora.metachat.global.MChatConstant
 import io.agora.metachat.global.MChatKeyCenter
 import io.agora.metachat.service.MChatRoomModel
+import io.agora.metachat.tools.GsonTools
 import io.agora.metachat.tools.LogTools
 import io.agora.metachat.tools.ToastTools
 import io.agora.metachat.widget.OnIntervalClickListener
@@ -83,7 +85,7 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
             }
         }
         mChatViewModel.roomListObservable().observe(viewLifecycleOwner) {
-            LogTools.d("获取房间列表：meta chat room list size:${it?.size}")
+            LogTools.d("获取房间列表:${GsonTools.beanToString(it)}")
             chatRoomList = it
         }
     }
@@ -94,12 +96,12 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
             ToastTools.showTips(R.string.mchat_room_create_empty_name)
             return
         }
-        for (item in chatRoomList ?: mutableListOf()) {
-            if (item.ownerId.toString() == MChatKeyCenter.imUid) {
-                ToastTools.showTips(R.string.mchat_room_create_equals_ownerid)
-                return
-            }
-        }
+        //for (item in chatRoomList ?: mutableListOf()) {
+        //    if (item.ownerId.toString() == MChatKeyCenter.imUid) {
+        //        ToastTools.showTips(R.string.mchat_room_create_equals_ownerid)
+        //        return
+        //    }
+        //}
         // 名字是否相同
         var containsName = false
         for (item in chatRoomList ?: mutableListOf()) {
