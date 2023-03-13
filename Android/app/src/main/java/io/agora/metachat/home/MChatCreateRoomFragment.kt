@@ -15,6 +15,7 @@ import io.agora.metachat.R
 import io.agora.metachat.baseui.BaseUiFragment
 import io.agora.metachat.databinding.MchatFragmentCreateRoomBinding
 import io.agora.metachat.global.MChatConstant
+import io.agora.metachat.global.MChatKeyCenter
 import io.agora.metachat.service.MChatRoomModel
 import io.agora.metachat.tools.LogTools
 import io.agora.metachat.tools.ToastTools
@@ -93,9 +94,11 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
             ToastTools.showTips(R.string.mchat_room_create_empty_name)
             return
         }
-        if (roomName.contains(" ")) {
-            ToastTools.showTips(R.string.mchat_room_create_cannot_use_spaces)
-            return
+        for (item in chatRoomList ?: mutableListOf()) {
+            if (item.ownerId.toString() == MChatKeyCenter.imUid) {
+                ToastTools.showTips(R.string.mchat_room_create_equals_ownerid)
+                return
+            }
         }
         // 名字是否相同
         var containsName = false
