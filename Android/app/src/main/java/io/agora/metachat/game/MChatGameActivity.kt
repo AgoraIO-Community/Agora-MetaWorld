@@ -7,6 +7,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.SurfaceTexture
+import android.media.audiofx.BassBoost
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -109,7 +110,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         Log.e(TAG, "onNewIntent    roomId = $roomId")
         gameViewModel.mReCreateScene = true
         //just for call setRequestedOrientation
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         super.onNewIntent(intent)
         mTextureView?.let {
             val result = gameViewModel.maybeCreateScene(this@MChatGameActivity, roomId, it)
@@ -394,12 +395,12 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onResume() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         super.onResume()
         Log.e(TAG, "onResume")
         if (chatContext.isInScene()) {
             chatContext.chatMediaPlayer()?.resume()
         }
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
     // 强制竖屏
@@ -407,7 +408,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         super.onConfigurationChanged(newConfig)
         Log.e("liu0313", "onConfigurationChanged    " + newConfig.orientation)
         if (newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         }
     }
 
