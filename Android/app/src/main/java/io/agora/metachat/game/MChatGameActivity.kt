@@ -4,8 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.content.res.TypedArray
 import android.graphics.SurfaceTexture
+import android.media.audiofx.BassBoost
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -72,6 +74,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     private var roomId = ""
 
     private val TAG = "MChatGameActivity"
+
     // karaoke manager
     private var karaokeManager: MChatKaraokeManager? = null
 
@@ -107,7 +110,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         Log.e(TAG, "onNewIntent    roomId = $roomId")
         gameViewModel.mReCreateScene = true
         //just for call setRequestedOrientation
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         super.onNewIntent(intent)
         mTextureView?.let {
             val result = gameViewModel.maybeCreateScene(this@MChatGameActivity, roomId, it)
@@ -285,9 +288,9 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             MChatMainActivity.startActivity(this@MChatGameActivity)
         }
         gameViewModel.leaveRoomObservable().observe(this) {
-            Log.e("liu0310","leaveRoom    3")
+            Log.e("liu0310", "leaveRoom    3")
             if (it) {
-                Log.e("liu0310","leaveRoom    4")
+                Log.e("liu0310", "leaveRoom    4")
                 chatContext.leaveScene()
             }
         }
@@ -392,11 +395,16 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     override fun onResume() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
         super.onResume()
         Log.e(TAG, "onResume")
         if (chatContext.isInScene()) {
             chatContext.chatMediaPlayer()?.resume()
         }
+    }
+
+    override fun setRequestedOrientation(requestedOrientation: Int) {
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
     }
 
     override fun onDestroy() {
@@ -454,6 +462,9 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             // 恢复音量
             chatContext.chatMediaPlayer()?.setPlayerVolume(lastTvVolume)
             chatContext.chatNpcManager()?.setNpcVolume(lastNpcVolume)
+            // 关闭耳返效果
+            karaokeManager?.enableInEarMonitoring(false)
+            MChatServiceProtocol.getImplInstance().disableEarphoneMonitoring {  }
 
             karaokeManager?.stopKaraoke()
             chatContext.chatNpcManager()?.playAll()

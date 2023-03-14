@@ -135,7 +135,7 @@ class MChatRoomListFragment : BaseUiFragment<MchatFragmentRoomListBinding>(), Sw
     private fun roomObservable() {
         mChatViewModel.roomListObservable().observe(viewLifecycleOwner) {
             binding.swipeRefreshLayout.isRefreshing = false
-            LogTools.d("meta chat room list size:${it?.size}")
+            LogTools.e("获取房间列表:${GsonTools.beanToString(it)}")
             roomAdapter?.submitList(it ?: mutableListOf())
         }
     }
