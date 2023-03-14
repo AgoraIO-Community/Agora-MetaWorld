@@ -24,7 +24,7 @@
     <string name="mchat_encrypted">加密</string>
     <string name="mchat_room_set_password_tips">请输入4位数字密码</string>
     <string name="mchat_room_create_empty_name">房间名不能为空</string>
-    <string name="mchat_room_create_cannot_use_spaces">名字不能使用空格</string>
+    <string name="mchat_room_create_cannot_use_spaces">名字前后不能使用空格</string>
     <string name="mchat_room_create_equals_name">房间名不能相同</string>
     <string name="mchat_room_create_equals_ownerid">您已经创建过一个房间了，不能重复创建</string>
     <string name="mchat_update">更换</string>

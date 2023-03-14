@@ -91,6 +91,10 @@ class MChatCreateRoomFragment : BaseUiFragment<MchatFragmentCreateRoomBinding>()
     }
 
     private fun onClickCreate(view: View) {
+        if (binding.etRoomName.text.toString() != binding.etRoomName.text.toString().trim()) {
+            ToastTools.showTips(R.string.mchat_room_create_cannot_use_spaces)
+            return
+        }
         val roomName = binding.etRoomName.text.toString().trim { it <= ' ' }
         if (roomName.isEmpty()) {
             ToastTools.showTips(R.string.mchat_room_create_empty_name)
