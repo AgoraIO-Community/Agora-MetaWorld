@@ -430,7 +430,7 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
             val id: Int? = when (position.objectId) {
                 SceneObjectId.TV.value -> chatContext.chatMediaPlayer()?.mediaPlayerId()
                 else -> {
-                    chatContext.chatNpcManager()?.getNpc(position.objectId)?.playerId() ?: -1
+                    chatContext.chatNpcManager()?.getNpc(position.objectId)?.playerId()
                 }
             }
             id?.let {

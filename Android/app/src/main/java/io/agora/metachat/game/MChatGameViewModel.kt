@@ -49,11 +49,10 @@ class MChatGameViewModel : ViewModel() {
         MChatContext.instance()
     }
 
-    override fun onCleared() {
+    fun cleared() {
         mchatContext.unregisterMetaChatEventHandler(mChatEventHandler)
         mchatContext.unregisterMetaChatSceneEventHandler(mChatSceneEventHandler)
         chatServiceProtocol.unsubscribeEvent(chatDelegate)
-        super.onCleared()
     }
 
     private val mChatEventHandler = object : MChatBaseEventHandler() {
@@ -91,6 +90,7 @@ class MChatGameViewModel : ViewModel() {
         override fun onReleasedScene(status: Int) {
             if (status == ErrorCode.ERR_OK) {
                 ThreadTools.get().runOnMainThread {
+                    cleared()
                     mchatContext.destroy()
                 }
                 _exitGame.postValue(true)

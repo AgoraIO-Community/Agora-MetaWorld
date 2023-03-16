@@ -15,9 +15,8 @@ class MChatNpcManager constructor() {
         const val TAG = "MChatNpcManager"
     }
 
-    private lateinit var npc1: MchatNpc
-    private lateinit var npc2: MchatNpc
-    private lateinit var npc3: MchatNpc
+    private lateinit var npc1: MchatNpc // 圆桌NPC
+    private lateinit var npc2: MchatNpc // 移动NPC
 
     // npc 音量
     var npcVolume: Int = MChatConstant.DefaultValue.DEFAULT_NPC_VOLUME
@@ -25,14 +24,12 @@ class MChatNpcManager constructor() {
     fun initNpcMediaPlayer(context: Context, chatContext: MChatContext, npcListener: NpcListener) {
         npc1 = MchatNpc(context, chatContext, SceneObjectId.NPC1.value, "npc_id_1.m4a", npcVolume, npcListener)
         npc2 = MchatNpc(context, chatContext, SceneObjectId.NPC2.value, "npc_id_2.m4a", npcVolume, npcListener)
-        npc3 = MchatNpc(context, chatContext, SceneObjectId.NPC3.value, "npc_id_3.m4a", npcVolume, npcListener)
     }
 
     fun getNpc(id: Int): MchatNpc? {
         return when (id) {
             SceneObjectId.NPC1.value -> npc1
             SceneObjectId.NPC2.value -> npc2
-            SceneObjectId.NPC3.value -> npc3
             else -> null
         }
     }
@@ -51,44 +48,19 @@ class MChatNpcManager constructor() {
         return result
     }
 
-    fun play(id: Int) {
-        when (id) {
-            SceneObjectId.NPC1.value -> {
-                npc1.play()
-            }
-            SceneObjectId.NPC2.value -> {
-                npc2.play()
-            }
-            SceneObjectId.NPC3.value -> {
-                npc3.play()
-            }
-        }
-    }
-
-    fun stop(id: Int) {
-        when (id) {
-            SceneObjectId.NPC1.value -> npc1.stop()
-            SceneObjectId.NPC2.value -> npc2.stop()
-            SceneObjectId.NPC3.value -> npc3.stop()
-        }
-    }
-
     fun playAll() {
         npc1.play()
         npc2.play()
-        npc3.play()
     }
 
     fun stopAll() {
         npc1.stop()
         npc2.stop()
-        npc3.stop()
     }
 
     fun destroy() {
         npc1.destroy()
         npc2.destroy()
-        npc3.destroy()
     }
 }
 

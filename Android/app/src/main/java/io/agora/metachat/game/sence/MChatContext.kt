@@ -12,7 +12,6 @@ import io.agora.metachat.game.sence.npc.MChatNpcManager
 import io.agora.metachat.game.sence.npc.NpcListener
 import io.agora.metachat.global.*
 import io.agora.metachat.tools.LogTools
-import io.agora.metachat.tools.ThreadTools
 import io.agora.rtc2.*
 import io.agora.spatialaudio.ILocalSpatialAudioEngine
 import io.agora.spatialaudio.LocalSpatialAudioConfig
@@ -134,7 +133,7 @@ class MChatContext private constructor() {
             npcManager = MChatNpcManager()
             npcManager?.initNpcMediaPlayer(MChatApp.instance(), this@MChatContext, object : NpcListener {
                 override fun onNpcReady(id: Int, sourceName: String) {
-                    npcManager?.play(id)
+
                 }
 
                 override fun onNpcFail() {

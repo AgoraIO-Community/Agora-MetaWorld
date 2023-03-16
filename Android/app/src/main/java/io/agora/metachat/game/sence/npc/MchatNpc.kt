@@ -29,6 +29,7 @@ class MchatNpc constructor(
                     override fun onSuccess() {
                         player = metaChatContext.createLocalSourcePlayer(id, getSourceFilePath(sourceName))
                         player?.setPlayerVolume(defaultVolume)
+                        player?.play(true)
                         npcListener.onNpcReady(id, getSourceFilePath(sourceName))
                         LogTools.d(MChatNpcManager.TAG, "npc source $sourceName copy success")
                     }

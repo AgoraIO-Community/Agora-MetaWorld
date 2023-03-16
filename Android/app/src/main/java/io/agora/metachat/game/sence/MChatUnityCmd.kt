@@ -112,7 +112,7 @@ data class SceneMessageReceiveKaraoke constructor(
     val actionId: Int,
 )
 
-data class SceneMessageReceivePositions(
+data class SceneMessageReceivePositions constructor(
     val objectId: Int,
     val position: FloatArray?,
     val forward: FloatArray?,
@@ -146,9 +146,8 @@ data class SceneMessageReceivePositions(
 
 enum class SceneObjectId(val value: Int) {
     TV(1),
-    NPC1(2),
-    NPC2(3),
-    NPC3(4),
+    NPC1(2), // 圆桌NPC
+    NPC2(3), // 移动NPC
 }
 
 interface SceneCmdListener {
