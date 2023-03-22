@@ -11,9 +11,13 @@ import Zip
 
 let kOnConnectionStateChangedNotifyName = NSNotification.Name(rawValue: "onConnectionStateChanged")
 
+let SCREEN_WIDTH: CGFloat = UIScreen.main.bounds.size.width
+let SCREEN_HEIGHT: CGFloat = UIScreen.main.bounds.size.height
+
 class SelSexCell: UIView {
     @IBOutlet weak var selectedBack: UIView!
     @IBOutlet weak var selectedButton: UIButton!
+    @IBOutlet weak var selectedLabel: UILabel!
 }
 
 protocol SelSexAlertDelegate: NSObjectProtocol {
@@ -117,6 +121,8 @@ class MetaChatLoginViewController: UIViewController {
     
     @IBOutlet weak var selSexLabel: UILabel!
     @IBOutlet weak var selSexIcon: UIImageView!
+    @IBOutlet weak var selRoleLabel: UILabel!
+    @IBOutlet weak var selRoleIcon: UIImageView!
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var userNameTF: UITextField!
@@ -128,7 +134,7 @@ class MetaChatLoginViewController: UIViewController {
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
     #if DEBUG
-    private var currentSceneId: Int = 8
+    private var currentSceneId: Int = 23
     #elseif TEST
     private var currentSceneId: Int = 4
     #else
@@ -137,9 +143,13 @@ class MetaChatLoginViewController: UIViewController {
     
     var sceneVC: MetaChatSceneViewController!
         
-    private let libraryPath = NSHomeDirectory() + "/Library/Caches/8/"
+    private let libraryPath = NSHomeDirectory() + "/Library/Caches/23"
     
     var selSex: Int = 0    //0未选择，1男，2女
+    
+    var sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.none // 0: broadcast  1: audience
+    
+    var currentSelBtnTag: Int = 0
     
     var selAvatarIndex: Int = 0
     
@@ -154,6 +164,9 @@ class MetaChatLoginViewController: UIViewController {
         
         userNameTF.attributedPlaceholder = NSAttributedString.init(string: "请输入2-10个字符", attributes: [NSAttributedString.Key.foregroundColor : UIColor.init(red: 161.0/255.0, green: 139.0/255.0, blue: 176/255.0, alpha: 1.0)])
         
+        userNameTF.text = "aaaa" + String(Int.random(in: 0...100))
+        selSex = 2
+        
         selSexAlert.delegate = self
         selAvatarAlert.setUI()
         
@@ -167,11 +180,11 @@ class MetaChatLoginViewController: UIViewController {
     }
 
     private func moveFileHandler() {
-        if FileManager.default.fileExists(atPath: libraryPath + "8", isDirectory: nil) {
-            return
-        }
-        FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
-        let path = Bundle.main.path(forResource: "8", ofType: "zip")
+//        if FileManager.default.fileExists(atPath: libraryPath + "20", isDirectory: nil) {
+//            return
+//        }
+//        FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
+        let path = Bundle.main.path(forResource: "23", ofType: "zip")
         try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: NSHomeDirectory() + "/Library/Caches/"), overwrite: true, password: nil) { progress in
             print("zip progress = \(progress)")
         } fileOutputHandler: { unzippedFile in
@@ -196,10 +209,26 @@ class MetaChatLoginViewController: UIViewController {
     }
     
     @IBAction func selectedSexAction(sender: UIButton) {
-        selSexAlert.isHidden = false
-        
-        selSexIcon.image = UIImage.init(named: "arrow-up")
+        var frame = selSexAlert.frame
+        if sender.tag == 1001 {
+            selSexIcon.image = UIImage.init(named: "arrow-up")
+            frame.origin.y = 0
+            selSexAlert.selManCell.selectedLabel.text = "男"
+            selSexAlert.selWomanCell.selectedLabel.text = "女"
+        } else if sender.tag == 1002 {
+            selRoleIcon.image = UIImage.init(named: "arrow-up")
+            frame.origin.y = 80
+            selSexAlert.selManCell.selectedLabel.text = "主播"
+            selSexAlert.selWomanCell.selectedLabel.text = "观众"
+        }
+//        selSexAlert.frame = frame
+        currentSelBtnTag = sender.tag
         view.endEditing(true)
+        
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.01, execute: {
+            self.selSexAlert.isHidden = false
+            self.selSexAlert.frame = frame
+        })
     }
     
     @IBAction func selectedAvatarAction(sender: UIButton) {
@@ -256,7 +285,23 @@ class MetaChatLoginViewController: UIViewController {
             defaultStand.set(true, forKey: key)
         }
         
+//        MetaChatEngine.sharedEngine.resolution = CGSizeMake(view.bounds.size.width * UIScreen.main.scale, view.bounds.size.height * UIScreen.main.scale)
+        MetaChatEngine.sharedEngine.resolution = CGSizeMake(240, 240);
+        
+        MetaChatEngine.sharedEngine.createRtcEngine()
+        
         MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
+        
+//        if sceneBroadcastMode == .audience {
+//            let mockRenderView = MockRenderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
+//            mockRenderView.layer.contentsScale = UIScreen.main.scale
+//            MetaChatEngine.sharedEngine.mockRenderView = mockRenderView
+//            onSceneReady(AgoraMetachatSceneInfo())
+//            
+//            indicatorView?.stopAnimating()
+//            isEntering = false
+//            return
+//        }
                         
         MetaChatEngine.sharedEngine.metachatKit?.getSceneInfos()
         
@@ -270,21 +315,30 @@ class MetaChatLoginViewController: UIViewController {
     }
     
     func onSceneReady(_ sceneInfo: AgoraMetachatSceneInfo) {
-        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        
+        self.joinChannel(sceneInfo)
+    }
+    
+    func joinChannel(_ sceneInfo: AgoraMetachatSceneInfo) {
+        MetaChatEngine.sharedEngine.joinRtcChannel { [weak self] in
+            guard let wSelf = self else {return}
+            wSelf.createScene(sceneInfo)
+        }
+    }
+    
+    func createScene(_ sceneInfo: AgoraMetachatSceneInfo) {
         DispatchQueue.main.async {
             self.downloadingBack.isHidden = true
             
+            let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             guard let sceneViewController = storyBoard.instantiateViewController(withIdentifier: "SceneViewController") as? MetaChatSceneViewController else { return }
             sceneViewController.currentGender = self.selSex - 1
+            sceneViewController.sceneBroadcastMode = self.sceneBroadcastMode
             sceneViewController.delegate = self
             sceneViewController.modalPresentationStyle = .fullScreen
-            MetaChatEngine.sharedEngine.createScene(sceneViewController)
+            MetaChatEngine.sharedEngine.createScene(sceneViewController, sceneBroadcastMode: self.sceneBroadcastMode)
             MetaChatEngine.sharedEngine.currentSceneInfo = sceneInfo
             self.sceneVC = sceneViewController
         }
-        
-
     }
     
     /// 本地是否存在换装信息
@@ -302,18 +356,29 @@ class MetaChatLoginViewController: UIViewController {
 extension MetaChatLoginViewController: SelSexAlertDelegate {
     func onSelectCancel() {
         selSexIcon.image = UIImage.init(named: "arrow-down")
+        selRoleIcon.image = UIImage.init(named: "arrow-down")
     }
     
     func onSelectSex(index: Int) {
         selSex = index + 1
+        sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.init(rawValue: UInt(index)) ?? .none
         
-        if selSex == 1 {
-            selSexLabel.text = "男"
-        }else if selSex == 2 {
-            selSexLabel.text = "女"
+        if currentSelBtnTag == 1001 {
+            if selSex == 1 {
+                selSexLabel.text = "男"
+            } else if selSex == 2 {
+                selSexLabel.text = "女"
+            }
+        } else {
+            if selSex == 1 {
+                selRoleLabel.text = "主播"
+            } else if selSex == 2 {
+                selRoleLabel.text = "观众"
+            }
         }
         
         selSexIcon.image = UIImage.init(named: "arrow-down")
+        selRoleIcon.image = UIImage.init(named: "arrow-down")
     }
 }
 
@@ -378,6 +443,8 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
                 let alertController = UIAlertController.init(title: "get Scenes failed:errorcode:\(errorCode)", message:nil , preferredStyle:.alert)
                 
                 alertController.addAction(UIAlertAction.init(title: "确定", style: .cancel, handler: nil))
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                appDelegate.isFullScreen = false
                 self.present(alertController, animated: true)
             }
             return
@@ -397,7 +464,6 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         let totalSize = firstScene.totalSize / 1024 / 1024
         if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
             DispatchQueue.main.async {
-                
                 let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载\(totalSize)M数据包", preferredStyle:.alert)
                 
                 alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
@@ -423,8 +489,6 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         
         if state == .downloaded && currentSceneInfo != nil {
             onSceneReady(currentSceneInfo!)
-        } else if state == .failed {
-            DLog("download failed.  state == \(state.rawValue)")
         }
     }
 }

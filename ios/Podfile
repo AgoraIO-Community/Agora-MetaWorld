@@ -13,6 +13,7 @@ target 'MetaChatDemo' do
 #  pod 'IQKeyboardManager'
   pod 'AFNetworking'
   pod 'MJExtension'
+  pod 'SwiftyMenu', '~> 0.6.3'
   # Pods for MetaChatDemo
 #  pod 'libyuv-iOS', '~> 1.0.2'
 

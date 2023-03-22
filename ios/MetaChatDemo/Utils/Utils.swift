@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftyMenu
 
 func DLog(_ message: Any..., file: String = #file, function: String = #function, lineNumber: Int = #line) {
     #if DEBUG
@@ -68,5 +69,23 @@ extension UIViewController {
             appDelegate.isFullScreen = isFullScreen
             UIDevice.switchOrientation(isPortrait ? .portrait : .landscapeRight)
         }
+    }
+}
+
+extension TimeInterval {
+    func toCMTime() -> CMTime {
+        let scale = CMTimeScale(NSEC_PER_SEC)
+        let rt = CMTime(value: CMTimeValue(self * Double(scale)), timescale: scale)
+        return rt
+    }
+}
+
+extension String: SwiftyMenuDisplayable {
+    public var retrievableValue: Any {
+        self
+    }
+    
+    public var displayableValue: String {
+        return self
     }
 }
