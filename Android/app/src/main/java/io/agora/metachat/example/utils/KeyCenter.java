@@ -8,10 +8,14 @@ import io.agora.rtm.RtmTokenBuilder;
 
 public class KeyCenter {
 
-    public static final String CHANNEL_ID = "MetaChatTest112";
+    public static final String CHANNEL_ID = "MetaChatTest1111111";
 
     public static final String APP_ID = BuildConfig.APP_ID;
-    public static final int RTC_UID = new Random().nextInt(1000); // 不要设置成0！！！
+
+    /**
+     * 不要设置成0！！！
+     */
+    public static final int RTC_UID = new Random().nextInt(100000);
     public static final String RTC_TOKEN = new RtcTokenBuilder().buildTokenWithUid(
             APP_ID,
             BuildConfig.APP_CERTIFICATE,
@@ -21,7 +25,10 @@ public class KeyCenter {
             0
     );
 
-    public static final String RTM_UID = String.valueOf(RTC_UID); // Demo侧使用String的RTC_UID
+    /**
+     * Demo侧使用String的RTC_UID
+     */
+    public static final String RTM_UID = String.valueOf(RTC_UID);
     public static String RTM_TOKEN = null;
 
     static {
@@ -37,5 +44,8 @@ public class KeyCenter {
             e.printStackTrace();
         }
     }
+
+    public static final String FACE_CAP_APP_ID = BuildConfig.FACE_CAP_APP_ID;
+    public static final String FACE_CAP_APP_KEY = BuildConfig.FACE_CAP_APP_KEY;
 
 }
