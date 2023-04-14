@@ -19,7 +19,12 @@ public class MetaChatConstants {
     public static final int SCENE_DRESS = 1;
 
     public static final int SCENE_ID_SDK_2_TEST = 8;
+    public static final int SCENE_ID_META_KIT = 15;
 
 
     public static final String KEY_UNITY_MESSAGE_DRESS_SETTING = "dressSetting";
+
+    public static final String KEY_HOTFIX_INFO = "hotfixInfo";
+
+    public static final int OS_ANDROID = 2;
 }

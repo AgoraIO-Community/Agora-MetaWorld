@@ -1,5 +1,6 @@
 package io.agora.metachat.example.metachat;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.TextureView;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
+import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.AvatarModelInfo;
 import io.agora.metachat.DressInfo;
 import io.agora.metachat.EnterSceneConfig;
@@ -28,6 +30,7 @@ import io.agora.metachat.MetachatSceneConfig;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
+import io.agora.metachat.example.BuildConfig;
 import io.agora.metachat.example.models.EnterSceneExtraInfo;
 import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.UnityMessage;
@@ -38,8 +41,10 @@ import io.agora.metachat.example.utils.MMKVUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
+import io.agora.rtc2.IMediaExtensionObserver;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.RtcEngineConfig;
 import io.agora.spatialaudio.ILocalSpatialAudioEngine;
 import io.agora.spatialaudio.LocalSpatialAudioConfig;
 import io.agora.spatialaudio.RemoteVoicePositionInfo;
@@ -97,7 +102,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         int ret = Constants.ERR_OK;
         if (rtcEngine == null) {
             try {
-                rtcEngine = RtcEngine.create(context, KeyCenter.APP_ID, new IRtcEngineEventHandler() {
+                RtcEngineConfig rtcEngineConfig = new RtcEngineConfig();
+                rtcEngineConfig.mContext = context;
+                rtcEngineConfig.mAppId = KeyCenter.APP_ID;
+                rtcEngineConfig.mChannelProfile = Constants.CHANNEL_PROFILE_LIVE_BROADCASTING;
+                rtcEngineConfig.mEventHandler = new IRtcEngineEventHandler() {
                     @Override
                     public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                         Log.d(TAG, String.format("onJoinChannelSuccess %s %d", channel, uid));
@@ -115,10 +124,52 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     public void onAudioRouteChanged(int routing) {
                         Log.d(TAG, String.format("onAudioRouteChanged %d", routing));
                     }
-                });
+                };
+                rtcEngineConfig.mAudioScenario = Constants.AudioScenario.getValue(Constants.AudioScenario.DEFAULT);
+
+
+//                rtcEngineConfig.mExtensionObserver = new IMediaExtensionObserver() {
+//                    @Override
+//                    public void onEvent(String provider, String extension, String key, String value) {
+//                        Log.i("metakit", "onEvent provider: " + provider + ",extension: " + extension + ",key: " + key + ",value: " + value);
+//                    }
+//
+//                    @Override
+//                    public void onStarted(String provider, String extension) {
+//                        Log.i("metakit", "onStarted provider: " + provider + ",extension: " + extension);
+//                        if ("metakit".equals(extension) && null != rtcEngine) {
+//                            String info;
+//                            try {
+//                                JSONObject jsonObject = new JSONObject();
+//                                jsonObject.put("appid", KeyCenter.APP_ID);
+//                                jsonObject.put("cert", BuildConfig.APP_CERTIFICATE);
+//                                jsonObject.put("userid", String.valueOf(KeyCenter.RTC_UID));
+//                                jsonObject.put("token", KeyCenter.RTM_TOKEN);
+//                                jsonObject.put("os", MetaChatConstants.OS_ANDROID);
+//                                jsonObject.put("gameid", getSceneId());
+//                                info = jsonObject.toString();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                                info = null;
+//                            }
+//                            rtcEngine.setExtensionProperty("agora_video_filters_metakit", "metakit", MetaChatConstants.KEY_HOTFIX_INFO, info);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onStopped(String provider, String extension) {
+//                        Log.i("metakit", "onStopped provider: " + provider + ",extension: " + extension);
+//                    }
+//
+//                    @Override
+//                    public void onError(String provider, String extension, int error, String message) {
+//                        Log.i("metakit", "onError provider: " + provider + ",extension: " + extension + ",error: " + error + ",message: " + message);
+//                    }
+//                };
+                rtcEngine = RtcEngine.create(rtcEngineConfig);
+
+
                 rtcEngine.setParameters("{\"rtc.enable_debug_log\":true}");
-                rtcEngine.enableAudio();
-                rtcEngine.disableVideo();
                 rtcEngine.setChannelProfile(Constants.CHANNEL_PROFILE_LIVE_BROADCASTING);
                 rtcEngine.setAudioProfile(
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
@@ -130,7 +181,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                         mRtcEngine = rtcEngine;
                         mAppId = KeyCenter.APP_ID;
                         mRtmToken = KeyCenter.RTM_TOKEN;
-                        mLocalDownloadPath = context.getExternalCacheDir().getPath();
+                        mLocalDownloadPath = context.getExternalFilesDir("").getPath();
                         mUserId = KeyCenter.RTM_UID;
                         mEventHandler = MetaChatContext.this;
                     }};
@@ -259,6 +310,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             }
             //加载的场景index
             config.mExtraCustomInfo = JSONObject.toJSONString(extraInfo).getBytes();
+            //unity添加主view
+
             metaChatScene.enterScene(config);
         }
     }
@@ -267,9 +320,15 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
         metaChatScene = scene;
         localUserAvatar = metaChatScene.getLocalUserAvatar();
+        enableRtcExtension();
         for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
             handler.onCreateSceneResult(scene, errorCode);
         }
+    }
+
+    private void enableRtcExtension() {
+        rtcEngine.enableAudio();
+        rtcEngine.enableVideo();
     }
 
     public boolean updateRole(int role) {
@@ -617,6 +676,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     }
 
     public int getSceneId() {
-        return MetaChatConstants.SCENE_ID_SDK_2_TEST;
+        return MetaChatConstants.SCENE_ID_META_KIT;
     }
 }

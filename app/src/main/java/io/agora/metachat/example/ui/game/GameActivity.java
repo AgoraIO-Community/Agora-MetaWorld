@@ -4,18 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.SurfaceTexture;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -32,6 +28,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.agora.meta.renderer.unity.AgoraAvatarView;
+import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
@@ -57,15 +55,14 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
 
     private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
-    private TextureView mTextureView = null;
 
     private final ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private static final int SKIN_TAB_MAX_PAGE_SIZE = 4;
     private int mCurrentTabIndex;
     private List<SkinGridViewAdapter> mTabItemAdapters;
-    private boolean mReCreateScene;
-    private boolean mSurfaceSizeChange;
     private boolean mIsFront;
+
+    private AgoraAvatarView mAvatarView;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -144,7 +141,9 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
                                 )
                         );
                         binding.mic.setVisibility(isBroadcaster.get() ? View.VISIBLE : View.GONE);
-                        if (isBroadcaster.get()) enableMic.set(true);
+                        if (isBroadcaster.get()) {
+                            enableMic.set(true);
+                        }
                     }
                 }
             };
@@ -158,17 +157,16 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         binding = GameActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        resetSceneState();
-
         isEnterScene.addOnPropertyChangedCallback(callback);
         enableMic.addOnPropertyChangedCallback(callback);
         enableSpeaker.addOnPropertyChangedCallback(callback);
         isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
-        initUnityView();
 
         initListener();
+
+        createScene();
     }
 
     @SuppressLint("CheckResult")
@@ -231,48 +229,20 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     private void initUnityView() {
-        mTextureView = new TextureView(this);
-        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                mReCreateScene = true;
-                mSurfaceSizeChange = true;
-                maybeCreateScene();
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                Log.i(TAG, "onSurfaceTextureSizeChanged");
-                mSurfaceSizeChange = true;
-                if (MetaChatConstants.SCENE_NONE == MetaChatContext.getInstance().getNextScene()) {
-                    maybeCreateScene();
-                }
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
-
-            }
-        });
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        binding.unity.addView(mTextureView, 0, layoutParams);
-
+        if (null == mAvatarView) {
+            mAvatarView = AvatarProcessImpl.createAgoraAvatarView(GameActivity.this);
+            //binding.layout.addView(mAvatarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        mReCreateScene = true;
         //just for call setRequestedOrientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         super.onNewIntent(intent);
 
-        maybeCreateScene();
+        createScene();
     }
 
 
@@ -287,11 +257,11 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
     }
 
-    private void createScene(TextureView tv) {
+    private void createScene() {
         Log.i(TAG, "createScene");
-        resetSceneState();
         resetViewVisibility();
-        MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, tv);
+        AvatarProcessImpl.setActivity(this);
+        MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, null);
     }
 
     private void resetViewVisibility() {
@@ -320,7 +290,6 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
             enableSpeaker.set(true);
             isBroadcaster.set(true);
         });
-        resetSceneState();
     }
 
     @Override
@@ -368,7 +337,13 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
         //异步线程回调需在主线程处理
-        runOnUiThread(() -> MetaChatContext.getInstance().enterScene());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initUnityView();
+                MetaChatContext.getInstance().enterScene();
+            }
+        });
     }
 
     @Override
@@ -402,7 +377,10 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
             initDressTab();
         }
-        maybeCreateScene();
+
+        if (null != mAvatarView) {
+            mAvatarView.resume();
+        }
     }
 
     @Override
@@ -410,12 +388,11 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         super.onPause();
         Log.i(TAG, "onPause");
         mIsFront = false;
-        //切换场景时候surface变更状态保留，重新进场景等待surface变更状态
-        if (MetaChatContext.getInstance().getNextScene() == MetaChatConstants.SCENE_NONE) {
-            mSurfaceSizeChange = false;
-        }
         if (MetaChatContext.getInstance().isInScene()) {
             MetaChatContext.getInstance().pauseMedia();
+        }
+        if (null != mAvatarView) {
+            mAvatarView.pause();
         }
     }
 
@@ -592,15 +569,4 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         super.setRequestedOrientation(requestedOrientation);
     }
 
-    private void maybeCreateScene() {
-        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront);
-        if (mReCreateScene && mSurfaceSizeChange && mIsFront) {
-            createScene(mTextureView);
-        }
-    }
-
-    private void resetSceneState() {
-        mReCreateScene = false;
-        mSurfaceSizeChange = false;
-    }
 }
