@@ -85,6 +85,10 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
                             binding.mic.setVisibility(View.GONE);
                             binding.speaker.setVisibility(View.GONE);
                             binding.dressSetting.setVisibility(View.GONE);
+
+                            if (isEnterScene.get()) {
+                                MetaChatContext.getInstance().sendRoleDressInfo();
+                            }
                         }
                         if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                             binding.back.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
@@ -99,9 +103,6 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
                             binding.saveBtn.setVisibility(View.GONE);
                             binding.dressTab.setVisibility(View.GONE);
                             binding.dressViewpage.setVisibility(View.GONE);
-                        }
-                        if (isEnterScene.get()) {
-                            MetaChatContext.getInstance().sendRoleDressInfo();
                         }
                     } else if (sender == enableMic) {
                         if (!MetaChatContext.getInstance().enableLocalAudio(enableMic.get())) {
@@ -231,7 +232,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     private void initUnityView() {
         if (null == mAvatarView) {
             mAvatarView = AvatarProcessImpl.createAgoraAvatarView(GameActivity.this);
-            //binding.layout.addView(mAvatarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            binding.layout.addView(mAvatarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
     }
 
