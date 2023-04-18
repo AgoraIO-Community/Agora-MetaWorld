@@ -395,7 +395,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
             MetaChatContext.getInstance().resetRoleInfo();
-            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene() && false) {
                 MetaChatContext.getInstance().removeSceneView(mLocalAvatarTextureView);
             } else {
                 MetaChatContext.getInstance().leaveScene();
@@ -602,27 +602,32 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     @Override
     public void onRecvMessageFromScene(byte[] message) {
         String jsonStr = new String(message);
-        JSONObject jsonObject = JSON.parseObject(jsonStr);
-        if (!TextUtils.isEmpty(jsonObject.getString("key"))) {
-            if (MetaChatConstants.SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //localAvatarViewReady();
-                        MetaChatContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, true);
-                    }
-                });
-            } else if (MetaChatConstants.SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
-                //maybe to do something
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeLocalSurfaceView();
-                        removeRemoteSurfaceView();
-                        MetaChatContext.getInstance().leaveScene();
-                    }
-                });
+        Log.e(TAG, "onRecvMessageFromScene jsonStr:" + jsonStr);
+        try {
+            JSONObject jsonObject = JSON.parseObject(jsonStr);
+            if (!TextUtils.isEmpty(jsonObject.getString("key"))) {
+                if (MetaChatConstants.SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //localAvatarViewReady();
+                            MetaChatContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, true);
+                        }
+                    });
+                } else if (MetaChatConstants.SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
+                    //maybe to do something
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            removeLocalSurfaceView();
+                            removeRemoteSurfaceView();
+                            MetaChatContext.getInstance().leaveScene();
+                        }
+                    });
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -504,7 +504,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     // Just for test
     private void pushVideoFrameToDisplay() {
-        metaChatScene.enableVideoDisplay("1", true);
+        //metaChatScene.enableVideoDisplay("1", true);
         //AgoraMediaPlayer.getInstance().play(MetaChatConstants.VIDEO_URL, 0);
     }
 
