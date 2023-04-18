@@ -2,15 +2,14 @@ package io.agora.metachat.example;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import io.agora.metachat.example.ui.main.MainFragment;
 
@@ -36,20 +35,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        View decorView = getWindow().getDecorView();
+
+// Hide both the navigation bar and the status bar.
+// SYSTEM_UI_FLAG_FULLSCREEN is only available on Android 4.1 and higher, but as
+// a general rule, you should design your app to hide the status bar whenever you
+// hide the navigation bar.
+
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+
+                | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+        decorView.setSystemUiVisibility(uiOptions);
+
         setContentView(R.layout.main_activity);
 
         handlePermission();
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, MainFragment.newInstance())
-                    .commitNow();
-        }
+        startFragment();
     }
+
+    private void startFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, MainFragment.newInstance())
+                .commitNow();
+    }
+
     private void handlePermission() {
 
         // 需要动态申请的权限
-        String permission = Manifest.permission.CAMERA;
+        String permission = Manifest.permission.READ_EXTERNAL_STORAGE;
 
         //查看是否已有权限
         int checkSelfPermission = ActivityCompat.checkSelfPermission(getApplicationContext(), permission);
@@ -87,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
 
     @Override
     public void onBackPressed() {

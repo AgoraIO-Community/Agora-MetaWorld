@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="view_card_width">120dp</dimen>
+    <dimen name="view_card_height">120dp</dimen>
+    <dimen name="local_view_max_width">260dp</dimen>
+    <dimen name="remote_view_max_width">380dp</dimen>
+
+</resources>

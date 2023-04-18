@@ -1,33 +1,46 @@
 package io.agora.metachat.example.ui.game;
 
+import static io.agora.rtc2.video.VideoEncoderConfiguration.STANDARD_BITRATE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.SurfaceTexture;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.viewpager.widget.ViewPager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.agora.base.FaceCaptureInfo;
+import io.agora.base.VideoFrame;
 import io.agora.meta.renderer.unity.AgoraAvatarView;
 import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.IMetachatEventHandler;
@@ -35,23 +48,32 @@ import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.IMetachatSceneEventHandler;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
+import io.agora.metachat.SceneDisplayConfig;
 import io.agora.metachat.example.MainActivity;
 import io.agora.metachat.example.adapter.SkinGridViewAdapter;
+import io.agora.metachat.example.adapter.SurfaceViewAdapter;
 import io.agora.metachat.example.adapter.ViewPagerAdapter;
 import io.agora.metachat.example.data.SkinsData;
+import io.agora.metachat.example.inf.IRtcEventCallback;
 import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.SkinInfo;
+import io.agora.metachat.example.models.SurfaceViewInfo;
 import io.agora.metachat.example.models.TabEntity;
+import io.agora.metachat.example.models.UnityMessage;
 import io.agora.metachat.example.ui.view.CirclePageIndicator;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.Constants;
+import io.agora.rtc2.RtcEngine;
+import io.agora.rtc2.video.IVideoFrameObserver;
+import io.agora.rtc2.video.VideoCanvas;
+import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class GameActivity extends Activity implements IMetachatSceneEventHandler, IMetachatEventHandler, SkinGridViewAdapter.SkinItemClick {
+public class GameActivity extends Activity implements IMetachatSceneEventHandler, IMetachatEventHandler, SkinGridViewAdapter.SkinItemClick, IRtcEventCallback {
 
     private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
@@ -61,6 +83,20 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     private int mCurrentTabIndex;
     private List<SkinGridViewAdapter> mTabItemAdapters;
     private boolean mIsFront;
+
+    private final List<SurfaceViewInfo> mLocalSurfaceViewList = new ArrayList<>();
+    private final List<SurfaceViewInfo> mRemoteSurfaceViewList = new ArrayList<>();
+
+    private SurfaceViewAdapter mRemoteViewAdapter;
+    private SurfaceViewAdapter mLocalViewAdapter;
+    private SurfaceView mLocalPreviewSurfaceView;
+
+    private TextureView mLocalAvatarTextureView;
+
+    private SurfaceTexture mSaveLocalAvatarSurfaceTexture;
+
+    private int mFrameWidth = -1;
+    private int mFrameHeight = -1;
 
     private AgoraAvatarView mAvatarView;
 
@@ -89,8 +125,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
                             if (isEnterScene.get()) {
                                 MetaChatContext.getInstance().sendRoleDressInfo();
                             }
-                        }
-                        if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                        } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                             binding.back.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.card.getRoot().setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.card.nickname.setText(MetaChatContext.getInstance().getRoleInfo().getName());
@@ -98,12 +133,15 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
                             binding.mic.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.speaker.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.dressSetting.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.btnSwitchLocalView.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.btnSwitchRemoteView.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
 
                             binding.cancelBt.setVisibility(View.GONE);
                             binding.saveBtn.setVisibility(View.GONE);
                             binding.dressTab.setVisibility(View.GONE);
                             binding.dressViewpage.setVisibility(View.GONE);
                         }
+
                     } else if (sender == enableMic) {
                         if (!MetaChatContext.getInstance().enableLocalAudio(enableMic.get())) {
                             return;
@@ -158,27 +196,215 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         binding = GameActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         isEnterScene.addOnPropertyChangedCallback(callback);
         enableMic.addOnPropertyChangedCallback(callback);
         enableSpeaker.addOnPropertyChangedCallback(callback);
         isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaChatContext.getInstance().registerMetaChatEventHandler(this);
+        MetaChatContext.getInstance().setRtcEventCallback(this);
 
         initListener();
 
         createScene();
     }
 
+    private void initLocalSurfaceView() {
+        if (MetaChatConstants.SCENE_GAME != MetaChatContext.getInstance().getCurrentScene()) {
+            return;
+        }
+        if (null == mLocalPreviewSurfaceView) {
+            mLocalPreviewSurfaceView = new SurfaceView(getApplicationContext());
+        }
+
+        RtcEngine rtcEngine = MetaChatContext.getInstance().getRtcEngine();
+
+        rtcEngine.setupLocalVideo(new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+
+        rtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
+
+        rtcEngine.registerVideoFrameObserver(new IVideoFrameObserver() {
+            @Override
+            public boolean onCaptureVideoFrame(VideoFrame videoFrame) {
+                if (null != videoFrame.getMetaInfo() && videoFrame.getMetaInfo().getCustomMetaInfo(MetaChatConstants.KEY_FACE_CAPTURE_INFO).size() > 0) {
+                    FaceCaptureInfo faceCaptureInfo = (FaceCaptureInfo) videoFrame.getMetaInfo().getCustomMetaInfo(MetaChatConstants.KEY_FACE_CAPTURE_INFO).get(0);
+                    UnityMessage unityMessage = new UnityMessage();
+                    unityMessage.setKey(MetaChatConstants.KEY_UNITY_MESSAGE_FACE_CAPTURE);
+                    unityMessage.setValue(faceCaptureInfo.toString());
+                    MetaChatContext.getInstance().sendSceneMessage(JSONObject.toJSONString(unityMessage));
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onPreEncodeVideoFrame(VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public boolean onScreenCaptureVideoFrame(VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public boolean onPreEncodeScreenVideoFrame(VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public boolean onMediaPlayerVideoFrame(VideoFrame videoFrame, int mediaPlayerId) {
+                return false;
+            }
+
+            @Override
+            public boolean onRenderVideoFrame(String channelId, int uid, VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public int getVideoFrameProcessMode() {
+                return 0;
+            }
+
+            @Override
+            public int getVideoFormatPreference() {
+                return 0;
+            }
+
+            @Override
+            public boolean getRotationApplied() {
+                return false;
+            }
+
+            @Override
+            public boolean getMirrorApplied() {
+                return false;
+            }
+
+            @Override
+            public int getObservedFramePosition() {
+                return 0;
+            }
+        });
+        rtcEngine.startPreview();
+
+
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalPreviewSurfaceView, KeyCenter.RTC_UID));
+
+        mLocalAvatarTextureView = new TextureView(this);
+        mLocalAvatarTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+//                    if (null == mSaveLocalAvatarSurfaceTexture) {
+//                        mSaveLocalAvatarSurfaceTexture = mLocalAvatarTextureView.getSurfaceTexture();
+//                        addLocalAvatarView();
+//                    } else {
+//                        mLocalAvatarTextureView.setSurfaceTexture(mSaveLocalAvatarSurfaceTexture);
+//                    }
+                addLocalAvatarView();
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+
+
+        //for init TextureView
+        //binding.unity.addView(mLocalAvatarTextureView, 1, new ViewGroup.LayoutParams(0, 0));
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView, KeyCenter.RTC_UID));
+
+        if (mLocalViewAdapter == null) {
+            mLocalViewAdapter = new SurfaceViewAdapter(getApplicationContext());
+            mLocalViewAdapter.setSurfaceViewData(mLocalSurfaceViewList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            binding.rvLocalView.setLayoutManager(linearLayoutManager);
+            binding.rvLocalView.setAdapter(mLocalViewAdapter);
+        } else {
+            localViewDataChanged();
+        }
+
+        binding.rvLocalView.setVisibility(View.VISIBLE);
+    }
+
+    private void addLocalAvatarView() {
+        SceneDisplayConfig sceneDisplayConfig = new SceneDisplayConfig();
+        sceneDisplayConfig.width = mLocalPreviewSurfaceView.getMeasuredWidth();
+        sceneDisplayConfig.height = mLocalPreviewSurfaceView.getMeasuredHeight();
+        MetaChatContext.getInstance().addSceneView(mLocalAvatarTextureView, sceneDisplayConfig);
+    }
+
+    private void localAvatarViewReady() {
+        binding.unity.removeView(mLocalAvatarTextureView);
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView, 0));
+        localViewDataChanged();
+    }
+
+    private void initRemoteSurfaceView() {
+        if (MetaChatConstants.SCENE_GAME != MetaChatContext.getInstance().getCurrentScene()) {
+            return;
+        }
+        if (mRemoteViewAdapter == null) {
+            mRemoteViewAdapter = new SurfaceViewAdapter(getApplicationContext());
+            mRemoteViewAdapter.setSurfaceViewData(mRemoteSurfaceViewList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            binding.rvRemoteView.setLayoutManager(linearLayoutManager);
+            binding.rvRemoteView.setAdapter(mRemoteViewAdapter);
+        }
+        binding.rvRemoteView.setVisibility(View.VISIBLE);
+
+        binding.btnSwitchRemoteView.setEnabled(mRemoteSurfaceViewList.size() != 0);
+    }
+
+    private void removeLocalSurfaceView() {
+        ViewGroup viewGroup = (ViewGroup) mLocalAvatarTextureView.getParent();
+        if (viewGroup.getChildCount() >= 1) {
+            viewGroup.removeView(mLocalAvatarTextureView);
+        }
+        RtcEngine rtcEngine = MetaChatContext.getInstance().getRtcEngine();
+        rtcEngine.stopPreview();
+        mLocalSurfaceViewList.clear();
+        binding.rvLocalView.setVisibility(View.GONE);
+        mLocalAvatarTextureView = null;
+        mFrameWidth = -1;
+        mFrameHeight = -1;
+    }
+
+    private void removeRemoteSurfaceView() {
+        mRemoteSurfaceViewList.clear();
+        binding.rvRemoteView.setVisibility(View.GONE);
+    }
+
     @SuppressLint("CheckResult")
     private void initListener() {
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
-            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
+            isEnterScene.set(false);
             MetaChatContext.getInstance().resetRoleInfo();
-            MetaChatContext.getInstance().leaveScene();
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                MetaChatContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+            } else {
+                MetaChatContext.getInstance().leaveScene();
+            }
+            MetaChatContext.getInstance().setCurrentScene(MetaChatConstants.SCENE_NONE);
         });
 
         RxView.clicks(binding.cancelBt).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            isEnterScene.set(false);
             MetaChatContext.getInstance().cancelRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
                     , MetaChatContext.getInstance().getRoleInfo().getGender());
             MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_GAME);
@@ -187,6 +413,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
 
 
         RxView.clicks(binding.saveBtn).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            isEnterScene.set(false);
             MetaChatContext.getInstance().saveRoleDressInfo(MetaChatContext.getInstance().getRoleInfo().getName()
                     , MetaChatContext.getInstance().getRoleInfo().getGender());
             MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_GAME);
@@ -194,8 +421,13 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         });
 
         RxView.clicks(binding.dressSetting).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
+            isEnterScene.set(false);
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                MetaChatContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+            } else {
+                MetaChatContext.getInstance().leaveScene();
+            }
             MetaChatContext.getInstance().setNextScene(MetaChatConstants.SCENE_DRESS);
-            MetaChatContext.getInstance().leaveScene();
         });
 
         RxView.clicks(binding.speaker).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
@@ -227,6 +459,26 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         RxView.clicks(binding.card.role).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isBroadcaster.set(!isBroadcaster.get());
         });
+
+        RxView.clicks(binding.btnSwitchLocalView).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (binding.rvLocalView.getVisibility() == View.VISIBLE) {
+                binding.btnSwitchLocalView.setText(getApplicationContext().getResources().getString(R.string.show_local_view));
+                binding.rvLocalView.setVisibility(View.GONE);
+            } else {
+                binding.btnSwitchLocalView.setText(getApplicationContext().getResources().getString(R.string.hide_local_view));
+                binding.rvLocalView.setVisibility(View.VISIBLE);
+            }
+        });
+
+        RxView.clicks(binding.btnSwitchRemoteView).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (binding.rvRemoteView.getVisibility() == View.VISIBLE) {
+                binding.btnSwitchRemoteView.setText(getApplicationContext().getResources().getString(R.string.show_remote_view));
+                binding.rvRemoteView.setVisibility(View.GONE);
+            } else {
+                binding.btnSwitchRemoteView.setText(getApplicationContext().getResources().getString(R.string.hide_remote_view));
+                binding.rvRemoteView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void initUnityView() {
@@ -255,7 +507,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         enableMic.removeOnPropertyChangedCallback(callback);
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
-        MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
+        MetaChatContext.getInstance().unregisterMetaChatEventHandler(this);
     }
 
     private void createScene() {
@@ -272,6 +524,8 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         binding.mic.setVisibility(View.GONE);
         binding.speaker.setVisibility(View.GONE);
         binding.dressSetting.setVisibility(View.GONE);
+        binding.btnSwitchLocalView.setVisibility(View.GONE);
+        binding.btnSwitchRemoteView.setVisibility(View.GONE);
 
         binding.cancelBt.setVisibility(View.GONE);
         binding.saveBtn.setVisibility(View.GONE);
@@ -290,14 +544,16 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
             enableMic.set(true);
             enableSpeaker.set(true);
             isBroadcaster.set(true);
+
+            if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                initLocalSurfaceView();
+                initRemoteSurfaceView();
+            }
         });
     }
 
     @Override
     public void onLeaveSceneResult(int errorCode) {
-        runOnUiThread(() -> {
-            isEnterScene.set(false);
-        });
     }
 
     @Override
@@ -321,8 +577,53 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     @Override
-    public void onRecvMessageFromScene(byte[] message) {
+    public void onSceneVideoFrame(TextureView view, VideoFrame videoFrame) {
+        if (null == videoFrame) {
+            return;
+        }
+        if (view == mLocalAvatarTextureView) {
+            if ((mFrameWidth == -1 && mFrameHeight == -1) || (mFrameWidth != videoFrame.getBuffer().getWidth() || mFrameHeight != videoFrame.getBuffer().getHeight())) {
+                mFrameWidth = videoFrame.getBuffer().getWidth();
+                mFrameHeight = videoFrame.getBuffer().getHeight();
+                // update set video configuration
+                MetaChatContext.getInstance().getRtcEngine().setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                        new VideoEncoderConfiguration.VideoDimensions(mFrameWidth, mFrameHeight),
+                        VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
+                        STANDARD_BITRATE,
+                        VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
+            }
+            if (!MetaChatContext.getInstance().pushExternalVideoFrame(videoFrame)) {
+                Log.e(TAG, "pushExternalVideoFrame fail");
+            }
+        }
 
+    }
+
+    @Override
+    public void onRecvMessageFromScene(byte[] message) {
+        String jsonStr = new String(message);
+        JSONObject jsonObject = JSON.parseObject(jsonStr);
+        if (!TextUtils.isEmpty(jsonObject.getString("key"))) {
+            if (MetaChatConstants.SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //localAvatarViewReady();
+                        MetaChatContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, true);
+                    }
+                });
+            } else if (MetaChatConstants.SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
+                //maybe to do something
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeLocalSurfaceView();
+                        removeRemoteSurfaceView();
+                        MetaChatContext.getInstance().leaveScene();
+                    }
+                });
+            }
+        }
     }
 
     @Override
@@ -378,7 +679,6 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
             initDressTab();
         }
-
         if (null != mAvatarView) {
             mAvatarView.resume();
         }
@@ -570,4 +870,70 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         super.setRequestedOrientation(requestedOrientation);
     }
 
+
+    @Override
+    public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
+        if (MetaChatConstants.SCENE_GAME != MetaChatContext.getInstance().getCurrentScene()) {
+            return;
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                SurfaceView surfaceView = new SurfaceView(getApplicationContext());
+                surfaceView.setZOrderMediaOverlay(true);
+                int ret = -1;
+                try {
+                    mRemoteSurfaceViewList.add(new SurfaceViewInfo(surfaceView, uid));
+                    remoteViewDataChanged();
+                    ret = MetaChatContext.getInstance().getRtcEngine().setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i(TAG, "onUserJoined setupRemoteVideo ret=" + ret);
+
+            }
+        });
+    }
+
+    @Override
+    public void onUserOffline(int uid, int reason) {
+        if (MetaChatConstants.SCENE_GAME != MetaChatContext.getInstance().getCurrentScene()) {
+            return;
+        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Iterator<SurfaceViewInfo> infoIterator = mRemoteSurfaceViewList.iterator();
+                while (infoIterator.hasNext()) {
+                    SurfaceViewInfo info = infoIterator.next();
+                    if (info.getUid() == uid) {
+                        infoIterator.remove();
+                    }
+                }
+                remoteViewDataChanged();
+
+                try {
+                    MetaChatContext.getInstance().getRtcEngine().setupRemoteVideo(new VideoCanvas(null, VideoCanvas.RENDER_MODE_FIT, uid));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void remoteViewDataChanged() {
+        if (null != mRemoteViewAdapter) {
+            mRemoteViewAdapter.notifyDataSetChanged();
+        }
+
+        binding.btnSwitchRemoteView.setEnabled(mRemoteSurfaceViewList.size() != 0);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void localViewDataChanged() {
+        if (null != mRemoteViewAdapter) {
+            mLocalViewAdapter.notifyDataSetChanged();
+        }
+    }
 }

@@ -19,10 +19,18 @@ public class MetaChatConstants {
     public static final int SCENE_DRESS = 1;
 
     public static final int SCENE_ID_SDK_2_TEST = 8;
+    public static final int SCENE_ID_SDK_2_5_TEST = 23;
     public static final int SCENE_ID_META_KIT = 15;
 
 
     public static final String KEY_UNITY_MESSAGE_DRESS_SETTING = "dressSetting";
+    public static final String KEY_UNITY_MESSAGE_FACE_CAPTURE = "faceCapture";
+
+    public static final String SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS = "addSceneViewSuccess";
+    public static final String SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS = "removeSceneViewSuccess";
+
+    public static final String KEY_FACE_CAPTURE_INFO = "FaceCaptureInfo";
+
 
     public static final String KEY_HOTFIX_INFO = "hotfixInfo";
 

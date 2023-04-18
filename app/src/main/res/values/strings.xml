@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">MetaChatExample</string>
-    <string name="game_view_content_description">Game view</string>
+    <string name="hide_local_view">隐藏本地视角</string>
+    <string name="show_local_view">显示本地视角</string>
+    <string name="hide_remote_view">隐藏远端视角</string>
+    <string name="show_remote_view">显示远端视角</string>
+    <string name="uid_label">uid:%1$d</string>
 </resources>
