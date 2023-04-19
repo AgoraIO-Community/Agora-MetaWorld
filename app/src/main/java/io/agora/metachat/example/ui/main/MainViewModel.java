@@ -9,18 +9,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.agora.metachat.AvatarModelInfo;
-import io.agora.metachat.IMetachatEventHandler;
-import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.MetachatBundleInfo;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserInfo;
+import io.agora.metachat.example.inf.IMetaEventHandler;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.MainApplication;
 import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.metachat.example.utils.SingleLiveData;
 
-public class MainViewModel extends ViewModel implements IMetachatEventHandler {
+public class MainViewModel extends ViewModel implements IMetaEventHandler {
 
     private final SingleLiveData<String> avatar = new SingleLiveData<>();
     private final SingleLiveData<String> nickname = new SingleLiveData<>();
@@ -124,20 +123,6 @@ public class MainViewModel extends ViewModel implements IMetachatEventHandler {
 
     public void cancelDownloadScene(MetachatSceneInfo sceneInfo) {
         MetaChatContext.getInstance().cancelDownloadScene(sceneInfo);
-    }
-
-    @Override
-    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
-    }
-
-    @Override
-    public void onConnectionStateChanged(int state, int reason) {
-
-    }
-
-    @Override
-    public void onRequestToken() {
-
     }
 
     @Override

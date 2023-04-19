@@ -80,9 +80,9 @@ public class MainFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 adapter.check(i);
                 if (i == 0) {
-                    mViewModel.setSex(MetaChatConstants.GENDER_MAN);
+                    mViewModel.setSex(MetaChatConstants.GENDER_BOY);
                 } else {
-                    mViewModel.setSex(MetaChatConstants.GENDER_WOMEN);
+                    mViewModel.setSex(MetaChatConstants.GENDER_GIRL);
                 }
             }
 
@@ -96,7 +96,7 @@ public class MainFragment extends Fragment {
                 Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
             } else {
                 MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
-                        mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_MAN : mViewModel.getSex().getValue());
+                        mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_BOY : mViewModel.getSex().getValue());
                 MetaChatContext.getInstance().getRoleInfo().setAvatar(mViewModel.getAvatar().getValue());
                 mViewModel.getScenes();
             }
@@ -139,7 +139,7 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getSex().observe(owner, i -> {
-            if (i == MetaChatConstants.GENDER_MAN) {
+            if (i == MetaChatConstants.GENDER_BOY) {
                 binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[0]);
             } else {
                 binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[1]);

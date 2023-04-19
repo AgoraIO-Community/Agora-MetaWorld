@@ -43,9 +43,7 @@ import io.agora.base.FaceCaptureInfo;
 import io.agora.base.VideoFrame;
 import io.agora.meta.renderer.unity.AgoraAvatarView;
 import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
-import io.agora.metachat.IMetachatEventHandler;
 import io.agora.metachat.IMetachatScene;
-import io.agora.metachat.IMetachatSceneEventHandler;
 import io.agora.metachat.MetachatSceneInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.SceneDisplayConfig;
@@ -54,6 +52,7 @@ import io.agora.metachat.example.adapter.SkinGridViewAdapter;
 import io.agora.metachat.example.adapter.SurfaceViewAdapter;
 import io.agora.metachat.example.adapter.ViewPagerAdapter;
 import io.agora.metachat.example.data.SkinsData;
+import io.agora.metachat.example.inf.IMetaEventHandler;
 import io.agora.metachat.example.inf.IRtcEventCallback;
 import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
@@ -73,7 +72,7 @@ import io.agora.rtc2.video.IVideoFrameObserver;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class GameActivity extends Activity implements IMetachatSceneEventHandler, IMetachatEventHandler, SkinGridViewAdapter.SkinItemClick, IRtcEventCallback {
+public class GameActivity extends Activity implements IMetaEventHandler, SkinGridViewAdapter.SkinItemClick, IRtcEventCallback {
 
     private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
@@ -632,16 +631,6 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     @Override
-    public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
-
-    }
-
-    @Override
-    public void onEnumerateVideoDisplaysResult(String[] displayIds) {
-
-    }
-
-    @Override
     public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
         //异步线程回调需在主线程处理
         runOnUiThread(new Runnable() {
@@ -654,38 +643,19 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
     }
 
     @Override
-    public void onConnectionStateChanged(int state, int reason) {
-
-    }
-
-    @Override
-    public void onRequestToken() {
-
-    }
-
-    @Override
-    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
-
-    }
-
-    @Override
-    public void onDownloadSceneProgress(long SceneId, int progress, int state) {
-
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         Log.i(TAG, "onResume");
         mIsFront = true;
-        if (MetaChatContext.getInstance().isInScene()) {
-            MetaChatContext.getInstance().resumeMedia();
-        }
         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
             initDressTab();
-        }
-        if (null != mAvatarView) {
-            mAvatarView.resume();
+        } else {
+            if (MetaChatContext.getInstance().isInScene()) {
+                MetaChatContext.getInstance().resumeMedia();
+            }
+            if (null != mAvatarView) {
+                mAvatarView.resume();
+            }
         }
     }
 
@@ -694,11 +664,14 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         super.onPause();
         Log.i(TAG, "onPause");
         mIsFront = false;
-        if (MetaChatContext.getInstance().isInScene()) {
-            MetaChatContext.getInstance().pauseMedia();
-        }
-        if (null != mAvatarView) {
-            mAvatarView.pause();
+
+        if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+            if (MetaChatContext.getInstance().isInScene()) {
+                MetaChatContext.getInstance().pauseMedia();
+            }
+            if (null != mAvatarView) {
+                mAvatarView.pause();
+            }
         }
     }
 
@@ -714,7 +687,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         mTabEntities.clear();
         mCurrentTabIndex = 0;
         View view;
-        if (MetaChatConstants.GENDER_WOMEN == MetaChatContext.getInstance().getRoleInfo().getGender()) {
+        if (MetaChatConstants.GENDER_GIRL == MetaChatContext.getInstance().getRoleInfo().getGender()) {
             for (TabEntity tabEntity : SkinsData.TAB_ENTITY_WOMEN) {
                 mTabEntities.add(tabEntity);
 
