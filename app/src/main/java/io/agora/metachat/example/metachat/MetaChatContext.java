@@ -8,7 +8,6 @@ import android.view.TextureView;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,45 +154,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 };
 
                 rtcConfig.mAudioScenario = Constants.AudioScenario.getValue(Constants.AudioScenario.DEFAULT);
-
-                //                rtcEngineConfig.mExtensionObserver = new IMediaExtensionObserver() {
-//                    @Override
-//                    public void onEvent(String provider, String extension, String key, String value) {
-//                        Log.i("metakit", "onEvent provider: " + provider + ",extension: " + extension + ",key: " + key + ",value: " + value);
-//                    }
-//
-//                    @Override
-//                    public void onStarted(String provider, String extension) {
-//                        Log.i("metakit", "onStarted provider: " + provider + ",extension: " + extension);
-//                        if ("metakit".equals(extension) && null != rtcEngine) {
-//                            String info;
-//                            try {
-//                                JSONObject jsonObject = new JSONObject();
-//                                jsonObject.put("appid", KeyCenter.APP_ID);
-//                                jsonObject.put("cert", BuildConfig.APP_CERTIFICATE);
-//                                jsonObject.put("userid", String.valueOf(KeyCenter.RTC_UID));
-//                                jsonObject.put("token", KeyCenter.RTM_TOKEN);
-//                                jsonObject.put("os", MetaChatConstants.OS_ANDROID);
-//                                jsonObject.put("gameid", getSceneId());
-//                                info = jsonObject.toString();
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                                info = null;
-//                            }
-//                            rtcEngine.setExtensionProperty("agora_video_filters_metakit", "metakit", MetaChatConstants.KEY_HOTFIX_INFO, info);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onStopped(String provider, String extension) {
-//                        Log.i("metakit", "onStopped provider: " + provider + ",extension: " + extension);
-//                    }
-//
-//                    @Override
-//                    public void onError(String provider, String extension, int error, String message) {
-//                        Log.i("metakit", "onError provider: " + provider + ",extension: " + extension + ",error: " + error + ",message: " + message);
-//                    }
-//                };
 
                 rtcEngine = RtcEngine.create(rtcConfig);
                 rtcEngine.setParameters("{\"rtc.enable_debug_log\":true}");
@@ -504,8 +464,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     // Just for test
     private void pushVideoFrameToDisplay() {
-        //metaChatScene.enableVideoDisplay("1", true);
-        //AgoraMediaPlayer.getInstance().play(MetaChatConstants.VIDEO_URL, 0);
+        metaChatScene.enableVideoDisplay("1", true);
+        AgoraMediaPlayer.getInstance().play(MetaChatConstants.VIDEO_URL, 0);
     }
 
     @Override
@@ -766,5 +726,9 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         }
 
         return rtcEngine.pushExternalVideoFrame(videoFrame);
+    }
+
+    public String getScenePath() {
+        return scenePath;
     }
 }

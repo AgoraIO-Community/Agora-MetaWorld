@@ -10,13 +10,15 @@ public class MetaChatConstants {
 
     public static final String MMKV_ID = "metachat";
     public static final String MMKV_ROLE_INFO = "role_info";
+    public static final String MMKV_CATALOG_HAS = "catalog_has";
 
     public static final int GENDER_MAN = 0;
     public static final int GENDER_WOMEN = 1;
 
     public static final int SCENE_NONE = -1;
-    public static final int SCENE_GAME = 0;
-    public static final int SCENE_DRESS = 1;
+    public static final int SCENE_DRESS = 0;
+    public static final int SCENE_GAME = 1;
+
 
     public static final int SCENE_ID_SDK_2_TEST = 8;
     public static final int SCENE_ID_SDK_2_5_TEST = 23;
@@ -32,7 +34,7 @@ public class MetaChatConstants {
     public static final String KEY_FACE_CAPTURE_INFO = "FaceCaptureInfo";
 
 
-    public static final String KEY_HOTFIX_INFO = "hotfixInfo";
-
-    public static final int OS_ANDROID = 2;
+    public static final String AVATAR_TYPE_BOY = "boy";
+    public static final String AVATAR_TYPE_GIRL = "girl";
+    public static final String AVATAR_TYPE_HUAMULAN = "huamulan";
 }

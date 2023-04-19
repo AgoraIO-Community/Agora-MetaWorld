@@ -38,6 +38,7 @@ import io.agora.metachat.example.adapter.SexAdapter;
 import io.agora.metachat.example.databinding.MainFragmentBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
 import io.agora.metachat.example.ui.game.GameActivity;
+import io.agora.metachat.example.utils.DressAndFaceDataUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
 
 public class MainFragment extends Fragment {
@@ -168,6 +169,8 @@ public class MainFragment extends Fragment {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
+
+            DressAndFaceDataUtils.getInstance().initData(MetaChatContext.getInstance().getScenePath() + "/" + MetaChatContext.getInstance().getSceneId());
 
             Intent intent = new Intent(context, GameActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
