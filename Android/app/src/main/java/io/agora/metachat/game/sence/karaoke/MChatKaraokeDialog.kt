@@ -167,7 +167,7 @@ class MChatKaraokeDialog constructor(
                     }
 
                     override fun onPitchChanged(pitch: Int) {
-                        chatServiceProtocol.changePitchSong(pitch){
+                        chatServiceProtocol.changePitchSong(pitch) {
 
                         }
                     }
@@ -176,13 +176,13 @@ class MChatKaraokeDialog constructor(
                     }
 
                     override fun onAccompanyVolumeChange(volume: Int) {
-                        chatServiceProtocol.changeAccompanimentVolume(volume){
+                        chatServiceProtocol.changeAccompanimentVolume(volume) {
 
                         }
                     }
 
                     override fun onAudioEffectChanged(effect: MChatAudioEffect) {
-                        chatServiceProtocol.changeAudioEffect(effect.value){}
+                        chatServiceProtocol.changeAudioEffect(effect.value) {}
                     }
 
                     override fun onConsoleClosed() {
@@ -194,7 +194,11 @@ class MChatKaraokeDialog constructor(
             }
             initViewPage()
             resetPlaylistTabTitle()
+            root.post {
+                karaokeManager?.findAndPlayFirstMusic()
+            }
         }
+
     }
 
     // 点击控制台

@@ -24,7 +24,6 @@ class MChatApp : Application() {
         app = this
         CrashReport.initCrashReport(applicationContext, "3ce0d80637", true)
         MChatGroupIMManager.instance().initConfig(this,MChatKeyCenter.IM_APP_KEY)
-        DeviceTools.isZh(this)
     }
 
     override fun onLowMemory() {

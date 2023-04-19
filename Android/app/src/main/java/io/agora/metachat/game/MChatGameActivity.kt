@@ -226,22 +226,21 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     }
 
     private fun showKaraokeDialog() {
-        karaokeDialog?.dismiss()
-        karaokeManager = MChatKaraokeManager(chatContext)
-        karaokeDialog = MChatKaraokeDialog(karaokeManager, object : OnKaraokeDialogListener {
-            override fun onMusicInserted(insert: Boolean, detail: MusicDetail) {
-            }
+        if (karaokeDialog == null) {
+            karaokeDialog = MChatKaraokeDialog(karaokeManager, object : OnKaraokeDialogListener {
+                override fun onMusicInserted(insert: Boolean, detail: MusicDetail) {
+                }
 
-            override fun onConsoleOpened() {
+                override fun onConsoleOpened() {
 
-            }
-        })
+                }
+            })
+        }
         karaokeDialog?.show(supportFragmentManager, "karaoke dialog")
     }
 
     private fun dismissKaraokeDialog() {
         karaokeDialog?.dismissAllowingStateLoss()
-        karaokeDialog = null
     }
 
     private fun gameObservable() {
@@ -419,7 +418,6 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
     // unity listener
     private var unityCmdListener = object : SceneCmdListener {
 
-        private var lastTvVolume = 0
         private var lastNpcVolume = 0
 
         override fun onObjectPositionAcquired(position: SceneMessageReceivePositions) {
@@ -439,10 +437,6 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
         }
 
         override fun onKaraokeStarted() {
-            // 设置电视音量为0，并记录音量用于退出KTV模式时恢复音量
-            lastTvVolume = chatContext.chatMediaPlayer()?.tvVolume ?: 0
-            chatContext.chatMediaPlayer()?.setPlayerVolume(0)
-
             // 设置NPC音量为0，并记录音量用于退出KTV模式时恢复音量
             lastNpcVolume = chatContext.chatNpcManager()?.npcVolume ?: 0
             chatContext.chatNpcManager()?.setNpcVolume(0)
@@ -460,11 +454,13 @@ class MChatGameActivity : BaseUiActivity<MchatActivityGameBinding>(), EasyPermis
 
         override fun onKaraokeStopped() {
             // 恢复音量
-            chatContext.chatMediaPlayer()?.setPlayerVolume(lastTvVolume)
             chatContext.chatNpcManager()?.setNpcVolume(lastNpcVolume)
             // 关闭耳返效果
             karaokeManager?.enableInEarMonitoring(false)
-            MChatServiceProtocol.getImplInstance().disableEarphoneMonitoring {  }
+            // 升降调恢复默认
+            karaokeManager?.setAudioPitch(0)
+            MChatServiceProtocol.getImplInstance().disableEarphoneMonitoring { }
+            MChatServiceProtocol.getImplInstance().changePitchSong(0, {})
 
             karaokeManager?.stopKaraoke()
             chatContext.chatNpcManager()?.playAll()

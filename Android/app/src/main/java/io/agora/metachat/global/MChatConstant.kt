@@ -49,8 +49,10 @@ object MChatConstant {
         // 默认场景
         const val DEFAULT_SCENE_ID: Long = 17
 
-        // 电视默认音量25，最大100
-        const val DEFAULT_TV_VOLUME: Int = 25
+        // 电视默认音量50，最大100
+        const val DEFAULT_TV_VOLUME: Int = 50
+        // 采集音量
+        const val DEFAULT_SIGNAL_VOLUME: Int = 50
 
         // 圆桌默认音量25，最大100
         const val DEFAULT_NPC_VOLUME: Int = 25

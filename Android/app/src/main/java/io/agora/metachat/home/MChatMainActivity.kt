@@ -11,6 +11,7 @@ import io.agora.metachat.baseui.BaseUiActivity
 import io.agora.metachat.databinding.MchatActivityMainBinding
 import io.agora.metachat.game.MChatGameActivity
 import io.agora.metachat.global.MChatConstant
+import io.agora.metachat.tools.DeviceTools
 import io.agora.metachat.tools.LogTools
 
 class MChatMainActivity : BaseUiActivity<MchatActivityMainBinding>() {
@@ -25,6 +26,7 @@ class MChatMainActivity : BaseUiActivity<MchatActivityMainBinding>() {
     }
 
     override fun getViewBinding(inflater: LayoutInflater): MchatActivityMainBinding? {
+        DeviceTools.isZh(this)
         return MchatActivityMainBinding.inflate(inflater)
     }
 

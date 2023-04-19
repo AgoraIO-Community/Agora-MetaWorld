@@ -5,6 +5,7 @@ import io.agora.metachat.R
 import io.agora.metachat.game.sence.MChatContext
 import io.agora.metachat.game.model.MusicDetail
 import io.agora.metachat.game.sence.MChatMediaPlayerListener
+import io.agora.metachat.global.MChatConstant
 import io.agora.metachat.service.MChatServiceProtocol
 import io.agora.metachat.service.MChatSubscribeDelegate
 import io.agora.rtc2.Constants
@@ -37,10 +38,10 @@ class MChatKaraokeManager constructor(val chatContext: MChatContext) {
     var pitchValue: Int = 0
 
     // k歌音量
-    var recordingSignalVolume: Int = 100
+    var recordingSignalVolume: Int = MChatConstant.DefaultValue.DEFAULT_SIGNAL_VOLUME
 
     // 伴奏音量
-    var accompanimentVolume: Int = 100
+    var accompanimentVolume: Int = MChatConstant.DefaultValue.DEFAULT_TV_VOLUME
 
     // 音效
     var audioEffect: MChatAudioEffect = MChatAudioEffect.Studio
@@ -72,7 +73,7 @@ class MChatKaraokeManager constructor(val chatContext: MChatContext) {
 
         override fun onOriginalSinging(value: Boolean) {
             super.onOriginalSinging(value)
-            enableInEarMonitoring(value)
+            enableUseOriginal(value)
         }
 
         override fun onEarphoneMonitoring(value: Boolean) {
@@ -99,7 +100,6 @@ class MChatKaraokeManager constructor(val chatContext: MChatContext) {
     init {
         chatContext.chatMediaPlayer()?.registerListener(chatMediaPlayerListener)
         MChatServiceProtocol.getImplInstance().subscribeEvent(chatSubscribeDelegate)
-
     }
 
     fun clearSubscribe() {
@@ -122,7 +122,7 @@ class MChatKaraokeManager constructor(val chatContext: MChatContext) {
     @Synchronized
     fun stopKaraoke(){
         chatContext.chatMediaPlayer()?.stopKaraoke()
-        songListPlaylist.clear()
+        playSongCode = -1
     }
 
     // 加入播放列表
@@ -164,7 +164,7 @@ class MChatKaraokeManager constructor(val chatContext: MChatContext) {
     }
 
     // 找到第一首可以播放的歌曲
-    private fun findAndPlayFirstMusic() {
+    fun findAndPlayFirstMusic() {
         if (songListPlaylist.isNotEmpty()) {
             val song = songListPlaylist[0]
             if (playSongCode != song.songCode) {
