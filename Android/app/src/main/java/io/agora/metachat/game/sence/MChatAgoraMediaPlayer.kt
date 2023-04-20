@@ -111,6 +111,7 @@ class MChatAgoraMediaPlayer constructor(val rtcEngine: RtcEngine, val mediaPlaye
         mediaPlayer.stop()
         val result = mediaPlayer.open(url, startPos)
         if (result == io.agora.rtc2.Constants.ERR_OK) {
+            playingUrl = url
             mediaPlayer.setLoopCount(repeatCount)
         }
     }

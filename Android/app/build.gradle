@@ -64,6 +64,14 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    applicationVariants.all {
+        variant ->
+            variant.outputs.all { output ->
+                outputFileName = new File("MetaChat_v" + defaultConfig.versionName + "_" +
+                        new Date().format("yyyyMMddHHmm") + "_" + buildType.name + ".apk")
+            }
+    }
 }
 
 dependencies {

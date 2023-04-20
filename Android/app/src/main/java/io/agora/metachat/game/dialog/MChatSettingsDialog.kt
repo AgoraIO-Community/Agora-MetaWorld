@@ -292,6 +292,14 @@ class MChatSettingsDialog constructor() : BaseFragmentDialog<MchatDialogSettings
             exitCallback?.invoke()
         }
     }
+
+    override fun dismiss() {
+        val name = binding?.etNickname?.text?.trim()?.toString()
+        if (MChatKeyCenter.nickname != name) {
+            updateNickname(name)
+        }
+        super.dismiss()
+    }
 }
 
 interface OnUpdateUserListener {
