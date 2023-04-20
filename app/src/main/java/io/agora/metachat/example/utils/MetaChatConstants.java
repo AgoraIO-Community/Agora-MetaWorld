@@ -12,16 +12,14 @@ public class MetaChatConstants {
     public static final String MMKV_ROLE_INFO = "role_info";
     public static final String MMKV_CATALOG_HAS = "catalog_has";
 
-    public static final int GENDER_MAN = 0;
-    public static final int GENDER_WOMEN = 1;
-
     public static final int SCENE_NONE = -1;
     public static final int SCENE_DRESS = 0;
     public static final int SCENE_GAME = 1;
 
     public static final int SCENE_ID_META_KIT = 15;
 
-    public static final String KEY_UNITY_MESSAGE_DRESS_SETTING = "dressSetting";
+    public static final String KEY_UNITY_MESSAGE_UPDATE_DRESS = "updateDress";
+    public static final String KEY_UNITY_MESSAGE_UPDATE_FACE = "updateFace";
     public static final String KEY_UNITY_MESSAGE_FACE_CAPTURE = "faceCapture";
 
     public static final String SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS = "addSceneViewSuccess";

@@ -17,4 +17,9 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
+    <style name="ImageRoundStyle" parent="Theme.AppCompat.DayNight">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
 </resources>

@@ -2,30 +2,31 @@ package io.agora.metachat.example.models;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * 保存换装的数据
- */
+import io.agora.metachat.example.utils.MetaChatConstants;
+
 public class RoleInfo {
     //名字
     private String name;
     //性别
     private int gender;
     //avatar
-    private String avatar;
-    //头发
-    private int hair;
-    //上衣
-    private int tops;
+    private String avatarUrl;
 
-    //裤子
-    private int lower;
-    //鞋子
-    private int shoes;
+    private String avatarType;
+
+    private Map<Integer, Integer> dressResourceMap;
+
+    private Map<String, Integer> faceParameterResourceMap;
 
     public RoleInfo() {
         name = "";
         gender = -1;
+        avatarType = MetaChatConstants.AVATAR_TYPE_BOY;
+        dressResourceMap = new HashMap<>();
+        faceParameterResourceMap = new HashMap<>();
     }
 
     public String getName() {
@@ -44,44 +45,36 @@ public class RoleInfo {
         this.gender = gender;
     }
 
-    public String getAvatar() {
-        return avatar;
+    public String getAvatarUrl() {
+        return avatarUrl;
     }
 
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
-    public int getHair() {
-        return hair;
+    public String getAvatarType() {
+        return avatarType;
     }
 
-    public void setHair(int hair) {
-        this.hair = hair;
+    public void setAvatarType(String avatarType) {
+        this.avatarType = avatarType;
     }
 
-    public int getTops() {
-        return tops;
+    public void updateDressResource(int type, int resId) {
+        dressResourceMap.put(type, resId);
     }
 
-    public void setTops(int tops) {
-        this.tops = tops;
+    public Map<Integer, Integer> getDressResourceMap() {
+        return dressResourceMap;
     }
 
-    public int getLower() {
-        return lower;
+    public void updateFaceParameter(String key, int value) {
+        faceParameterResourceMap.put(key, value);
     }
 
-    public void setLower(int lower) {
-        this.lower = lower;
-    }
-
-    public int getShoes() {
-        return shoes;
-    }
-
-    public void setShoes(int shoes) {
-        this.shoes = shoes;
+    public Map<String, Integer> getFaceParameterResourceMap() {
+        return faceParameterResourceMap;
     }
 
     @NonNull
@@ -90,11 +83,10 @@ public class RoleInfo {
         return "RoleInfo{" +
                 "name='" + name + '\'' +
                 ", gender=" + gender +
-                ", avatar='" + avatar + '\'' +
-                ", hair=" + hair +
-                ", tops=" + tops +
-                ", lower=" + lower +
-                ", shoes=" + shoes +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", avatarType='" + avatarType + '\'' +
+                ", dressResourceMap=" + dressResourceMap +
+                ", faceParameterResourceMap=" + faceParameterResourceMap +
                 '}';
     }
 }

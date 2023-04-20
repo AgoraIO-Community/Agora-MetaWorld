@@ -97,7 +97,7 @@ public class MainFragment extends Fragment {
             } else {
                 MetaChatContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
                         mViewModel.getSex().getValue() == null ? MetaChatConstants.GENDER_BOY : mViewModel.getSex().getValue());
-                MetaChatContext.getInstance().getRoleInfo().setAvatar(mViewModel.getAvatar().getValue());
+                MetaChatContext.getInstance().getRoleInfo().setAvatarUrl(mViewModel.getAvatar().getValue());
                 mViewModel.getScenes();
             }
         });

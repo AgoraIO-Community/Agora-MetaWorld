@@ -4,5 +4,5 @@
     <dimen name="view_card_height">120dp</dimen>
     <dimen name="local_view_max_width">260dp</dimen>
     <dimen name="remote_view_max_width">380dp</dimen>
-
+    <dimen name="select_border_width">2dp</dimen>
 </resources>

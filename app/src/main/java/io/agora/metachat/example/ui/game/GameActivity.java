@@ -20,17 +20,23 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jakewharton.rxbinding2.view.RxView;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import io.agora.base.FaceCaptureInfo;
 import io.agora.base.VideoFrame;
@@ -39,6 +45,8 @@ import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.SceneDisplayConfig;
 import io.agora.metachat.example.MainActivity;
+import io.agora.metachat.example.adapter.DressTypeAdapter;
+import io.agora.metachat.example.adapter.DressTypeAssetAdapter;
 import io.agora.metachat.example.adapter.SurfaceViewAdapter;
 import io.agora.metachat.example.inf.IMetaEventHandler;
 import io.agora.metachat.example.inf.IRtcEventCallback;
@@ -46,8 +54,10 @@ import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
+import io.agora.metachat.example.models.DressItemResource;
 import io.agora.metachat.example.models.SurfaceViewInfo;
 import io.agora.metachat.example.models.UnityMessage;
+import io.agora.metachat.example.utils.DressAndFaceDataUtils;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.Constants;
@@ -79,6 +89,12 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     private AgoraAvatarView mAvatarView;
 
+    private DressTypeAdapter mDressTypeAdapter;
+    private DressTypeAssetAdapter mDressTypeAssetAdapter;
+    private List<DressItemResource> mDressResourceDataList;
+
+    private DressItemResource mCurrentDressItemResource;
+
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
     private final ObservableBoolean enableSpeaker = new ObservableBoolean(true);
@@ -96,6 +112,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                                 MetaChatContext.getInstance().sendRoleDressInfo();
                             }
                         } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
+                            binding.card.nickname.setText(MetaChatContext.getInstance().getRoleInfo().getName());
+
                             binding.sceneGameGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
                         }
@@ -466,6 +484,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private void createScene() {
         Log.i(TAG, "createScene");
         resetViewVisibility();
+        DressItemResource[] dressItemResources = DressAndFaceDataUtils.getInstance().getDressResources(MetaChatContext.getInstance().getRoleInfo().getAvatarType());
+        if (null != dressItemResources) {
+            mDressResourceDataList = Arrays.asList(dressItemResources);
+        }
         AvatarProcessImpl.setActivity(this);
         MetaChatContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, null);
     }
@@ -490,6 +512,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
                 initLocalSurfaceView();
                 initRemoteSurfaceView();
+            } else if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
+                initDressTypeView();
             }
         });
     }
@@ -590,9 +614,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         super.onResume();
         Log.i(TAG, "onResume");
         mIsFront = true;
-        if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-            initDressAndFaceUI();
-        } else {
+        if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
             if (MetaChatContext.getInstance().isInScene()) {
                 MetaChatContext.getInstance().resumeMedia();
             }
@@ -600,6 +622,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 mAvatarView.resume();
             }
         }
+        initDressTypeView();
     }
 
     @Override
@@ -620,10 +643,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     @Override
     public void onBackPressed() {
-    }
-
-    private void initDressAndFaceUI() {
-
     }
 
     @Override
@@ -701,5 +720,80 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         if (null != mRemoteViewAdapter) {
             mLocalViewAdapter.notifyDataSetChanged();
         }
+    }
+
+    private void initDressTypeView() {
+        if (MetaChatConstants.SCENE_DRESS != MetaChatContext.getInstance().getCurrentScene()) {
+            return;
+        }
+
+        if (mDressTypeAdapter == null) {
+            mCurrentDressItemResource = mDressResourceDataList.get(0);
+
+            mDressTypeAdapter = new DressTypeAdapter(getApplicationContext());
+            mDressTypeAdapter.setDataList(mDressResourceDataList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            binding.rvDressType.setLayoutManager(linearLayoutManager);
+            binding.rvDressType.setAdapter(mDressTypeAdapter);
+            mDressTypeAdapter.setOnItemClickCallBack(new DressTypeAdapter.OnItemClickCallBack() {
+                @Override
+                public void onItemClick(DressItemResource dressItemResource) {
+                    mCurrentDressItemResource = dressItemResource;
+                    if (null != mDressTypeAssetAdapter) {
+                        mDressTypeAssetAdapter.setDataList(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)),
+                                MetaChatContext.getInstance().getRoleInfo().getDressResourceMap().get(mCurrentDressItemResource.getId()));
+                        mDressTypeAssetAdapter.notifyDataSetChanged();
+                    }
+                }
+            });
+        } else {
+            mDressTypeAdapter.setDataList(mDressResourceDataList);
+            mDressTypeAdapter.notifyItemRangeChanged(0, mDressResourceDataList.size());
+        }
+
+        String iconFilePath = DressAndFaceDataUtils.getInstance().getIconFilePath(MetaChatContext.getInstance().getRoleInfo().getAvatarType());
+        if (!TextUtils.isEmpty(iconFilePath)) {
+            File file = new File(iconFilePath);
+            Map<Integer, String> assetMap = null;
+            if (file.isDirectory()) {
+                File[] files = file.listFiles();
+                if (null != files) {
+                    assetMap = new HashMap<>(files.length);
+                    for (File tempFile : files) {
+                        try {
+                            int assetId = Integer.parseInt(tempFile.getName().substring(0, tempFile.getName().lastIndexOf(".")));
+                            assetMap.put(assetId, tempFile.getPath());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            if (null != assetMap) {
+                if (mDressTypeAssetAdapter == null) {
+                    mDressTypeAssetAdapter = new DressTypeAssetAdapter(getApplicationContext(), assetMap);
+                    mDressTypeAssetAdapter.setDataList(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)),
+                            MetaChatContext.getInstance().getRoleInfo().getDressResourceMap().get(mCurrentDressItemResource.getId()));
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
+                    binding.rvDressTypeAsset.setLayoutManager(gridLayoutManager);
+                    binding.rvDressTypeAsset.setAdapter(mDressTypeAssetAdapter);
+
+                    mDressTypeAssetAdapter.setOnItemClickCallBack(new DressTypeAssetAdapter.OnItemClickCallBack() {
+                        @Override
+                        public void onItemClick(int resId) {
+                            MetaChatContext.getInstance().getRoleInfo().updateDressResource(mCurrentDressItemResource.getId(), resId);
+                            MetaChatContext.getInstance().sendRoleDressInfo();
+                        }
+                    });
+                } else {
+                    mDressTypeAssetAdapter.setDataList(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)),
+                            MetaChatContext.getInstance().getRoleInfo().getDressResourceMap().get(mCurrentDressItemResource.getId()));
+                    mDressTypeAssetAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+
     }
 }

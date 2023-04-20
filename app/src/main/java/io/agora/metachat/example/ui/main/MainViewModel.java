@@ -108,7 +108,7 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
         }}, new MetachatUserInfo() {{
             mUserId = KeyCenter.RTM_UID;
             mUserName = MetaChatContext.getInstance().getRoleInfo().getName() == null ? mUserId : MetaChatContext.getInstance().getRoleInfo().getName();
-            mUserIconUrl = MetaChatContext.getInstance().getRoleInfo().getAvatar() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : MetaChatContext.getInstance().getRoleInfo().getAvatar();
+            mUserIconUrl = MetaChatContext.getInstance().getRoleInfo().getAvatarUrl() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : MetaChatContext.getInstance().getRoleInfo().getAvatarUrl();
         }});
         if (metaChatContext.isSceneDownloaded(sceneInfo)) {
             selectScene.postValue(sceneInfo.mSceneId);

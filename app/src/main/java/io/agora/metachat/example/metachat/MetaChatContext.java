@@ -17,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
 import io.agora.metachat.AvatarModelInfo;
-import io.agora.metachat.DressInfo;
 import io.agora.metachat.EnterSceneConfig;
 import io.agora.metachat.ILocalUserAvatar;
 import io.agora.metachat.IMetachatEventHandler;
@@ -31,11 +30,12 @@ import io.agora.metachat.MetachatUserInfo;
 import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.SceneDisplayConfig;
 import io.agora.metachat.example.inf.IRtcEventCallback;
+import io.agora.metachat.example.models.DressItemResource;
 import io.agora.metachat.example.models.EnterSceneExtraInfo;
 import io.agora.metachat.example.models.RoleInfo;
 import io.agora.metachat.example.models.UnityMessage;
-import io.agora.metachat.example.models.UnityRoleInfo;
 import io.agora.metachat.example.utils.AgoraMediaPlayer;
+import io.agora.metachat.example.utils.DressAndFaceDataUtils;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MMKVUtils;
 import io.agora.metachat.example.utils.MetaChatConstants;
@@ -269,10 +269,11 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             //该model的mBundleType为MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR类型
             localUserAvatar.setModelInfo(modelInfo);
             if (null != roleInfo) {
-                //设置服装信息
-                DressInfo dressInfo = new DressInfo();
-                dressInfo.mExtraCustomInfo = (JSONObject.toJSONString(getUnityRoleInfo())).getBytes();
-                localUserAvatar.setDressInfo(dressInfo);
+                //设置dress等信息
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("avatar", roleInfo.getAvatarType());
+                jsonObject.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
+                localUserAvatar.setExtraCustomInfo(jsonObject.toJSONString().getBytes());
             }
         }
         if (null != metaChatScene) {
@@ -433,6 +434,12 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
             if (needSaveDressInfo) {
                 needSaveDressInfo = false;
+                DressItemResource[] dressResources = DressAndFaceDataUtils.getInstance().getDressResources(roleInfo.getAvatarType());
+                if (null != dressResources) {
+                    for (DressItemResource resource : dressResources) {
+                        roleInfo.updateDressResource(resource.getId(), resource.getAssets()[0]);
+                    }
+                }
                 MMKVUtils.getInstance().putValue(MetaChatConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
             }
 
@@ -581,11 +588,16 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             roleInfo = new RoleInfo();
             roleInfo.setName(name);
             roleInfo.setGender(gender);
-            //dress default id is 1
-            roleInfo.setHair(1);
-            roleInfo.setTops(1);
-            roleInfo.setShoes(1);
-            roleInfo.setLower(1);
+            switch (gender) {
+                case MetaChatConstants.GENDER_BOY:
+                    roleInfo.setAvatarType(MetaChatConstants.AVATAR_TYPE_BOY);
+                    break;
+                case MetaChatConstants.GENDER_GIRL:
+                    roleInfo.setAvatarType(MetaChatConstants.AVATAR_TYPE_GIRL);
+                    break;
+                default:
+                    break;
+            }
             roleInfos.add(roleInfo);
 
             needSaveDressInfo = true;
@@ -620,8 +632,10 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     public void sendRoleDressInfo() {
         //注意该协议格式需要和unity协商一致
         UnityMessage message = new UnityMessage();
-        message.setKey(MetaChatConstants.KEY_UNITY_MESSAGE_DRESS_SETTING);
-        message.setValue(JSONObject.toJSONString(getUnityRoleInfo()));
+        message.setKey(MetaChatConstants.KEY_UNITY_MESSAGE_UPDATE_DRESS);
+        JSONObject valueJson = new JSONObject();
+        valueJson.put("id", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
+        message.setValue(valueJson.toJSONString());
         sendSceneMessage(JSONObject.toJSONString(message));
     }
 
@@ -674,16 +688,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
         } else {
             Log.e(TAG, "send " + msg + " fail");
         }
-    }
-
-    public UnityRoleInfo getUnityRoleInfo() {
-        UnityRoleInfo unityRoleInfo = new UnityRoleInfo();
-        unityRoleInfo.setGender(roleInfo.getGender());
-        unityRoleInfo.setHair(roleInfo.getHair());
-        unityRoleInfo.setTops(roleInfo.getTops());
-        unityRoleInfo.setLower(roleInfo.getLower());
-        unityRoleInfo.setShoes(roleInfo.getShoes());
-        return unityRoleInfo;
     }
 
     public void resetRoleInfo() {
