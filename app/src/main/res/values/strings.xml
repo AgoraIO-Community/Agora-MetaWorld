@@ -5,4 +5,6 @@
     <string name="hide_remote_view">隐藏远端视角</string>
     <string name="show_remote_view">显示远端视角</string>
     <string name="uid_label">uid:%1$d</string>
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
 </resources>

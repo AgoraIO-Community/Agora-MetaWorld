@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,53 +16,6 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/cancel_bt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="取消"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/save_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="保存"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.flyco.tablayout.CommonTabLayout
-        android:id="@+id/dress_tab"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="#ffffff"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/dress_viewpage"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:tl_iconHeight="60dp"
-        app:tl_iconWidth="60dp"
-        app:tl_indicator_color="#2C97DE"
-        app:tl_indicator_height='0dp'
-        app:tl_textSelectColor="#2C97DE"
-        app:tl_textUnselectColor="#66000000"
-        app:tl_underline_color="#DDDDDD"
-        app:tl_underline_height="0dp" />
-
-    <io.agora.metachat.example.ui.view.NoScrollViewPager
-        android:id="@+id/dress_viewpage"
-        android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 
     <ImageView
@@ -179,5 +133,37 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_max="@dimen/remote_view_max_width" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/scene_game_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="back,card,users,mic,speaker,dress_setting,btn_switch_local_view,btn_switch_remote_view,rv_local_view,rv_remote_view" />
+
+
+    <Button
+        android:id="@+id/cancel_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/scene_dress_and_face_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="cancel_bt,save_btn" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

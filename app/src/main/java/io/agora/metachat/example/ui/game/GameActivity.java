@@ -10,12 +10,10 @@ import android.graphics.SurfaceTexture;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -23,20 +21,15 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.viewpager.widget.ViewPager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.flyco.tablayout.listener.CustomTabEntity;
-import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.agora.base.FaceCaptureInfo;
@@ -44,26 +37,17 @@ import io.agora.base.VideoFrame;
 import io.agora.meta.renderer.unity.AgoraAvatarView;
 import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.IMetachatScene;
-import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserPositionInfo;
 import io.agora.metachat.SceneDisplayConfig;
 import io.agora.metachat.example.MainActivity;
-import io.agora.metachat.example.adapter.SkinGridViewAdapter;
 import io.agora.metachat.example.adapter.SurfaceViewAdapter;
-import io.agora.metachat.example.adapter.ViewPagerAdapter;
-import io.agora.metachat.example.data.SkinsData;
 import io.agora.metachat.example.inf.IMetaEventHandler;
 import io.agora.metachat.example.inf.IRtcEventCallback;
 import io.agora.metachat.example.metachat.MetaChatContext;
 import io.agora.metachat.example.R;
 import io.agora.metachat.example.databinding.GameActivityBinding;
 import io.agora.metachat.example.dialog.CustomDialog;
-import io.agora.metachat.example.models.RoleInfo;
-import io.agora.metachat.example.models.SkinInfo;
 import io.agora.metachat.example.models.SurfaceViewInfo;
-import io.agora.metachat.example.models.TabEntity;
 import io.agora.metachat.example.models.UnityMessage;
-import io.agora.metachat.example.ui.view.CirclePageIndicator;
 import io.agora.metachat.example.utils.KeyCenter;
 import io.agora.metachat.example.utils.MetaChatConstants;
 import io.agora.rtc2.Constants;
@@ -72,15 +56,11 @@ import io.agora.rtc2.video.IVideoFrameObserver;
 import io.agora.rtc2.video.VideoCanvas;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class GameActivity extends Activity implements IMetaEventHandler, SkinGridViewAdapter.SkinItemClick, IRtcEventCallback {
+public class GameActivity extends Activity implements IMetaEventHandler, IRtcEventCallback {
 
     private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
 
-    private final ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private static final int SKIN_TAB_MAX_PAGE_SIZE = 4;
-    private int mCurrentTabIndex;
-    private List<SkinGridViewAdapter> mTabItemAdapters;
     private boolean mIsFront;
 
     private final List<SurfaceViewInfo> mLocalSurfaceViewList = new ArrayList<>();
@@ -109,36 +89,15 @@ public class GameActivity extends Activity implements IMetaEventHandler, SkinGri
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     if (sender == isEnterScene) {
                         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-                            binding.cancelBt.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.saveBtn.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.dressTab.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.dressViewpage.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-
-                            binding.back.setVisibility(View.GONE);
-                            binding.card.getRoot().setVisibility(View.GONE);
-                            binding.users.setVisibility(View.GONE);
-                            binding.mic.setVisibility(View.GONE);
-                            binding.speaker.setVisibility(View.GONE);
-                            binding.dressSetting.setVisibility(View.GONE);
+                            binding.sceneDressAndFaceGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.sceneGameGroup.setVisibility(View.GONE);
 
                             if (isEnterScene.get()) {
                                 MetaChatContext.getInstance().sendRoleDressInfo();
                             }
                         } else if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene()) {
-                            binding.back.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.card.getRoot().setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.card.nickname.setText(MetaChatContext.getInstance().getRoleInfo().getName());
-                            binding.users.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.mic.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.speaker.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.dressSetting.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.btnSwitchLocalView.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-                            binding.btnSwitchRemoteView.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
-
-                            binding.cancelBt.setVisibility(View.GONE);
-                            binding.saveBtn.setVisibility(View.GONE);
-                            binding.dressTab.setVisibility(View.GONE);
-                            binding.dressViewpage.setVisibility(View.GONE);
+                            binding.sceneGameGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                            binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
                         }
 
                     } else if (sender == enableMic) {
@@ -296,12 +255,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, SkinGri
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
                 Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
-//                    if (null == mSaveLocalAvatarSurfaceTexture) {
-//                        mSaveLocalAvatarSurfaceTexture = mLocalAvatarTextureView.getSurfaceTexture();
-//                        addLocalAvatarView();
-//                    } else {
-//                        mLocalAvatarTextureView.setSurfaceTexture(mSaveLocalAvatarSurfaceTexture);
-//                    }
                 addLocalAvatarView();
             }
 
@@ -394,6 +347,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, SkinGri
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
             MetaChatContext.getInstance().resetRoleInfo();
+            //fix here
             if (MetaChatConstants.SCENE_GAME == MetaChatContext.getInstance().getCurrentScene() && false) {
                 MetaChatContext.getInstance().removeSceneView(mLocalAvatarTextureView);
             } else {
@@ -517,19 +471,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, SkinGri
     }
 
     private void resetViewVisibility() {
-        binding.back.setVisibility(View.GONE);
-        binding.card.getRoot().setVisibility(View.GONE);
-        binding.users.setVisibility(View.GONE);
-        binding.mic.setVisibility(View.GONE);
-        binding.speaker.setVisibility(View.GONE);
-        binding.dressSetting.setVisibility(View.GONE);
-        binding.btnSwitchLocalView.setVisibility(View.GONE);
-        binding.btnSwitchRemoteView.setVisibility(View.GONE);
-
-        binding.cancelBt.setVisibility(View.GONE);
-        binding.saveBtn.setVisibility(View.GONE);
-        binding.dressTab.setVisibility(View.GONE);
-        binding.dressViewpage.setVisibility(View.GONE);
+        binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
+        binding.sceneGameGroup.setVisibility(View.GONE);
     }
 
     @Override
@@ -648,7 +591,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, SkinGri
         Log.i(TAG, "onResume");
         mIsFront = true;
         if (MetaChatConstants.SCENE_DRESS == MetaChatContext.getInstance().getCurrentScene()) {
-            initDressTab();
+            initDressAndFaceUI();
         } else {
             if (MetaChatContext.getInstance().isInScene()) {
                 MetaChatContext.getInstance().resumeMedia();
@@ -679,163 +622,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, SkinGri
     public void onBackPressed() {
     }
 
-    private void initDressTab() {
-        getLayoutInflater();
-        LayoutInflater lf = LayoutInflater.from(this);
-        Map<View, String> viewDressTypeMap = new LinkedHashMap<>();
+    private void initDressAndFaceUI() {
 
-        mTabEntities.clear();
-        mCurrentTabIndex = 0;
-        View view;
-        if (MetaChatConstants.GENDER_GIRL == MetaChatContext.getInstance().getRoleInfo().getGender()) {
-            for (TabEntity tabEntity : SkinsData.TAB_ENTITY_WOMEN) {
-                mTabEntities.add(tabEntity);
-
-                view = lf.inflate(R.layout.viewpager_skin_layout, null);
-                viewDressTypeMap.put(view, tabEntity.getDressType());
-            }
-
-        } else {
-            for (TabEntity tabEntity : SkinsData.TAB_ENTITY_MAN) {
-                mTabEntities.add(tabEntity);
-                view = lf.inflate(R.layout.viewpager_skin_layout, null);
-                viewDressTypeMap.put(view, tabEntity.getDressType());
-            }
-        }
-
-
-        binding.dressTab.setTabData(mTabEntities);
-        binding.dressTab.setCurrentTab(mCurrentTabIndex);
-        binding.dressTab.setOnTabSelectListener(new OnTabSelectListener() {
-            @Override
-            public void onTabSelect(int position) {
-                mCurrentTabIndex = position;
-                binding.dressViewpage.setCurrentItem(mCurrentTabIndex);
-            }
-
-            @Override
-            public void onTabReselect(int position) {
-
-            }
-        });
-
-        mTabItemAdapters = new ArrayList<>(mTabEntities.size());
-
-        for (Map.Entry<View, String> entry : viewDressTypeMap.entrySet()) {
-            initGridView(entry.getKey(), entry.getValue());
-        }
-
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this.getApplicationContext(), new ArrayList<>(viewDressTypeMap.keySet()));
-        binding.dressViewpage.setAdapter(viewPagerAdapter);
-        binding.dressViewpage.setScrollable(false);
-
-        binding.dressViewpage.setCurrentItem(mCurrentTabIndex);
-
-        binding.dressViewpage.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                Log.i(TAG, "onPageSelected position=" + position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-    }
-
-    /**
-     * 加载tab下的gridview控件
-     */
-    private void initGridView(View view, String viewDressType) {
-        List<SkinInfo> list = SkinsData.getDressInfo(viewDressType);
-        if (null == list) {
-            return;
-        }
-
-        List<SkinInfo> dataList = new ArrayList<>(list);
-
-        int selectIndex = 0;
-        RoleInfo roleInfo = MetaChatContext.getInstance().getRoleInfo();
-        if (null != roleInfo) {
-            if (SkinsData.KEY_WOMEN_CLOTHING.equalsIgnoreCase(viewDressType) ||
-                    SkinsData.KEY_MAN_CLOTHING.equalsIgnoreCase(viewDressType)) {
-                selectIndex = roleInfo.getTops() - 1;
-            } else if (SkinsData.KEY_WOMEN_HAIRPIN.equalsIgnoreCase(viewDressType) ||
-                    SkinsData.KEY_MAN_HAIRPIN.equalsIgnoreCase(viewDressType)) {
-                selectIndex = roleInfo.getHair() - 1;
-            } else if (SkinsData.KEY_WOMEN_SHOES.equalsIgnoreCase(viewDressType) ||
-                    SkinsData.KEY_MAN_SHOES.equalsIgnoreCase(viewDressType)) {
-                selectIndex = roleInfo.getShoes() - 1;
-            } else if (SkinsData.KEY_WOMEN_TROUSERS.equalsIgnoreCase(viewDressType) ||
-                    SkinsData.KEY_MAN_TROUSERS.equalsIgnoreCase(viewDressType)) {
-                selectIndex = roleInfo.getLower() - 1;
-            }
-            if (selectIndex < 0) {
-                selectIndex = 0;
-            }
-        }
-
-
-        ViewPager mCurrentTabViewPager = view.findViewById(R.id.viewpage_skin_item);
-        CirclePageIndicator indicator = (CirclePageIndicator) view.findViewById(R.id.indicator);
-
-        //总的页数=总数/每页数量，并向上取整取整
-        int totalPage = (int) Math.ceil(dataList.size() * 1.0 / SKIN_TAB_MAX_PAGE_SIZE);
-        List<View> mViewPagerList = new ArrayList<>();
-        for (int i = 0; i < dataList.size(); i++) {
-            dataList.get(i).setCheck(i == selectIndex);
-        }
-        SkinGridViewAdapter adapter;
-        for (int i = 0; i < totalPage; i++) {
-            View pagerView = getLayoutInflater().inflate(R.layout.skin_gridview, null);
-            //初始化gridview的控件并绑定
-            final GridView gridView = pagerView.findViewById(R.id.gridview);
-            adapter = new SkinGridViewAdapter(this, dataList, i, SKIN_TAB_MAX_PAGE_SIZE, this);
-            gridView.setAdapter(adapter);
-            //每一个GridView作为一个View对象添加到ViewPager集合中
-            mViewPagerList.add(gridView);
-            mTabItemAdapters.add(adapter);
-        }
-        ViewPagerAdapter mViewPagerAdapter = new ViewPagerAdapter(this, mViewPagerList);
-        mCurrentTabViewPager.setAdapter(mViewPagerAdapter);
-        indicator.setViewPager(mCurrentTabViewPager);
-    }
-
-    @Override
-    public void onSkinItemClick(int position) {
-        for (SkinGridViewAdapter adapter : mTabItemAdapters) {
-            adapter.notifyDataSetChanged();
-        }
-
-        TabEntity tabEntity = (TabEntity) mTabEntities.get(mCurrentTabIndex);
-        RoleInfo roleInfo = MetaChatContext.getInstance().getRoleInfo();
-        if (null != roleInfo) {
-            if (SkinsData.KEY_WOMEN_CLOTHING.equalsIgnoreCase(tabEntity.getDressType()) ||
-                    SkinsData.KEY_MAN_CLOTHING.equalsIgnoreCase(tabEntity.getDressType())) {
-                roleInfo.setTops(position + 1);
-            }
-            if (SkinsData.KEY_WOMEN_HAIRPIN.equalsIgnoreCase(tabEntity.getDressType()) ||
-                    SkinsData.KEY_MAN_HAIRPIN.equalsIgnoreCase(tabEntity.getDressType())) {
-                roleInfo.setHair(position + 1);
-            }
-
-            if (SkinsData.KEY_WOMEN_TROUSERS.equalsIgnoreCase(tabEntity.getDressType()) ||
-                    SkinsData.KEY_MAN_TROUSERS.equalsIgnoreCase(tabEntity.getDressType())) {
-                roleInfo.setLower(position + 1);
-            }
-
-            if (SkinsData.KEY_WOMEN_SHOES.equalsIgnoreCase(tabEntity.getDressType()) ||
-                    SkinsData.KEY_MAN_SHOES.equalsIgnoreCase(tabEntity.getDressType())) {
-                roleInfo.setShoes(position + 1);
-            }
-
-            MetaChatContext.getInstance().sendRoleDressInfo();
-        }
     }
 
     @Override

@@ -593,6 +593,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             currentScene = MetaChatConstants.SCENE_GAME;
             needSaveDressInfo = false;
         }
+        currentScene = MetaChatConstants.SCENE_DRESS;
     }
 
 
