@@ -1,4 +1,4 @@
-package io.agora.meta.example.models;
+package io.agora.meta.example.models.manifest;
 
 import androidx.annotation.NonNull;
 

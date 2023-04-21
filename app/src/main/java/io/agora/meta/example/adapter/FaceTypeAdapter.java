@@ -13,26 +13,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.R;
-import io.agora.meta.example.databinding.ItemDressTypeListBinding;
+import io.agora.meta.example.databinding.ItemFaceTypeListBinding;
+import io.agora.meta.example.models.manifest.FaceBlendShape;
 
 
-public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.ViewHolder> {
+public class FaceTypeAdapter extends RecyclerView.Adapter<FaceTypeAdapter.ViewHolder> {
 
-    private List<DressItemResource> mDataList;
+    private List<FaceBlendShape> mDataList;
     private Context mContext;
     private OnItemClickCallBack mOnItemClickCallBack;
 
     private int mCurrentPosition;
 
-    public DressTypeAdapter(Context context) {
+    public FaceTypeAdapter(Context context) {
         mDataList = new ArrayList<>();
         mContext = context;
         mCurrentPosition = 0;
     }
 
-    public void setDataList(List<DressItemResource> list) {
+    public void setDataList(List<FaceBlendShape> list) {
         mDataList = list;
         mCurrentPosition = 0;
     }
@@ -42,9 +42,9 @@ public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public final ItemDressTypeListBinding binding;
+        public final ItemFaceTypeListBinding binding;
 
-        public ViewHolder(ItemDressTypeListBinding binding) {
+        public ViewHolder(ItemFaceTypeListBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
@@ -56,7 +56,7 @@ public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.View
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         // Create a new view, which defines the UI of the list item
-        return new ViewHolder(ItemDressTypeListBinding.inflate(
+        return new ViewHolder(ItemFaceTypeListBinding.inflate(
                 LayoutInflater.from(viewGroup.getContext()), viewGroup, false));
     }
 
@@ -72,8 +72,8 @@ public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.View
                 viewHolder.binding.layout.setBackground(new ColorDrawable(Color.TRANSPARENT));
             }
 
-            DressItemResource dressItemResource = mDataList.get(position);
-            viewHolder.binding.dressTypeTv.setText(dressItemResource.getName());
+            FaceBlendShape faceBlendShape = mDataList.get(position);
+            viewHolder.binding.faceTypeTv.setText(faceBlendShape.getType());
             viewHolder.binding.layout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -81,7 +81,7 @@ public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.View
                         notifyItemChanged(position);
                         notifyItemChanged(mCurrentPosition);
                         mCurrentPosition = position;
-                        mOnItemClickCallBack.onItemClick(dressItemResource);
+                        mOnItemClickCallBack.onItemClick(faceBlendShape);
                     }
                 }
             });
@@ -98,6 +98,6 @@ public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.View
     }
 
     public interface OnItemClickCallBack {
-        void onItemClick(DressItemResource dressItemResource);
+        void onItemClick(FaceBlendShape faceBlendShape);
     }
 }

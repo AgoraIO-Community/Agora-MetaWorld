@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
 import io.agora.meta.example.utils.MetaConstants;
 
 public class RoleInfo {
@@ -17,9 +18,9 @@ public class RoleInfo {
 
     private String avatarType;
 
-    private Map<Integer, Integer> dressResourceMap;
+    private final Map<Integer, Integer> dressResourceMap;
 
-    private Map<String, Integer> faceParameterResourceMap;
+    private final Map<String, FaceParameterItem> faceParameterResourceMap;
 
     public RoleInfo() {
         name = "";
@@ -70,10 +71,16 @@ public class RoleInfo {
     }
 
     public void updateFaceParameter(String key, int value) {
-        faceParameterResourceMap.put(key, value);
+        FaceParameterItem item = faceParameterResourceMap.get(key);
+        if (null == item) {
+            item = new FaceParameterItem(key, value);
+            faceParameterResourceMap.put(key, item);
+        } else {
+            item.setValue(value);
+        }
     }
 
-    public Map<String, Integer> getFaceParameterResourceMap() {
+    public Map<String, FaceParameterItem> getFaceParameterResourceMap() {
         return faceParameterResourceMap;
     }
 

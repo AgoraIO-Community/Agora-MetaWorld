@@ -7,4 +7,7 @@
     <string name="uid_label">uid:%1$d</string>
     <string name="cancel">取消</string>
     <string name="save">保存</string>
+    <string name="dress_setting">换装</string>
+    <string name="face_setting">捏脸</string>
+    <string name="face_shape_label">%1s:%2d</string>
 </resources>

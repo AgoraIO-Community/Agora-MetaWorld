@@ -42,15 +42,19 @@ import io.agora.base.VideoFrame;
 import io.agora.meta.example.MainActivity;
 import io.agora.meta.example.adapter.DressTypeAdapter;
 import io.agora.meta.example.adapter.DressTypeAssetAdapter;
+import io.agora.meta.example.adapter.FaceTypeAdapter;
+import io.agora.meta.example.adapter.FaceTypeShapesAdapter;
 import io.agora.meta.example.adapter.SurfaceViewAdapter;
 import io.agora.meta.example.databinding.GameActivityBinding;
 import io.agora.meta.example.dialog.CustomDialog;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
 import io.agora.meta.example.meta.MetaContext;
-import io.agora.meta.example.models.DressItemResource;
+import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.SurfaceViewInfo;
 import io.agora.meta.example.models.UnityMessage;
+import io.agora.meta.example.models.manifest.FaceBlendShape;
+import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MetaConstants;
@@ -94,6 +98,11 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     private DressItemResource mCurrentDressItemResource;
 
+    private FaceTypeAdapter mFaceTypeAdapter;
+    private FaceTypeShapesAdapter mFaceTypeShapesAdapter;
+    private List<FaceBlendShape> mFaceBlendShapeDataList;
+    private FaceBlendShape mCurrentFaceBlendShape;
+
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
     private final ObservableBoolean enableSpeaker = new ObservableBoolean(true);
@@ -108,7 +117,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                             binding.sceneGameGroup.setVisibility(View.GONE);
 
                             if (isEnterScene.get()) {
-                                MetaContext.getInstance().sendRoleDressInfo();
+                                //MetaContext.getInstance().sendRoleDressInfo();
+                                binding.dressSettingLayout.setVisibility(View.GONE);
+                                binding.faceSettingLayout.setVisibility(View.VISIBLE);
                             }
                         } else if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                             binding.card.nickname.setText(MetaContext.getInstance().getRoleInfo().getName());
@@ -449,6 +460,16 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 binding.rvRemoteView.setVisibility(View.VISIBLE);
             }
         });
+
+        RxView.clicks(binding.dressSettingBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            binding.dressSettingLayout.setVisibility(View.VISIBLE);
+            binding.faceSettingLayout.setVisibility(View.GONE);
+        });
+
+        RxView.clicks(binding.faceSettingBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            binding.dressSettingLayout.setVisibility(View.GONE);
+            binding.faceSettingLayout.setVisibility(View.VISIBLE);
+        });
     }
 
     private void initUnityView() {
@@ -483,10 +504,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private void createScene() {
         Log.i(TAG, "createScene");
         resetViewVisibility();
-        DressItemResource[] dressItemResources = DressAndFaceDataUtils.getInstance().getDressResources(MetaContext.getInstance().getRoleInfo().getAvatarType());
-        if (null != dressItemResources) {
-            mDressResourceDataList = Arrays.asList(dressItemResources);
-        }
+        initDressAndFaceData();
         AvatarProcessImpl.setActivity(this);
         MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, null);
     }
@@ -513,6 +531,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 initRemoteSurfaceView();
             } else if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
                 initDressTypeView();
+                initFaceTypeView();
             }
         });
     }
@@ -621,7 +640,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 mAvatarView.resume();
             }
         }
-        initDressTypeView();
     }
 
     @Override
@@ -721,6 +739,18 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         }
     }
 
+    private void initDressAndFaceData() {
+        DressItemResource[] dressItemResources = DressAndFaceDataUtils.getInstance().getDressResources(MetaContext.getInstance().getRoleInfo().getAvatarType());
+        if (null != dressItemResources) {
+            mDressResourceDataList = Arrays.asList(dressItemResources);
+        }
+
+        FaceBlendShape[] faceBlendShapes = DressAndFaceDataUtils.getInstance().getFaceBlendShapes(MetaContext.getInstance().getRoleInfo().getAvatarType());
+        if (null != faceBlendShapes) {
+            mFaceBlendShapeDataList = Arrays.asList(faceBlendShapes);
+        }
+    }
+
     private void initDressTypeView() {
         if (MetaConstants.SCENE_DRESS != MetaContext.getInstance().getCurrentScene()) {
             return;
@@ -798,7 +828,76 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private void setDressTypeAssetData(List<Integer> list) {
         Integer resId = MetaContext.getInstance().getRoleInfo().getDressResourceMap().get(mCurrentDressItemResource.getId());
         if (null != mDressTypeAssetAdapter) {
-            mDressTypeAssetAdapter.setDataList(list, null != resId ? resId : -1);
+            if (null == resId) {
+                resId = -1;
+            } else {
+                if (!list.contains(resId)) {
+                    resId = -1;
+                }
+            }
+            mDressTypeAssetAdapter.setDataList(list, resId);
+            binding.rvDressTypeAsset.scrollToPosition(0);
+
+        }
+    }
+
+    private void initFaceTypeView() {
+        if (MetaConstants.SCENE_DRESS != MetaContext.getInstance().getCurrentScene()) {
+            return;
+        }
+
+        if (null == mFaceBlendShapeDataList) {
+            Log.i(TAG, "face data list is null");
+            return;
+        }
+
+        if (mFaceTypeAdapter == null) {
+            mCurrentFaceBlendShape = mFaceBlendShapeDataList.get(0);
+
+            mFaceTypeAdapter = new FaceTypeAdapter(getApplicationContext());
+            mFaceTypeAdapter.setDataList(mFaceBlendShapeDataList);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+            linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            binding.rvFaceType.setLayoutManager(linearLayoutManager);
+            binding.rvFaceType.setAdapter(mFaceTypeAdapter);
+            mFaceTypeAdapter.setOnItemClickCallBack(new FaceTypeAdapter.OnItemClickCallBack() {
+                @Override
+                public void onItemClick(FaceBlendShape faceBlendShape) {
+                    mCurrentFaceBlendShape = faceBlendShape;
+                    if (null != mFaceTypeShapesAdapter) {
+                        setFaceTypeShapesData(Arrays.asList(mCurrentFaceBlendShape.getShapes()));
+                    }
+                }
+            });
+        } else {
+            mFaceTypeAdapter.setDataList(mFaceBlendShapeDataList);
+            mFaceTypeAdapter.notifyItemRangeChanged(0, mFaceBlendShapeDataList.size());
+        }
+
+
+        if (mFaceTypeShapesAdapter == null) {
+            mFaceTypeShapesAdapter = new FaceTypeShapesAdapter(getApplicationContext());
+            setFaceTypeShapesData(Arrays.asList(mCurrentFaceBlendShape.getShapes()));
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+            binding.rvFaceTypeShapes.setLayoutManager(gridLayoutManager);
+            binding.rvFaceTypeShapes.setAdapter(mFaceTypeShapesAdapter);
+
+            mFaceTypeShapesAdapter.setOnShapeChangeCallBack(new FaceTypeShapesAdapter.OnShapeChangeCallBack() {
+                @Override
+                public void onShapeChange(FaceBlendShapeItem faceBlendShapeItem, int value) {
+                    MetaContext.getInstance().getRoleInfo().updateFaceParameter(faceBlendShapeItem.getKey(), value);
+                    MetaContext.getInstance().sendRoleFaceInfo();
+                }
+            });
+        } else {
+            setFaceTypeShapesData(Arrays.asList(mCurrentFaceBlendShape.getShapes()));
+        }
+    }
+
+    private void setFaceTypeShapesData(List<FaceBlendShapeItem> list) {
+        if (null != mFaceTypeShapesAdapter) {
+            mFaceTypeShapesAdapter.setDataList(list, MetaContext.getInstance().getRoleInfo().getFaceParameterResourceMap());
+            binding.rvFaceTypeShapes.scrollToPosition(0);
         }
     }
 }

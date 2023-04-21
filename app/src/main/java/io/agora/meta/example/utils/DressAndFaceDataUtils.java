@@ -8,9 +8,11 @@ import com.alibaba.fastjson.JSON;
 
 import java.io.File;
 
-import io.agora.meta.example.models.AaManifest;
-import io.agora.meta.example.models.DressItemResource;
-import io.agora.meta.example.models.DressResource;
+import io.agora.meta.example.models.manifest.AaManifest;
+import io.agora.meta.example.models.manifest.DressItemResource;
+import io.agora.meta.example.models.manifest.DressResource;
+import io.agora.meta.example.models.manifest.FaceBlendShape;
+import io.agora.meta.example.models.manifest.FaceParameter;
 
 public class DressAndFaceDataUtils {
     private final static String TAG = DressAndFaceDataUtils.class.getSimpleName();
@@ -90,5 +92,16 @@ public class DressAndFaceDataUtils {
         } else {
             return mIconsFilePath + File.separator + avatarType + File.separator;
         }
+    }
+
+    public FaceBlendShape[] getFaceBlendShapes(String avatarType) {
+        if (null != mManifest) {
+            for (FaceParameter faceParameter : mManifest.getFaceParameters()) {
+                if (avatarType.equals(faceParameter.getAvatar())) {
+                    return faceParameter.getBlendShape();
+                }
+            }
+        }
+        return null;
     }
 }

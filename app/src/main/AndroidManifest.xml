@@ -34,7 +34,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MetaChatExample"
+        android:theme="@style/Theme.MetaExample"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
@@ -45,15 +45,19 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
-            <meta-data android:name="android.notch_support" android:value="true" />
+
+            <meta-data
+                android:name="unityplayer.UnityActivity"
+                android:value="true" />
+            <meta-data
+                android:name="android.notch_support"
+                android:value="true" />
         </activity>
         <activity
             android:name=".ui.game.GameActivity"
             android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale|layoutDirection|density"
             android:hardwareAccelerated="true"
-            android:resizeableActivity="false"
-            android:theme="@style/UnityThemeSelector" />
+            android:resizeableActivity="false" />
 
         <meta-data
             android:name="unity.splash-mode"

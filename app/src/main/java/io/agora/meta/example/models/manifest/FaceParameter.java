@@ -1,14 +1,16 @@
-package io.agora.meta.example.models;
+package io.agora.meta.example.models.manifest;
 
 import androidx.annotation.NonNull;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.util.Arrays;
+
 public class FaceParameter {
     private String avatar;
     @JSONField(name = "blendshape")
 
-    private FaceBlendShape blendShape;
+    private FaceBlendShape[] blendShape;
 
     public String getAvatar() {
         return avatar;
@@ -18,11 +20,11 @@ public class FaceParameter {
         this.avatar = avatar;
     }
 
-    public FaceBlendShape getBlendShape() {
+    public FaceBlendShape[] getBlendShape() {
         return blendShape;
     }
 
-    public void setBlendShape(FaceBlendShape blendShape) {
+    public void setBlendShape(FaceBlendShape[] blendShape) {
         this.blendShape = blendShape;
     }
 
@@ -31,7 +33,7 @@ public class FaceParameter {
     public String toString() {
         return "FaceParameter{" +
                 "avatar='" + avatar + '\'' +
-                ", blendShape=" + blendShape +
+                ", blendShape=" + Arrays.toString(blendShape) +
                 '}';
     }
 }

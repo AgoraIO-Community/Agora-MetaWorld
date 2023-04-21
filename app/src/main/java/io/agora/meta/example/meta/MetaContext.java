@@ -1,6 +1,7 @@
 package io.agora.meta.example.meta;
 
 import android.content.Context;
+import android.media.FaceDetector;
 import android.util.Log;
 import android.view.TextureView;
 
@@ -13,15 +14,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
-import io.agora.meta.example.models.DressItemResource;
+import io.agora.meta.example.models.FaceParameterItem;
+import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.EnterSceneExtraInfo;
 import io.agora.meta.example.models.RoleInfo;
 import io.agora.meta.example.models.UnityMessage;
+import io.agora.meta.example.models.manifest.FaceBlendShape;
+import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
 import io.agora.meta.example.utils.AgoraMediaPlayer;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
@@ -265,6 +270,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public void enterScene() {
+        checkRoleInfoRes();
+
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
             //该model的mBundleType为MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR类型
@@ -274,6 +281,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("avatar", roleInfo.getAvatarType());
                 jsonObject.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
+                jsonObject.put("face", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
                 localUserAvatar.setExtraCustomInfo(jsonObject.toJSONString().getBytes());
             }
         }
@@ -435,12 +443,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
             if (needSaveDressInfo) {
                 needSaveDressInfo = false;
-                DressItemResource[] dressResources = DressAndFaceDataUtils.getInstance().getDressResources(roleInfo.getAvatarType());
-                if (null != dressResources) {
-                    for (DressItemResource resource : dressResources) {
-                        roleInfo.updateDressResource(resource.getId(), resource.getAssets()[0]);
-                    }
-                }
                 MMKVUtils.getInstance().putValue(MetaConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
             }
 
@@ -609,6 +611,30 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         currentScene = MetaConstants.SCENE_DRESS;
     }
 
+    private void checkRoleInfoRes() {
+        DressItemResource[] dressResources = DressAndFaceDataUtils.getInstance().getDressResources(roleInfo.getAvatarType());
+        if (null != dressResources) {
+            for (DressItemResource resource : dressResources) {
+                if (!roleInfo.getDressResourceMap().containsKey(resource.getId())) {
+                    roleInfo.updateDressResource(resource.getId(), resource.getAssets()[0]);
+                }
+            }
+        }
+
+        FaceBlendShape[] faceBlendShapes = DressAndFaceDataUtils.getInstance().getFaceBlendShapes(roleInfo.getAvatarType());
+        if (null != faceBlendShapes) {
+            for (FaceBlendShape faceBlendShape : faceBlendShapes) {
+                FaceBlendShapeItem[] shapes = faceBlendShape.getShapes();
+                if (null != shapes) {
+                    for (FaceBlendShapeItem faceBlendShapeItem : shapes) {
+                        if (!roleInfo.getFaceParameterResourceMap().containsKey(faceBlendShapeItem.getKey())) {
+                            roleInfo.updateFaceParameter(faceBlendShapeItem.getKey(), 50);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public RoleInfo getRoleInfo() {
         return roleInfo;
@@ -636,6 +662,16 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         message.setKey(MetaConstants.KEY_UNITY_MESSAGE_UPDATE_DRESS);
         JSONObject valueJson = new JSONObject();
         valueJson.put("id", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
+        message.setValue(valueJson.toJSONString());
+        sendSceneMessage(JSONObject.toJSONString(message));
+    }
+
+    public void sendRoleFaceInfo() {
+        //注意该协议格式需要和unity协商一致
+        UnityMessage message = new UnityMessage();
+        message.setKey(MetaConstants.KEY_UNITY_MESSAGE_UPDATE_FACE);
+        JSONObject valueJson = new JSONObject();
+        valueJson.put("value", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
         message.setValue(valueJson.toJSONString());
         sendSceneMessage(JSONObject.toJSONString(message));
     }
