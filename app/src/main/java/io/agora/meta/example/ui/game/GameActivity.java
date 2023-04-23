@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
@@ -50,6 +51,7 @@ import io.agora.meta.example.dialog.CustomDialog;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
 import io.agora.meta.example.meta.MetaContext;
+import io.agora.meta.example.models.FaceParameterItem;
 import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.SurfaceViewInfo;
 import io.agora.meta.example.models.UnityMessage;
@@ -117,9 +119,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                             binding.sceneGameGroup.setVisibility(View.GONE);
 
                             if (isEnterScene.get()) {
-                                //MetaContext.getInstance().sendRoleDressInfo();
-                                binding.dressSettingLayout.setVisibility(View.GONE);
-                                binding.faceSettingLayout.setVisibility(View.VISIBLE);
+                                binding.dressSettingLayout.setVisibility(View.VISIBLE);
+                                binding.faceSettingLayout.setVisibility(View.GONE);
                             }
                         } else if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                             binding.card.nickname.setText(MetaContext.getInstance().getRoleInfo().getName());
@@ -127,7 +128,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                             binding.sceneGameGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
                         }
-
+                        if (isEnterScene.get()) {
+                            updateUnityViewHeight();
+                        }
                     } else if (sender == enableMic) {
                         if (!MetaContext.getInstance().enableLocalAudio(enableMic.get())) {
                             return;
@@ -404,7 +407,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         RxView.clicks(binding.dressSetting).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
-                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+                //fix here
+                //MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+                MetaContext.getInstance().leaveScene();
             } else {
                 MetaContext.getInstance().leaveScene();
             }
@@ -475,8 +480,11 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private void initUnityView() {
         if (null == mAvatarView) {
             mAvatarView = AvatarProcessImpl.createAgoraAvatarView(GameActivity.this);
-            binding.layout.addView(mAvatarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            binding.unity.addView(mAvatarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         }
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.unity.getLayoutParams();
+        layoutParams.bottomMargin = 0;
+        binding.unity.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -815,7 +823,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                         @Override
                         public void onItemClick(int resId) {
                             MetaContext.getInstance().getRoleInfo().updateDressResource(mCurrentDressItemResource.getId(), resId);
-                            MetaContext.getInstance().sendRoleDressInfo();
+                            MetaContext.getInstance().sendRoleDressInfo(new int[]{resId});
                         }
                     });
                 } else {
@@ -886,7 +894,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 @Override
                 public void onShapeChange(FaceBlendShapeItem faceBlendShapeItem, int value) {
                     MetaContext.getInstance().getRoleInfo().updateFaceParameter(faceBlendShapeItem.getKey(), value);
-                    MetaContext.getInstance().sendRoleFaceInfo();
+                    MetaContext.getInstance().sendRoleFaceInfo(new FaceParameterItem[]{new FaceParameterItem(faceBlendShapeItem.getKey(), value)});
                 }
             });
         } else {
@@ -899,5 +907,20 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             mFaceTypeShapesAdapter.setDataList(list, MetaContext.getInstance().getRoleInfo().getFaceParameterResourceMap());
             binding.rvFaceTypeShapes.scrollToPosition(0);
         }
+    }
+
+    private void updateUnityViewHeight() {
+        binding.dressSettingLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.unity.getLayoutParams();
+                if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
+                    layoutParams.bottomMargin = 0;
+                } else if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
+                    layoutParams.bottomMargin = binding.dressSettingLayout.getMeasuredHeight();
+                }
+                binding.unity.setLayoutParams(layoutParams);
+            }
+        });
     }
 }

@@ -61,7 +61,7 @@ public class FaceTypeShapesAdapter extends RecyclerView.Adapter<FaceTypeShapesAd
                 @SuppressLint("RestrictedApi")
                 @Override
                 public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                    if (null != mCallBack && null != mFaceBlendShapeItem) {
+                    if (fromUser && null != mCallBack && null != mFaceBlendShapeItem) {
                         binding.faceTypeTv.setText(String.format(context.getResources().getString(R.string.face_shape_label), mFaceBlendShapeItem.getCh(), (int) value));
                         mCallBack.onShapeChange(mFaceBlendShapeItem, (int) value);
                     }

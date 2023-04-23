@@ -608,7 +608,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             currentScene = MetaConstants.SCENE_GAME;
             needSaveDressInfo = false;
         }
-        currentScene = MetaConstants.SCENE_DRESS;
     }
 
     private void checkRoleInfoRes() {
@@ -656,22 +655,23 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         this.nextScene = nextScene;
     }
 
-    public void sendRoleDressInfo() {
+    public void sendRoleDressInfo(int[] resIdArray) {
         //注意该协议格式需要和unity协商一致
         UnityMessage message = new UnityMessage();
         message.setKey(MetaConstants.KEY_UNITY_MESSAGE_UPDATE_DRESS);
         JSONObject valueJson = new JSONObject();
-        valueJson.put("id", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
+        valueJson.put("id", resIdArray);
         message.setValue(valueJson.toJSONString());
         sendSceneMessage(JSONObject.toJSONString(message));
     }
 
-    public void sendRoleFaceInfo() {
+
+    public void sendRoleFaceInfo(FaceParameterItem[] faceParameterItems) {
         //注意该协议格式需要和unity协商一致
         UnityMessage message = new UnityMessage();
         message.setKey(MetaConstants.KEY_UNITY_MESSAGE_UPDATE_FACE);
         JSONObject valueJson = new JSONObject();
-        valueJson.put("value", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
+        valueJson.put("value", faceParameterItems);
         message.setValue(valueJson.toJSONString());
         sendSceneMessage(JSONObject.toJSONString(message));
     }
