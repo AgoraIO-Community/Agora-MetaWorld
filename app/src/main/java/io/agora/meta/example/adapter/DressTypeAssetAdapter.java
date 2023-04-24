@@ -27,15 +27,18 @@ public class DressTypeAssetAdapter extends RecyclerView.Adapter<DressTypeAssetAd
     private final Context mContext;
     private OnItemClickCallBack mOnItemClickCallBack;
 
-    private final Map<Integer, String> mAssetMap;
+    private Map<Integer, String> mAssetMap;
     private int mCurrentResId;
     private int mCurrentPosition;
 
-    public DressTypeAssetAdapter(Context context, Map<Integer, String> assetMap) {
+    public DressTypeAssetAdapter(Context context) {
         mDataList = new ArrayList<>();
         mContext = context;
-        mAssetMap = assetMap;
         mCurrentPosition = 0;
+    }
+
+    public void setAssetMap(Map<Integer, String> assetMap) {
+        mAssetMap = assetMap;
     }
 
     public void setDataList(List<Integer> list, int resId) {

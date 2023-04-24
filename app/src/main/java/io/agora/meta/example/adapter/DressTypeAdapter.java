@@ -35,6 +35,7 @@ public class DressTypeAdapter extends RecyclerView.Adapter<DressTypeAdapter.View
     public void setDataList(List<DressItemResource> list) {
         mDataList = list;
         mCurrentPosition = 0;
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickCallBack(OnItemClickCallBack callBack) {

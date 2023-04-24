@@ -378,9 +378,12 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
             MetaContext.getInstance().resetRoleInfo();
-            //fix here
-            if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene() && false) {
-                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+            if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
+                //fix here
+                removeLocalSurfaceView();
+                removeRemoteSurfaceView();
+                MetaContext.getInstance().leaveScene();
+                //MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
             } else {
                 MetaContext.getInstance().leaveScene();
             }
@@ -409,6 +412,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 //fix here
                 //MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+                removeLocalSurfaceView();
+                removeRemoteSurfaceView();
                 MetaContext.getInstance().leaveScene();
             } else {
                 MetaContext.getInstance().leaveScene();
@@ -514,6 +519,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         resetViewVisibility();
         initDressAndFaceData();
         AvatarProcessImpl.setActivity(this);
+        initUnityView();
         MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, null);
     }
 
@@ -629,7 +635,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                initUnityView();
                 MetaContext.getInstance().enterScene();
             }
         });
@@ -789,7 +794,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             });
         } else {
             mDressTypeAdapter.setDataList(mDressResourceDataList);
-            mDressTypeAdapter.notifyItemRangeChanged(0, mDressResourceDataList.size());
         }
 
         String iconFilePath = DressAndFaceDataUtils.getInstance().getIconFilePath(MetaContext.getInstance().getRoleInfo().getAvatarType());
@@ -813,7 +817,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
             if (null != assetMap) {
                 if (mDressTypeAssetAdapter == null) {
-                    mDressTypeAssetAdapter = new DressTypeAssetAdapter(getApplicationContext(), assetMap);
+                    mDressTypeAssetAdapter = new DressTypeAssetAdapter(getApplicationContext());
+                    mDressTypeAssetAdapter.setAssetMap(assetMap);
                     setDressTypeAssetData(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)));
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
                     binding.rvDressTypeAsset.setLayoutManager(gridLayoutManager);
@@ -827,6 +832,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                         }
                     });
                 } else {
+                    mDressTypeAssetAdapter.setAssetMap(assetMap);
                     setDressTypeAssetData(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)));
                 }
             }

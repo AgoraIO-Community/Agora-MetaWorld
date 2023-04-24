@@ -1,7 +1,6 @@
 package io.agora.meta.example.meta;
 
 import android.content.Context;
-import android.media.FaceDetector;
 import android.util.Log;
 import android.view.TextureView;
 
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
@@ -560,6 +558,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     @Override
     public void onMediaVideoFramePushed(VideoFrame frame) {
+        Log.i(TAG, "onMediaVideoFramePushed");
         if (null != metaChatScene) {
             metaChatScene.pushVideoFrameToDisplay("1", frame);
         }
