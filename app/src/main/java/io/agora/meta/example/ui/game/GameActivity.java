@@ -58,7 +58,6 @@ import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MetaConstants;
-import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.SceneDisplayConfig;
 import io.agora.meta.example.R;
@@ -538,7 +537,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             resetSceneState();
             resetViewVisibility();
             initDressAndFaceData();
-            AvatarProcessImpl.setActivity(this);
             MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, mTextureView);
         }
     }

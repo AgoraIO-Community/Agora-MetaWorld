@@ -161,7 +161,20 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
                 rtcEngine = RtcEngine.create(rtcConfig);
                 rtcEngine.setParameters("{\"rtc.enable_debug_log\":true}");
-
+//                if (currentScene == MetaConstants.SCENE_GAME) {
+//                    rtcEngine.enableExtension("agora_video_filters_face_capture", "face_capture", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
+//                    rtcEngine.setExtensionProperty(
+//                            "agora_video_filters_face_capture", "face_capture", "face_capture_options", "{" +
+//                                    "\"activationInfo\":{" +
+//                                    "\"faceCapAppId\":\"" + KeyCenter.FACE_CAP_APP_ID + "\"," +
+//                                    "\"faceCapAppKey\":\"" + KeyCenter.FACE_CAP_APP_KEY + "\"," +
+//                                    "\"agoraAppId\":\"" + KeyCenter.APP_ID + "\"," +
+//                                    "\"agoraRtmToken\":\"" + KeyCenter.RTM_TOKEN + "\"," +
+//                                    "\"agoraUid\":\"" + KeyCenter.RTM_UID + "\"}," +
+//                                    "\"enable\":1" +
+//                                    "}"
+//                    );
+//                }
 
                 rtcEngine.setAudioProfile(
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
@@ -328,17 +341,17 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     private void enableRtcExtension() {
         if (currentScene == MetaConstants.SCENE_GAME) {
-            rtcEngine.enableExtension("agora_video_filters_face_capture", "face_capture", true);
-            rtcEngine.setExtensionProperty(
-                    "agora_video_filters_face_capture", "face_capture", "face_capture_options", "{" +
-                            "\"activationInfo\":{" +
-                            "\"faceCapAppId\":\"" + KeyCenter.FACE_CAP_APP_ID + "\"," +
-                            "\"faceCapAppKey\":\"" + KeyCenter.FACE_CAP_APP_KEY + "\"," +
-                            "\"agoraAppId\":\"" + KeyCenter.APP_ID + "\"," +
-                            "\"agoraRtmToken\":\"" + KeyCenter.RTM_TOKEN + "\"," +
-                            "\"agoraUid\":\"" + KeyCenter.RTM_UID + "\"}," +
-                            "\"enable\":1" +
-                            "}"
+                rtcEngine.enableExtension("agora_video_filters_face_capture", "face_capture", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
+                rtcEngine.setExtensionProperty(
+                        "agora_video_filters_face_capture", "face_capture", "face_capture_options", "{" +
+                                "\"activationInfo\":{" +
+                                "\"faceCapAppId\":\"" + KeyCenter.FACE_CAP_APP_ID + "\"," +
+                                "\"faceCapAppKey\":\"" + KeyCenter.FACE_CAP_APP_KEY + "\"," +
+                                "\"agoraAppId\":\"" + KeyCenter.APP_ID + "\"," +
+                                "\"agoraRtmToken\":\"" + KeyCenter.RTM_TOKEN + "\"," +
+                                "\"agoraUid\":\"" + KeyCenter.RTM_UID + "\"}," +
+                                "\"enable\":1" +
+                                "}"
             );
         }
 
@@ -447,7 +460,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             if (null != metaChatScene) {
                 metaChatScene.setSceneParameters("{\"debugUnity\":true}");
                 if (MetaConstants.SCENE_GAME == currentScene) {
-                    enableSceneVideo(this.sceneView, true);
+                    //enableSceneVideo(this.sceneView, true);
                 }
             }
             rtcEngine.joinChannel(
@@ -745,7 +758,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     public void addSceneView(TextureView view, SceneDisplayConfig config) {
         if (null != metaChatScene) {
-            Log.i(TAG,"addRenderView view::"+view);
+            Log.i(TAG, "addRenderView view::" + view);
             metaChatScene.addSceneView(view, config);
         }
     }
