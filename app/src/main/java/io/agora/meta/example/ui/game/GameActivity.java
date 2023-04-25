@@ -76,6 +76,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private final String TAG = GameActivity.class.getSimpleName();
     private GameActivityBinding binding;
 
+    private TextureView mTextureView = null;
+    private boolean mReCreateScene;
+    private boolean mSurfaceSizeChange;
     private boolean mIsFront;
 
     private final List<SurfaceViewInfo> mLocalSurfaceViewList = new ArrayList<>();
@@ -193,6 +196,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         MetaContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaContext.getInstance().registerMetaChatEventHandler(this);
         MetaContext.getInstance().setRtcEventCallback(this);
+
+        initMainUnityView();
 
         initListener();
 
@@ -492,14 +497,54 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         binding.unity.setLayoutParams(layoutParams);
     }
 
+    private void initMainUnityView() {
+        mTextureView = new TextureView(this);
+        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+                mReCreateScene = true;
+                mSurfaceSizeChange = true;
+                maybeCreateScene();
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
+                Log.i(TAG, "onSurfaceTextureSizeChanged");
+                mSurfaceSizeChange = true;
+                if (MetaConstants.SCENE_NONE == MetaContext.getInstance().getNextScene()) {
+                    maybeCreateScene();
+                }
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
+
+            }
+        });
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        binding.unity.addView(mTextureView, 0, layoutParams);
+
+        ConstraintLayout.LayoutParams unityLayoutParams = (ConstraintLayout.LayoutParams) binding.unity.getLayoutParams();
+        unityLayoutParams.bottomMargin = 0;
+        binding.unity.setLayoutParams(unityLayoutParams);
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
+        mReCreateScene = true;
         //just for call setRequestedOrientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         super.onNewIntent(intent);
 
         createScene();
+
+        maybeCreateScene();
     }
 
 
@@ -522,6 +567,23 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         initUnityView();
         MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, null);
     }
+
+    private void maybeCreateScene() {
+        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront);
+        if (mReCreateScene && mSurfaceSizeChange && mIsFront && false) {
+            resetSceneState();
+            resetViewVisibility();
+            initDressAndFaceData();
+            AvatarProcessImpl.setActivity(this);
+            MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, mTextureView);
+        }
+    }
+
+    private void resetSceneState() {
+        mReCreateScene = false;
+        mSurfaceSizeChange = false;
+    }
+
 
     private void resetViewVisibility() {
         binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
@@ -548,6 +610,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 initFaceTypeView();
             }
         });
+        resetSceneState();
     }
 
     @Override
@@ -660,7 +723,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         super.onPause();
         Log.i(TAG, "onPause");
         mIsFront = false;
-
+        if (MetaContext.getInstance().getNextScene() == MetaConstants.SCENE_NONE) {
+            mSurfaceSizeChange = false;
+        }
         if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
             if (MetaContext.getInstance().isInScene()) {
                 MetaContext.getInstance().pauseMedia();
@@ -753,14 +818,16 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     }
 
     private void initDressAndFaceData() {
-        DressItemResource[] dressItemResources = DressAndFaceDataUtils.getInstance().getDressResources(MetaContext.getInstance().getRoleInfo().getAvatarType());
-        if (null != dressItemResources) {
-            mDressResourceDataList = Arrays.asList(dressItemResources);
-        }
+        if (MetaContext.getInstance().getCurrentScene() == MetaConstants.SCENE_DRESS) {
+            DressItemResource[] dressItemResources = DressAndFaceDataUtils.getInstance().getDressResources(MetaContext.getInstance().getRoleInfo().getAvatarType());
+            if (null != dressItemResources) {
+                mDressResourceDataList = Arrays.asList(dressItemResources);
+            }
 
-        FaceBlendShape[] faceBlendShapes = DressAndFaceDataUtils.getInstance().getFaceBlendShapes(MetaContext.getInstance().getRoleInfo().getAvatarType());
-        if (null != faceBlendShapes) {
-            mFaceBlendShapeDataList = Arrays.asList(faceBlendShapes);
+            FaceBlendShape[] faceBlendShapes = DressAndFaceDataUtils.getInstance().getFaceBlendShapes(MetaContext.getInstance().getRoleInfo().getAvatarType());
+            if (null != faceBlendShapes) {
+                mFaceBlendShapeDataList = Arrays.asList(faceBlendShapes);
+            }
         }
     }
 
