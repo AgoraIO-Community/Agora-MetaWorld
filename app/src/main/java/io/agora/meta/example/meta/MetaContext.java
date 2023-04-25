@@ -745,6 +745,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     public void addSceneView(TextureView view, SceneDisplayConfig config) {
         if (null != metaChatScene) {
+            Log.i(TAG,"addRenderView view::"+view);
             metaChatScene.addSceneView(view, config);
         }
     }

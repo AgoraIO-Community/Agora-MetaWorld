@@ -38,7 +38,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import io.agora.base.FaceCaptureInfo;
 import io.agora.base.VideoFrame;
 import io.agora.meta.example.MainActivity;
 import io.agora.meta.example.adapter.DressTypeAdapter;
@@ -54,13 +53,11 @@ import io.agora.meta.example.meta.MetaContext;
 import io.agora.meta.example.models.FaceParameterItem;
 import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.SurfaceViewInfo;
-import io.agora.meta.example.models.UnityMessage;
 import io.agora.meta.example.models.manifest.FaceBlendShape;
 import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MetaConstants;
-import io.agora.meta.renderer.unity.AgoraAvatarView;
 import io.agora.meta.renderer.unity.api.AvatarProcessImpl;
 import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.SceneDisplayConfig;
@@ -94,8 +91,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     private int mFrameWidth = -1;
     private int mFrameHeight = -1;
-
-    private AgoraAvatarView mAvatarView;
 
     private DressTypeAdapter mDressTypeAdapter;
     private DressTypeAssetAdapter mDressTypeAssetAdapter;
@@ -188,11 +183,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         binding = GameActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-        isEnterScene.addOnPropertyChangedCallback(callback);
-        enableMic.addOnPropertyChangedCallback(callback);
-        enableSpeaker.addOnPropertyChangedCallback(callback);
-        isBroadcaster.addOnPropertyChangedCallback(callback);
         MetaContext.getInstance().registerMetaChatSceneEventHandler(this);
         MetaContext.getInstance().registerMetaChatEventHandler(this);
         MetaContext.getInstance().setRtcEventCallback(this);
@@ -200,8 +190,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         initMainUnityView();
 
         initListener();
-
-        createScene();
     }
 
     private void initLocalSurfaceView() {
@@ -221,13 +209,13 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         rtcEngine.registerVideoFrameObserver(new IVideoFrameObserver() {
             @Override
             public boolean onCaptureVideoFrame(VideoFrame videoFrame) {
-                if (null != videoFrame.getMetaInfo() && videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).size() > 0) {
-                    FaceCaptureInfo faceCaptureInfo = (FaceCaptureInfo) videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).get(0);
-                    UnityMessage unityMessage = new UnityMessage();
-                    unityMessage.setKey(MetaConstants.KEY_UNITY_MESSAGE_FACE_CAPTURE);
-                    unityMessage.setValue(faceCaptureInfo.toString());
-                    MetaContext.getInstance().sendSceneMessage(JSONObject.toJSONString(unityMessage));
-                }
+//                if (null != videoFrame.getMetaInfo() && videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).size() > 0) {
+//                    FaceCaptureInfo faceCaptureInfo = (FaceCaptureInfo) videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).get(0);
+//                    UnityMessage unityMessage = new UnityMessage();
+//                    unityMessage.setKey(MetaConstants.KEY_UNITY_MESSAGE_FACE_CAPTURE);
+//                    unityMessage.setValue(faceCaptureInfo.toString());
+//                    MetaContext.getInstance().sendSceneMessage(JSONObject.toJSONString(unityMessage));
+//                }
                 return false;
             }
 
@@ -380,15 +368,16 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     @SuppressLint("CheckResult")
     private void initListener() {
+        isEnterScene.addOnPropertyChangedCallback(callback);
+        enableMic.addOnPropertyChangedCallback(callback);
+        enableSpeaker.addOnPropertyChangedCallback(callback);
+        isBroadcaster.addOnPropertyChangedCallback(callback);
+
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
             MetaContext.getInstance().resetRoleInfo();
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
-                //fix here
-                removeLocalSurfaceView();
-                removeRemoteSurfaceView();
-                MetaContext.getInstance().leaveScene();
-                //MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
             } else {
                 MetaContext.getInstance().leaveScene();
             }
@@ -415,11 +404,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         RxView.clicks(binding.dressSetting).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
-                //fix here
-                //MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
-                removeLocalSurfaceView();
-                removeRemoteSurfaceView();
-                MetaContext.getInstance().leaveScene();
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
             } else {
                 MetaContext.getInstance().leaveScene();
             }
@@ -487,16 +472,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         });
     }
 
-    private void initUnityView() {
-        if (null == mAvatarView) {
-            mAvatarView = AvatarProcessImpl.createAgoraAvatarView(GameActivity.this);
-            binding.unity.addView(mAvatarView, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        }
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) binding.unity.getLayoutParams();
-        layoutParams.bottomMargin = 0;
-        binding.unity.setLayoutParams(layoutParams);
-    }
-
     private void initMainUnityView() {
         mTextureView = new TextureView(this);
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
@@ -542,8 +517,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         super.onNewIntent(intent);
 
-        createScene();
-
         maybeCreateScene();
     }
 
@@ -559,18 +532,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         MetaContext.getInstance().unregisterMetaChatEventHandler(this);
     }
 
-    private void createScene() {
-        Log.i(TAG, "createScene");
-        resetViewVisibility();
-        initDressAndFaceData();
-        AvatarProcessImpl.setActivity(this);
-        initUnityView();
-        MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, null);
-    }
-
     private void maybeCreateScene() {
         Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront);
-        if (mReCreateScene && mSurfaceSizeChange && mIsFront && false) {
+        if (mReCreateScene && mSurfaceSizeChange && mIsFront) {
             resetSceneState();
             resetViewVisibility();
             initDressAndFaceData();
@@ -712,9 +676,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (MetaContext.getInstance().isInScene()) {
                 MetaContext.getInstance().resumeMedia();
             }
-            if (null != mAvatarView) {
-                mAvatarView.resume();
-            }
         }
     }
 
@@ -729,9 +690,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
             if (MetaContext.getInstance().isInScene()) {
                 MetaContext.getInstance().pauseMedia();
-            }
-            if (null != mAvatarView) {
-                mAvatarView.pause();
             }
         }
     }
@@ -885,8 +843,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (null != assetMap) {
                 if (mDressTypeAssetAdapter == null) {
                     mDressTypeAssetAdapter = new DressTypeAssetAdapter(getApplicationContext());
-                    mDressTypeAssetAdapter.setAssetMap(assetMap);
-                    setDressTypeAssetData(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)));
                     GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
                     binding.rvDressTypeAsset.setLayoutManager(gridLayoutManager);
                     binding.rvDressTypeAsset.setAdapter(mDressTypeAssetAdapter);
@@ -898,10 +854,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                             MetaContext.getInstance().sendRoleDressInfo(new int[]{resId});
                         }
                     });
-                } else {
-                    mDressTypeAssetAdapter.setAssetMap(assetMap);
-                    setDressTypeAssetData(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)));
+
                 }
+                mDressTypeAssetAdapter.setAssetMap(assetMap);
+                setDressTypeAssetData(Arrays.asList(Arrays.stream(mCurrentDressItemResource.getAssets()).boxed().toArray(Integer[]::new)));
             }
         }
     }
@@ -958,7 +914,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         if (mFaceTypeShapesAdapter == null) {
             mFaceTypeShapesAdapter = new FaceTypeShapesAdapter(getApplicationContext());
-            setFaceTypeShapesData(Arrays.asList(mCurrentFaceBlendShape.getShapes()));
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
             binding.rvFaceTypeShapes.setLayoutManager(gridLayoutManager);
             binding.rvFaceTypeShapes.setAdapter(mFaceTypeShapesAdapter);
@@ -970,9 +925,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                     MetaContext.getInstance().sendRoleFaceInfo(new FaceParameterItem[]{new FaceParameterItem(faceBlendShapeItem.getKey(), value)});
                 }
             });
-        } else {
-            setFaceTypeShapesData(Arrays.asList(mCurrentFaceBlendShape.getShapes()));
         }
+        setFaceTypeShapesData(Arrays.asList(mCurrentFaceBlendShape.getShapes()));
     }
 
     private void setFaceTypeShapesData(List<FaceBlendShapeItem> list) {
