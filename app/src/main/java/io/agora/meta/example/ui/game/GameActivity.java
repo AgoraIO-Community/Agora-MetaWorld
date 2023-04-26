@@ -125,9 +125,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                             binding.sceneGameGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
                         }
-                        if (isEnterScene.get()) {
-                            updateUnityViewHeight();
-                        }
+//                        if (isEnterScene.get()) {
+//                            updateUnityViewHeight();
+//                        }
                     } else if (sender == enableMic) {
                         if (!MetaContext.getInstance().enableLocalAudio(enableMic.get())) {
                             return;
@@ -201,7 +201,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RtcEngine rtcEngine = MetaContext.getInstance().getRtcEngine();
 
-        rtcEngine.setupLocalVideo(new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
+        rtcEngine.setupLocalVideo(new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, Constants.VIDEO_MIRROR_MODE_DISABLED, Constants.VideoModulePosition.getValue(Constants.VideoModulePosition.VIDEO_MODULE_POSITION_POST_CAPTURER_ORIGIN), 0));
+        //rtcEngine.setupLocalVideo(new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
 
         rtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
 
@@ -675,6 +676,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 MetaContext.getInstance().resumeMedia();
             }
         }
+        maybeCreateScene();
     }
 
     @Override
@@ -709,6 +711,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     @Override
     public void onFirstRemoteVideoDecoded(int uid, int width, int height, int elapsed) {
+        Log.i(TAG, "onFirstRemoteVideoDecoded width:" + width + " height:" + height);
         if (MetaConstants.SCENE_GAME != MetaContext.getInstance().getCurrentScene()) {
             return;
         }
@@ -797,11 +800,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             return;
         }
 
+        mCurrentDressItemResource = mDressResourceDataList.get(0);
         if (mDressTypeAdapter == null) {
-            mCurrentDressItemResource = mDressResourceDataList.get(0);
-
             mDressTypeAdapter = new DressTypeAdapter(getApplicationContext());
-            mDressTypeAdapter.setDataList(mDressResourceDataList);
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             binding.rvDressType.setLayoutManager(linearLayoutManager);
@@ -815,9 +817,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                     }
                 }
             });
-        } else {
-            mDressTypeAdapter.setDataList(mDressResourceDataList);
         }
+        mDressTypeAdapter.setDataList(mDressResourceDataList);
+
 
         String iconFilePath = DressAndFaceDataUtils.getInstance().getIconFilePath(MetaContext.getInstance().getRoleInfo().getAvatarType());
         if (!TextUtils.isEmpty(iconFilePath)) {
@@ -886,11 +888,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             return;
         }
 
+        mCurrentFaceBlendShape = mFaceBlendShapeDataList.get(0);
         if (mFaceTypeAdapter == null) {
-            mCurrentFaceBlendShape = mFaceBlendShapeDataList.get(0);
-
             mFaceTypeAdapter = new FaceTypeAdapter(getApplicationContext());
-            mFaceTypeAdapter.setDataList(mFaceBlendShapeDataList);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             binding.rvFaceType.setLayoutManager(linearLayoutManager);
@@ -904,10 +904,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                     }
                 }
             });
-        } else {
-            mFaceTypeAdapter.setDataList(mFaceBlendShapeDataList);
-            mFaceTypeAdapter.notifyItemRangeChanged(0, mFaceBlendShapeDataList.size());
         }
+        mFaceTypeAdapter.setDataList(mFaceBlendShapeDataList);
 
 
         if (mFaceTypeShapesAdapter == null) {

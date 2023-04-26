@@ -82,7 +82,12 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
                 MainApplication.mGlobalApplication
         );
         if (flag) {
-            metaChatContext.getSceneInfos();
+            if (MetaContext.getInstance().isEnableLocalSceneRes()) {
+                prepareScene(null);
+                selectScene.postValue(0L);
+            } else {
+                metaChatContext.getSceneInfos();
+            }
         }
     }
 
@@ -90,11 +95,13 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
         MetaContext metaChatContext = MetaContext.getInstance();
         metaChatContext.prepareScene(sceneInfo, new AvatarModelInfo() {{
             // TODO choose one
-            MetachatBundleInfo[] bundles = sceneInfo.mBundles;
-            for (MetachatBundleInfo bundleInfo : bundles) {
-                if (bundleInfo.mBundleType == MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR) {
-                    mBundleCode = bundleInfo.mBundleCode;
-                    break;
+            if (null != sceneInfo) {
+                MetachatBundleInfo[] bundles = sceneInfo.mBundles;
+                for (MetachatBundleInfo bundleInfo : bundles) {
+                    if (bundleInfo.mBundleType == MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR) {
+                        mBundleCode = bundleInfo.mBundleCode;
+                        break;
+                    }
                 }
             }
             mLocalVisible = true;
@@ -110,10 +117,12 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
             mUserName = MetaContext.getInstance().getRoleInfo().getName() == null ? mUserId : MetaContext.getInstance().getRoleInfo().getName();
             mUserIconUrl = MetaContext.getInstance().getRoleInfo().getAvatarUrl() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : MetaContext.getInstance().getRoleInfo().getAvatarUrl();
         }});
-        if (metaChatContext.isSceneDownloaded(sceneInfo)) {
-            selectScene.postValue(sceneInfo.mSceneId);
-        } else {
-            requestDownloading.postValue(true);
+        if (!MetaContext.getInstance().isEnableLocalSceneRes()) {
+            if (metaChatContext.isSceneDownloaded(sceneInfo)) {
+                selectScene.postValue(sceneInfo.mSceneId);
+            } else {
+                requestDownloading.postValue(true);
+            }
         }
     }
 

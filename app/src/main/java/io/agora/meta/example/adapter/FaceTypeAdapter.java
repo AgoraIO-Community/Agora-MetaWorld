@@ -35,6 +35,7 @@ public class FaceTypeAdapter extends RecyclerView.Adapter<FaceTypeAdapter.ViewHo
     public void setDataList(List<FaceBlendShape> list) {
         mDataList = list;
         mCurrentPosition = 0;
+        notifyDataSetChanged();
     }
 
     public void setOnItemClickCallBack(OnItemClickCallBack callBack) {
