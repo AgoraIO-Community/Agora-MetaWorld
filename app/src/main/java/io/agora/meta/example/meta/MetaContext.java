@@ -21,6 +21,7 @@ import io.agora.base.VideoFrame;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
 import io.agora.meta.example.models.FaceParameterItem;
+import io.agora.meta.example.models.UnityRoleInfo;
 import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.EnterSceneExtraInfo;
 import io.agora.meta.example.models.RoleInfo;
@@ -32,6 +33,7 @@ import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MMKVUtils;
 import io.agora.metachat.AvatarModelInfo;
+import io.agora.metachat.DressInfo;
 import io.agora.metachat.EnterSceneConfig;
 import io.agora.metachat.ILocalUserAvatar;
 import io.agora.metachat.IMetachatEventHandler;
@@ -314,6 +316,10 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             localUserAvatar.setModelInfo(modelInfo);
             if (null != roleInfo) {
                 //设置dress等信息
+                DressInfo dressInfo = new DressInfo();
+                dressInfo.mExtraCustomInfo = (JSONObject.toJSONString(getUnityRoleInfo())).getBytes();
+                localUserAvatar.setDressInfo(dressInfo);
+
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("avatar", roleInfo.getAvatarType());
                 jsonObject.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
@@ -467,7 +473,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
             if (null != metaChatScene) {
                 metaChatScene.setSceneParameters("{\"debugUnity\":true}");
-                if (MetaConstants.SCENE_GAME == currentScene) {
+                if (MetaConstants.SCENE_DRESS == currentScene) {
                     //enableSceneVideo(this.sceneView, true);
                 }
             }
@@ -759,13 +765,13 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public void addSceneView(TextureView view, SceneDisplayConfig config) {
-        if (null != metaChatScene) {
+        if (null != metaChatScene && null != rtcEngine) {
             Log.i(TAG, "addRenderView view::" + view + ",config:" + config);
-            MetaContext.getInstance().getRtcEngine().setVideoEncoderConfiguration(new VideoEncoderConfiguration(
-                    new VideoEncoderConfiguration.VideoDimensions(config.width, config.height),
+            rtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                    new VideoEncoderConfiguration.VideoDimensions(330, 330),
                     VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
                     STANDARD_BITRATE,
-                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_ADAPTIVE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
+                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_LANDSCAPE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
             metaChatScene.addSceneView(view, config);
         }
     }
@@ -796,5 +802,11 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     public boolean isEnableLocalSceneRes() {
         return isEnableLocalSceneRes;
+    }
+
+    public UnityRoleInfo getUnityRoleInfo() {
+        UnityRoleInfo unityRoleInfo = new UnityRoleInfo();
+        unityRoleInfo.setGender(roleInfo.getGender());
+        return unityRoleInfo;
     }
 }

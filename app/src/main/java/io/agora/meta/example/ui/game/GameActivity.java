@@ -128,9 +128,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                             binding.sceneGameGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                             binding.sceneDressAndFaceGroup.setVisibility(View.GONE);
                         }
-//                        if (isEnterScene.get()) {
-//                            updateUnityViewHeight();
-//                        }
+                        if (isEnterScene.get()) {
+                            MetaContext.getInstance().sendRoleDressInfo(Arrays.stream(MetaContext.getInstance().getRoleInfo().getDressResourceMap().values().toArray(new Integer[0])).mapToInt(Integer::valueOf).toArray());
+//                            MetaContext.getInstance().sendRoleFaceInfo();
+                        }
                     } else if (sender == enableMic) {
                         if (!MetaContext.getInstance().enableLocalAudio(enableMic.get())) {
                             return;
