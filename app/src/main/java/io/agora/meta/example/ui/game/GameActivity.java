@@ -62,6 +62,7 @@ import io.agora.metachat.IMetachatScene;
 import io.agora.metachat.SceneDisplayConfig;
 import io.agora.meta.example.R;
 import io.agora.rtc2.Constants;
+import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.video.IVideoFrameObserver;
 import io.agora.rtc2.video.VideoCanvas;
@@ -101,6 +102,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private FaceTypeShapesAdapter mFaceTypeShapesAdapter;
     private List<FaceBlendShape> mFaceBlendShapeDataList;
     private FaceBlendShape mCurrentFaceBlendShape;
+
+    private boolean mJoinChannelSuccess;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -189,6 +192,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         initMainUnityView();
 
         initListener();
+        MetaContext.getInstance().joinChannel();
     }
 
     private void initLocalSurfaceView() {
@@ -200,10 +204,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         }
 
         RtcEngine rtcEngine = MetaContext.getInstance().getRtcEngine();
-
-        rtcEngine.setupLocalVideo(new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, Constants.VIDEO_MIRROR_MODE_DISABLED, Constants.VideoModulePosition.getValue(Constants.VideoModulePosition.VIDEO_MODULE_POSITION_POST_CAPTURER_ORIGIN), 0));
-        //rtcEngine.setupLocalVideo(new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0));
-
+        VideoCanvas videoCanvas = new VideoCanvas(mLocalPreviewSurfaceView, VideoCanvas.RENDER_MODE_HIDDEN, 0);
+        videoCanvas.position = Constants.VideoModulePosition.VIDEO_MODULE_POSITION_POST_CAPTURER_ORIGIN;
+        rtcEngine.setupLocalVideo(videoCanvas);
         rtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
 
         rtcEngine.registerVideoFrameObserver(new IVideoFrameObserver() {
@@ -516,6 +519,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         super.onNewIntent(intent);
+        MetaContext.getInstance().joinChannel();
 
         maybeCreateScene();
     }
@@ -533,12 +537,12 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     }
 
     private void maybeCreateScene() {
-        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront);
-        if (mReCreateScene && mSurfaceSizeChange && mIsFront) {
+        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
+        if (mReCreateScene && mSurfaceSizeChange && mIsFront && mJoinChannelSuccess) {
             resetSceneState();
             resetViewVisibility();
             initDressAndFaceData();
-            MetaContext.getInstance().createScene(this, KeyCenter.CHANNEL_ID, mTextureView);
+            MetaContext.getInstance().createScene(this, mTextureView);
         }
     }
 
@@ -945,5 +949,23 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 binding.unity.setLayoutParams(layoutParams);
             }
         });
+    }
+
+    @Override
+    public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+        Log.i(TAG, "onJoinChannelSuccess");
+        mJoinChannelSuccess = true;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                maybeCreateScene();
+            }
+        });
+
+    }
+
+    @Override
+    public void onLeaveChannel(IRtcEngineEventHandler.RtcStats stats) {
+        mJoinChannelSuccess = false;
     }
 }

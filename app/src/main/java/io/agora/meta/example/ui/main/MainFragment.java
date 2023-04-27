@@ -216,11 +216,7 @@ public class MainFragment extends Fragment {
             ConstraintLayout constraintLayout = CustomDialog.getCustomView(progressDialog);
             ProgressBar progressBar = constraintLayout.findViewById(R.id.progressBar);
             TextView textView = constraintLayout.findViewById(R.id.textView);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                progressBar.setProgress(integer, true);
-            } else {
-                progressBar.setProgress(integer);
-            }
+            progressBar.setProgress(integer, true);
             textView.setText(String.format(Locale.getDefault(), "%d%%", integer));
         });
     }

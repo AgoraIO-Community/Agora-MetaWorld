@@ -68,7 +68,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     private MetachatSceneInfo sceneInfo;
     private AvatarModelInfo modelInfo;
     private MetachatUserInfo userInfo;
-    private String roomName;
     private TextureView sceneView;
     private final ConcurrentHashMap<IMetachatEventHandler, Integer> metaChatEventHandlerMap;
     private final ConcurrentHashMap<IMetachatSceneEventHandler, Integer> metaChatSceneEventHandlerMap;
@@ -126,6 +125,9 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                     public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
                         Log.d(TAG, String.format("onJoinChannelSuccess %s %d", channel, uid));
                         mJoinedRtc = true;
+                        if (null != iRtcEventCallback) {
+                            iRtcEventCallback.onJoinChannelSuccess(channel, uid, elapsed);
+                        }
                     }
 
                     @Override
@@ -167,9 +169,9 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 rtcEngine = RtcEngine.create(rtcConfig);
                 rtcEngine.setParameters("{\"rtc.enable_debug_log\":true}");
                 if (currentScene == MetaConstants.SCENE_GAME) {
-                    int res = rtcEngine.enableExtension("agora_video_filters_face_capture", "face_capture", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
-                    Log.i(TAG,"testsss agora_video_filters_face_capture res:"+res);
-                    res = rtcEngine.setExtensionProperty(
+                    ret = rtcEngine.enableExtension("agora_video_filters_face_capture", "face_capture", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
+                    Log.i(TAG, "agora_video_filters_face_capture enableExtension ret:" + ret);
+                    ret = rtcEngine.setExtensionProperty(
                             "agora_video_filters_face_capture", "face_capture", "face_capture_options", "{" +
                                     "\"activationInfo\":{" +
                                     "\"faceCapAppId\":\"" + KeyCenter.FACE_CAP_APP_ID + "\"," +
@@ -180,19 +182,19 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                                     "\"enable\":1" +
                                     "}"
                     );
-//                    Log.i(TAG,"testsss agora_video_filters_face_capture setExtensionProperty res:"+res);
-//                    res = rtcEngine.enableExtension("agora_video_filters_metakit", "metakit", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
-//                    Log.i(TAG,"testsss agora_video_filters_metakit res:"+res);
-//                    res = rtcEngine.setExtensionProperty(
-//                            "agora_video_filters_metakit", "metakit", "initialize", "{}");
-//                    Log.i(TAG,"testsss agora_video_filters_metakit setExtensionProperty res:"+res);
+                    Log.i(TAG, "agora_video_filters_face_capture setExtensionProperty ret:" + ret);
                 }
+
+                int metakitRet = rtcEngine.enableExtension("agora_video_filters_metakit", "metakit", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
+                Log.i(TAG, "agora_video_filters_metakit enableExtension ret:" + metakitRet);
+
+                rtcEngine.enableAudio();
+                rtcEngine.enableVideo();
 
                 rtcEngine.setAudioProfile(
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
                 );
                 rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
-                //rtcEngine.setExternalVideoSource(true, true, Constants.ExternalVideoSourceType.VIDEO_FRAME);
                 scenePath = context.getExternalFilesDir("").getPath();
                 {
                     metaChatService = IMetachatService.create();
@@ -218,6 +220,18 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
         }
         return ret == Constants.ERR_OK;
+    }
+
+    public void joinChannel() {
+        if (null != rtcEngine) {
+            rtcEngine.joinChannel(
+                    KeyCenter.RTC_TOKEN, KeyCenter.CHANNEL_ID, KeyCenter.RTC_UID,
+                    new ChannelMediaOptions() {{
+                        publishMicrophoneTrack = true;
+                        autoSubscribeAudio = true;
+                        clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
+                    }});
+        }
     }
 
     public void destroy() {
@@ -266,9 +280,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         this.userInfo = userInfo;
     }
 
-    public boolean createScene(Context activityContext, String roomName, TextureView tv) {
-        Log.d(TAG, String.format("createAndEnterScene %s", roomName));
-        this.roomName = roomName;
+    public boolean createScene(Context activityContext, TextureView tv) {
+        Log.d(TAG, String.format("createAndEnterScene"));
         this.sceneView = tv;
 
         if (spatialAudioEngine == null && enableSpatialAudio) {
@@ -317,7 +330,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             //sceneView必须为Texture类型，为渲染unity显示的view
             config.mSceneView = this.sceneView;
             //rtc加入channel的ID
-            config.mRoomName = this.roomName;
+            config.mRoomName = KeyCenter.CHANNEL_ID;
             //内容中心对应的ID
             if (null != sceneInfo) {
                 config.mSceneId = this.sceneInfo.mSceneId;
@@ -349,30 +362,9 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         Log.i(TAG, "onCreateSceneResult errorCode: " + errorCode);
         metaChatScene = scene;
         localUserAvatar = metaChatScene.getLocalUserAvatar();
-        enableRtcExtension();
         for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
             handler.onCreateSceneResult(scene, errorCode);
         }
-    }
-
-    private void enableRtcExtension() {
-//        if (currentScene == MetaConstants.SCENE_GAME) {
-//                rtcEngine.enableExtension("agora_video_filters_face_capture", "face_capture", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
-//                rtcEngine.setExtensionProperty(
-//                        "agora_video_filters_face_capture", "face_capture", "face_capture_options", "{" +
-//                                "\"activationInfo\":{" +
-//                                "\"faceCapAppId\":\"" + KeyCenter.FACE_CAP_APP_ID + "\"," +
-//                                "\"faceCapAppKey\":\"" + KeyCenter.FACE_CAP_APP_KEY + "\"," +
-//                                "\"agoraAppId\":\"" + KeyCenter.APP_ID + "\"," +
-//                                "\"agoraRtmToken\":\"" + KeyCenter.RTM_TOKEN + "\"," +
-//                                "\"agoraUid\":\"" + KeyCenter.RTM_UID + "\"}," +
-//                                "\"enable\":1" +
-//                                "}"
-//            );
-//        }
-
-        rtcEngine.enableAudio();
-        rtcEngine.enableVideo();
     }
 
     public boolean updateRole(int role) {
@@ -479,13 +471,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                     //enableSceneVideo(this.sceneView, true);
                 }
             }
-            rtcEngine.joinChannel(
-                    KeyCenter.RTC_TOKEN, roomName, KeyCenter.RTC_UID,
-                    new ChannelMediaOptions() {{
-                        publishMicrophoneTrack = true;
-                        autoSubscribeAudio = true;
-                        clientRoleType = Constants.CLIENT_ROLE_BROADCASTER;
-                    }});
+
             if (spatialAudioEngine != null) {
                 // audio的mute状态交给ILocalSpatialAudioEngine统一管理
                 rtcEngine.muteAllRemoteAudioStreams(true);
