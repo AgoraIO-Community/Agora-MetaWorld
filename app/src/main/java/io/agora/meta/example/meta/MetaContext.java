@@ -197,6 +197,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
                 );
                 rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
+                rtcEngine.startPreview();
+
                 scenePath = context.getExternalFilesDir("").getPath();
                 {
                     metaChatService = IMetachatService.create();
@@ -484,6 +486,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 pushVideoFrameToDisplay();
+                joinChannel();
             }
         }
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {

@@ -8,7 +8,7 @@ import io.agora.rtm.RtmTokenBuilder;
 
 public class KeyCenter {
 
-    public static final String CHANNEL_ID = "MetaChatTest1111111";
+    public static final String CHANNEL_ID = "MetaChatInternalTest";
 
     public static final String APP_ID = BuildConfig.APP_ID;
 

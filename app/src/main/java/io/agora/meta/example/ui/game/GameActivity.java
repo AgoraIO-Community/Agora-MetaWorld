@@ -193,7 +193,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         initMainUnityView();
 
         initListener();
-        MetaContext.getInstance().joinChannel();
+        // MetaContext.getInstance().joinChannel();
     }
 
     private void initLocalSurfaceView() {
@@ -520,7 +520,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         super.onNewIntent(intent);
-        MetaContext.getInstance().joinChannel();
+        // MetaContext.getInstance().joinChannel();
 
         maybeCreateScene();
     }
@@ -539,7 +539,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     private void maybeCreateScene() {
         Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
-        if (mReCreateScene && mSurfaceSizeChange && mIsFront && mJoinChannelSuccess) {
+        if (mReCreateScene && mSurfaceSizeChange && mIsFront /*&& mJoinChannelSuccess*/) {
             resetSceneState();
             resetViewVisibility();
             initDressAndFaceData();
@@ -639,7 +639,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            //localAvatarViewReady();
                             MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, true);
                         }
                     });
