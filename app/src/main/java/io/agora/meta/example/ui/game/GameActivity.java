@@ -105,6 +105,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     private boolean mJoinChannelSuccess;
 
+    private boolean mEnableRemotePreviewAvatar;
+
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
     private final ObservableBoolean enableSpeaker = new ObservableBoolean(true);
@@ -474,6 +476,14 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             binding.dressSettingLayout.setVisibility(View.GONE);
             binding.faceSettingLayout.setVisibility(View.VISIBLE);
         });
+
+
+        RxView.clicks(binding.btnSwitchRemotePreview).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            mEnableRemotePreviewAvatar = !mEnableRemotePreviewAvatar;
+            MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, mEnableRemotePreviewAvatar);
+            binding.btnSwitchRemotePreview.setText(mEnableRemotePreviewAvatar ? getApplicationContext().getResources().getString(R.string.btn_switch_remote_preview_camera) :
+                    getApplicationContext().getResources().getString(R.string.btn_switch_remote_preview_avatar));
+        });
     }
 
     private void initMainUnityView() {
@@ -550,6 +560,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private void resetSceneState() {
         mReCreateScene = false;
         mSurfaceSizeChange = false;
+        mEnableRemotePreviewAvatar = true;
     }
 
 
@@ -639,7 +650,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, true);
+                            MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, mEnableRemotePreviewAvatar);
                         }
                     });
                 } else if (MetaConstants.SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {

@@ -1,6 +1,8 @@
 package io.agora.meta.example.utils;
 
 import android.content.Context;
+import android.util.DisplayMetrics;
+
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,7 +67,7 @@ public class Utils {
             ZipEntry zipEntry = zipInputStream.getNextEntry();
             byte[] buffer = new byte[1024];
             while (zipEntry != null) {
-                if(!zipEntry.isDirectory()) {
+                if (!zipEntry.isDirectory()) {
                     String fileName = zipEntry.getName();
                     File newFile = new File(destDirectory + File.separator + fileName);
                     // create all non exists folders
@@ -83,5 +85,15 @@ public class Utils {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static int getScreenHeight(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.heightPixels;
+    }
+
+    public static int getScreenWidth(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return displayMetrics.widthPixels;
     }
 }

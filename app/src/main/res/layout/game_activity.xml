@@ -104,6 +104,18 @@
         app:layout_constraintTop_toBottomOf="@id/dress_setting" />
 
     <Button
+        android:id="@+id/btn_switch_remote_preview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="21dp"
+        android:text="@string/btn_switch_remote_preview_camera"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btn_switch_local_view" />
+
+    <Button
         android:id="@+id/btn_switch_remote_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -139,7 +151,7 @@
         android:id="@+id/scene_game_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="back,card,users,mic,speaker,dress_setting,btn_switch_local_view,btn_switch_remote_view,rv_local_view,rv_remote_view" />
+        app:constraint_referenced_ids="back,card,users,mic,speaker,dress_setting,btn_switch_local_view,btn_switch_remote_view,btn_switch_remote_preview,rv_local_view,rv_remote_view" />
 
 
     <Button

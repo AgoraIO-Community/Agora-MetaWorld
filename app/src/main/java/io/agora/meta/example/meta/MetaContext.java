@@ -475,9 +475,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
             if (null != metaChatScene) {
                 metaChatScene.setSceneParameters("{\"debugUnity\":true}");
-                if (MetaConstants.SCENE_DRESS == currentScene) {
-                    //enableSceneVideo(this.sceneView, true);
-                }
             }
 
             if (spatialAudioEngine != null) {
