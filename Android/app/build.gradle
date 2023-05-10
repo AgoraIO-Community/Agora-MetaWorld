@@ -16,7 +16,7 @@ android {
         minSdk 23
         targetSdk 33
         versionCode 401220
-        versionName "401.213.220.0322.1"
+        versionName "401.213.220.0504.1"
         flavorDimensions "versionCode"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -49,6 +49,13 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            debuggable true
+            jniDebuggable true
+        }
+
     }
     applicationVariants.all { variant ->
         variant.outputs.all {
