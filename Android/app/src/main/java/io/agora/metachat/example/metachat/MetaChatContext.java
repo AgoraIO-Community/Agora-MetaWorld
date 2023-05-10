@@ -77,6 +77,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
     private boolean isInitMetachat;
 
     private IRtcEventCallback iRtcEventCallback;
+    private String scenePath;
 
     private MetaChatContext() {
         metaChatEventHandlerMap = new ConcurrentHashMap<>();
@@ -174,7 +175,6 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                     );
                 }
 
-
                 rtcEngine.enableAudio();
                 rtcEngine.enableVideo();
                 rtcEngine.setAudioProfile(
@@ -182,14 +182,14 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
                 );
                 rtcEngine.setDefaultAudioRoutetoSpeakerphone(true);
                 rtcEngine.setExternalVideoSource(true, true, Constants.ExternalVideoSourceType.VIDEO_FRAME);
-
+                scenePath = context.getExternalCacheDir().getPath();
                 {
                     metaChatService = IMetachatService.create();
                     MetachatConfig config = new MetachatConfig() {{
                         mRtcEngine = rtcEngine;
                         mAppId = KeyCenter.APP_ID;
                         mRtmToken = KeyCenter.RTM_TOKEN;
-                        mLocalDownloadPath = context.getExternalCacheDir().getPath();
+                        mLocalDownloadPath = scenePath;
                         mUserId = KeyCenter.RTM_UID;
                         mEventHandler = MetaChatContext.this;
                     }};
@@ -272,6 +272,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
         MetachatSceneConfig sceneConfig = new MetachatSceneConfig();
         sceneConfig.mActivityContext = activityContext;
+        //sceneConfig.mSyncMode = MetachatSceneConfig.StateSyncMode.STATE_SYNC_MODE_NONE;
         int ret = -1;
         if (metaChatScene == null) {
             ret = metaChatService.createScene(sceneConfig);
@@ -304,6 +305,8 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
             config.mRoomName = this.roomName;
             //内容中心对应的ID
             config.mSceneId = this.sceneInfo.mSceneId;
+//            config.mSceneId = 0;
+//            config.mScenePath = scenePath + "/23";
             /*
              *仅为示例格式，具体格式以项目实际为准
              *   "extraCustomInfo":{
@@ -324,6 +327,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+        Log.i(TAG, "onCreateSceneResult errorCode: " + errorCode);
         metaChatScene = scene;
         localUserAvatar = metaChatScene.getLocalUserAvatar();
         for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
@@ -478,7 +482,7 @@ public class MetaChatContext implements IMetachatEventHandler, IMetachatSceneEve
 
     @Override
     public void onReleasedScene(int status) {
-        Log.d(TAG, String.format("onReleasedScene %d", status));
+        Log.d(TAG, String.format("[metachat] onReleasedScene %d", status));
         for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
             handler.onReleasedScene(status);
         }

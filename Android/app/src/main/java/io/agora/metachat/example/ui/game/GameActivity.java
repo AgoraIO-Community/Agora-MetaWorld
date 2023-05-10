@@ -534,7 +534,7 @@ public class GameActivity extends Activity implements IMetachatSceneEventHandler
         enableMic.removeOnPropertyChangedCallback(callback);
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
-        MetaChatContext.getInstance().registerMetaChatSceneEventHandler(this);
+        MetaChatContext.getInstance().unregisterMetaChatEventHandler(this);
     }
 
     private void createScene(TextureView tv) {
