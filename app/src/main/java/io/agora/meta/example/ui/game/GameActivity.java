@@ -39,6 +39,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.agora.base.VideoFrame;
+import io.agora.meta.IMetaScene;
+import io.agora.meta.SceneDisplayConfig;
 import io.agora.meta.example.MainActivity;
 import io.agora.meta.example.adapter.DressTypeAdapter;
 import io.agora.meta.example.adapter.DressTypeAssetAdapter;
@@ -58,8 +60,6 @@ import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MetaConstants;
-import io.agora.metachat.IMetachatScene;
-import io.agora.metachat.SceneDisplayConfig;
 import io.agora.meta.example.R;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
@@ -188,8 +188,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         binding = GameActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        MetaContext.getInstance().registerMetaChatSceneEventHandler(this);
-        MetaContext.getInstance().registerMetaChatEventHandler(this);
+        MetaContext.getInstance().registerMetaSceneEventHandler(this);
+        MetaContext.getInstance().registerMetaServiceEventHandler(this);
         MetaContext.getInstance().setRtcEventCallback(this);
 
         initMainUnityView();
@@ -544,7 +544,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         enableMic.removeOnPropertyChangedCallback(callback);
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
-        MetaContext.getInstance().unregisterMetaChatEventHandler(this);
+        MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
     }
 
     private void maybeCreateScene() {
@@ -617,7 +617,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     }
 
     @Override
-    public void onSceneVideoFrame(TextureView view, VideoFrame videoFrame) {
+    public void onSceneVideoFrameCaptured(TextureView view, VideoFrame videoFrame) {
         if (null == videoFrame) {
             return;
         }
@@ -640,7 +640,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     }
 
     @Override
-    public void onRecvMessageFromScene(byte[] message) {
+    public void onSceneMessageReceived(byte[] message) {
         String jsonStr = new String(message);
         Log.e(TAG, "onRecvMessageFromScene jsonStr:" + jsonStr);
         try {
@@ -671,7 +671,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     }
 
     @Override
-    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+    public void onCreateSceneResult(IMetaScene scene, int errorCode) {
         //异步线程回调需在主线程处理
         runOnUiThread(new Runnable() {
             @Override

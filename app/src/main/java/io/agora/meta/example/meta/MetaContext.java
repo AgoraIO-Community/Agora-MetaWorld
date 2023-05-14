@@ -18,6 +18,19 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
+import io.agora.meta.AvatarModelInfo;
+import io.agora.meta.EnterSceneConfig;
+import io.agora.meta.ILocalUserAvatar;
+import io.agora.meta.IMetaScene;
+import io.agora.meta.IMetaSceneEventHandler;
+import io.agora.meta.IMetaService;
+import io.agora.meta.IMetaServiceEventHandler;
+import io.agora.meta.MetaSceneAssetsInfo;
+import io.agora.meta.MetaSceneConfig;
+import io.agora.meta.MetaServiceConfig;
+import io.agora.meta.MetaUserInfo;
+import io.agora.meta.MetaUserPositionInfo;
+import io.agora.meta.SceneDisplayConfig;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
 import io.agora.meta.example.models.FaceParameterItem;
@@ -32,20 +45,6 @@ import io.agora.meta.example.utils.AgoraMediaPlayer;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MMKVUtils;
-import io.agora.metachat.AvatarModelInfo;
-import io.agora.metachat.DressInfo;
-import io.agora.metachat.EnterSceneConfig;
-import io.agora.metachat.ILocalUserAvatar;
-import io.agora.metachat.IMetachatEventHandler;
-import io.agora.metachat.IMetachatScene;
-import io.agora.metachat.IMetachatSceneEventHandler;
-import io.agora.metachat.IMetachatService;
-import io.agora.metachat.MetachatConfig;
-import io.agora.metachat.MetachatSceneConfig;
-import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserInfo;
-import io.agora.metachat.MetachatUserPositionInfo;
-import io.agora.metachat.SceneDisplayConfig;
 import io.agora.meta.example.utils.MetaConstants;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
@@ -65,14 +64,14 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     private RtcEngine rtcEngine;
     private ILocalSpatialAudioEngine spatialAudioEngine;
-    private IMetachatService metaChatService;
-    private IMetachatScene metaChatScene;
-    private MetachatSceneInfo sceneInfo;
+    private IMetaService metaService;
+    private IMetaScene metaScene;
+    private MetaSceneAssetsInfo sceneInfo;
     private AvatarModelInfo modelInfo;
-    private MetachatUserInfo userInfo;
+    private MetaUserInfo userInfo;
     private TextureView sceneView;
-    private final ConcurrentHashMap<IMetachatEventHandler, Integer> metaChatEventHandlerMap;
-    private final ConcurrentHashMap<IMetachatSceneEventHandler, Integer> metaChatSceneEventHandlerMap;
+    private final ConcurrentHashMap<IMetaServiceEventHandler, Integer> metaServiceEventHandlerMap;
+    private final ConcurrentHashMap<IMetaSceneEventHandler, Integer> metaSceneEventHandlerMap;
     private boolean mJoinedRtc = false;
     private ILocalUserAvatar localUserAvatar;
     private boolean isInScene;
@@ -81,7 +80,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     private RoleInfo roleInfo;
     private List<RoleInfo> roleInfos;
     private boolean needSaveDressInfo;
-    private boolean isInitMetachat;
+    private boolean isInitMeta;
 
     private IRtcEventCallback iRtcEventCallback;
     private String scenePath;
@@ -89,14 +88,14 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     private boolean isEnableLocalSceneRes = false;
 
     private MetaContext() {
-        metaChatEventHandlerMap = new ConcurrentHashMap<>();
-        metaChatSceneEventHandlerMap = new ConcurrentHashMap<>();
+        metaServiceEventHandlerMap = new ConcurrentHashMap<>();
+        metaSceneEventHandlerMap = new ConcurrentHashMap<>();
         isInScene = false;
         currentScene = MetaConstants.SCENE_NONE;
         nextScene = MetaConstants.SCENE_NONE;
         roleInfo = null;
         needSaveDressInfo = false;
-        isInitMetachat = false;
+        isInitMeta = false;
     }
 
     public static MetaContext getInstance() {
@@ -201,8 +200,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
                 scenePath = context.getExternalFilesDir("").getPath();
                 {
-                    metaChatService = IMetachatService.create();
-                    MetachatConfig config = new MetachatConfig() {{
+                    metaService = IMetaService.create();
+                    MetaServiceConfig config = new MetaServiceConfig() {{
                         mRtcEngine = rtcEngine;
                         mAppId = KeyCenter.APP_ID;
                         mRtmToken = KeyCenter.RTM_TOKEN;
@@ -210,14 +209,14 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                         mUserId = KeyCenter.RTM_UID;
                         mEventHandler = MetaContext.this;
                     }};
-                    ret += metaChatService.initialize(config);
-                    Log.i(TAG, "launcher version=" + metaChatService.getLauncherVersion(context));
+                    ret += metaService.initialize(config);
+                    Log.i(TAG, "launcher version=" + metaService.getLauncherVersion(context));
                 }
 
                 AgoraMediaPlayer.getInstance().initMediaPlayer(rtcEngine);
                 AgoraMediaPlayer.getInstance().setOnMediaVideoFramePushListener(this);
 
-                isInitMetachat = true;
+                isInitMeta = true;
             } catch (Exception e) {
                 e.printStackTrace();
                 return false;
@@ -239,46 +238,46 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public void destroy() {
-        IMetachatService.destroy();
-        metaChatService = null;
+        IMetaService.destroy();
+        metaService = null;
         RtcEngine.destroy();
         rtcEngine = null;
-        isInitMetachat = false;
+        isInitMeta = false;
     }
 
-    public void registerMetaChatEventHandler(IMetachatEventHandler eventHandler) {
-        metaChatEventHandlerMap.put(eventHandler, 0);
+    public void registerMetaSceneEventHandler(IMetaSceneEventHandler eventHandler) {
+        metaSceneEventHandlerMap.put(eventHandler, 0);
     }
 
-    public void unregisterMetaChatEventHandler(IMetachatEventHandler eventHandler) {
-        metaChatEventHandlerMap.remove(eventHandler);
+    public void unregisterMetaSceneEventHandler(IMetaSceneEventHandler eventHandler) {
+        metaSceneEventHandlerMap.remove(eventHandler);
     }
 
-    public void registerMetaChatSceneEventHandler(IMetachatSceneEventHandler eventHandler) {
-        metaChatSceneEventHandlerMap.put(eventHandler, 0);
+    public void registerMetaServiceEventHandler(IMetaServiceEventHandler eventHandler) {
+        metaServiceEventHandlerMap.put(eventHandler, 0);
     }
 
-    public void unregisterMetaChatSceneEventHandler(IMetachatSceneEventHandler eventHandler) {
-        metaChatSceneEventHandlerMap.remove(eventHandler);
+    public void unregisterMetaServiceEventHandler(IMetaServiceEventHandler eventHandler) {
+        metaServiceEventHandlerMap.remove(eventHandler);
     }
 
     public boolean getSceneInfos() {
-        return metaChatService.getSceneInfos() == Constants.ERR_OK;
+        return metaService.getSceneAssetsInfo() == Constants.ERR_OK;
     }
 
-    public boolean isSceneDownloaded(MetachatSceneInfo sceneInfo) {
-        return metaChatService.isSceneDownloaded(sceneInfo.mSceneId) > 0;
+    public boolean isSceneDownloaded(MetaSceneAssetsInfo sceneInfo) {
+        return metaService.isSceneAssetsDownloaded(sceneInfo.mSceneId) > 0;
     }
 
-    public boolean downloadScene(MetachatSceneInfo sceneInfo) {
-        return metaChatService.downloadScene(sceneInfo.mSceneId) == Constants.ERR_OK;
+    public boolean downloadScene(MetaSceneAssetsInfo sceneInfo) {
+        return metaService.downloadSceneAssets(sceneInfo.mSceneId) == Constants.ERR_OK;
     }
 
-    public boolean cancelDownloadScene(MetachatSceneInfo sceneInfo) {
-        return metaChatService.cancelDownloadScene(sceneInfo.mSceneId) == Constants.ERR_OK;
+    public boolean cancelDownloadScene(MetaSceneAssetsInfo sceneInfo) {
+        return metaService.cancelDownloadSceneAssets(sceneInfo.mSceneId) == Constants.ERR_OK;
     }
 
-    public void prepareScene(MetachatSceneInfo sceneInfo, AvatarModelInfo modelInfo, MetachatUserInfo userInfo) {
+    public void prepareScene(MetaSceneAssetsInfo sceneInfo, AvatarModelInfo modelInfo, MetaUserInfo userInfo) {
         this.sceneInfo = sceneInfo;
         this.modelInfo = modelInfo;
         this.userInfo = userInfo;
@@ -298,12 +297,12 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             spatialAudioEngine.muteAllRemoteAudioStreams(false);
         }
 
-        MetachatSceneConfig sceneConfig = new MetachatSceneConfig();
+        MetaSceneConfig sceneConfig = new MetaSceneConfig();
         sceneConfig.mActivityContext = activityContext;
         //sceneConfig.mSyncMode = MetachatSceneConfig.StateSyncMode.STATE_SYNC_MODE_NONE;
         int ret = -1;
-        if (metaChatScene == null) {
-            ret = metaChatService.createScene(sceneConfig);
+        if (metaScene == null) {
+            ret = metaService.createScene(sceneConfig);
         }
         mJoinedRtc = false;
         return ret == Constants.ERR_OK;
@@ -314,26 +313,21 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
-            //该model的mBundleType为MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR类型
+            //该model的mBundleType为MetaBundleInfo.BundleType.BUNDLE_TYPE_AVATAR类型
             localUserAvatar.setModelInfo(modelInfo);
             if (null != roleInfo) {
-                //设置dress等信息
-                DressInfo dressInfo = new DressInfo();
-                dressInfo.mExtraCustomInfo = (JSONObject.toJSONString(getUnityRoleInfo())).getBytes();
-                localUserAvatar.setDressInfo(dressInfo);
-
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("avatar", roleInfo.getAvatarType());
                 jsonObject.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
                 jsonObject.put("face", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
-                localUserAvatar.setExtraCustomInfo(jsonObject.toJSONString().getBytes());
+                localUserAvatar.setExtraInfo(jsonObject.toJSONString().getBytes());
             }
         }
-        if (null != metaChatScene) {
+        if (null != metaScene) {
             //使能位置信息回调功能
-            metaChatScene.enableUserPositionNotification(MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene());
+            //metaScene.enableUserPositionNotification(MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene());
             //设置回调接口
-            metaChatScene.addEventHandler(MetaContext.getInstance());
+            metaScene.addEventHandler(MetaContext.getInstance());
             EnterSceneConfig config = new EnterSceneConfig();
             //sceneView必须为Texture类型，为渲染unity显示的view
             config.mSceneView = this.sceneView;
@@ -360,17 +354,17 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 extraInfo.setSceneIndex(MetaConstants.SCENE_GAME);
             }
             //加载的场景index
-            config.mExtraCustomInfo = JSONObject.toJSONString(extraInfo).getBytes();
-            metaChatScene.enterScene(config);
+            config.mExtraInfo = JSONObject.toJSONString(extraInfo).getBytes();
+            metaScene.enterScene(config);
         }
     }
 
     @Override
-    public void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+    public void onCreateSceneResult(IMetaScene scene, int errorCode) {
         Log.i(TAG, "onCreateSceneResult errorCode: " + errorCode);
-        metaChatScene = scene;
-        localUserAvatar = metaChatScene.getLocalUserAvatar();
-        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
+        metaScene = scene;
+        localUserAvatar = metaScene.getLocalUserAvatar();
+        for (IMetaServiceEventHandler handler : metaServiceEventHandlerMap.keySet()) {
             handler.onCreateSceneResult(scene, errorCode);
         }
     }
@@ -413,10 +407,10 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     public boolean leaveScene() {
         Log.d(TAG, "leaveScene");
         int ret = Constants.ERR_OK;
-        if (metaChatScene != null) {
+        if (metaScene != null) {
             ret += rtcEngine.leaveChannel();
             enableSceneVideo(this.sceneView, false);
-            ret += metaChatScene.leaveScene();
+            ret += metaScene.leaveScene();
         }
         if (spatialAudioEngine != null) {
             ILocalSpatialAudioEngine.destroy();
@@ -430,35 +424,35 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     @Override
     public void onConnectionStateChanged(int state, int reason) {
         Log.d(TAG, "onConnectionStateChanged state=" + state + ",reason=" + reason);
-        if (state == ConnectionState.METACHAT_CONNECTION_STATE_ABORTED) {
+        if (state == ConnectionState.META_CONNECTION_STATE_ABORTED) {
             setCurrentScene(MetaConstants.SCENE_NONE);
             resetRoleInfo();
             leaveScene();
         }
 
-        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
+        for (IMetaServiceEventHandler handler : metaServiceEventHandlerMap.keySet()) {
             handler.onConnectionStateChanged(state, reason);
         }
     }
 
     @Override
-    public void onRequestToken() {
-        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
-            handler.onRequestToken();
+    public void onTokenWillExpire() {
+        for (IMetaServiceEventHandler handler : metaServiceEventHandlerMap.keySet()) {
+            handler.onTokenWillExpire();
         }
     }
 
     @Override
-    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
-        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
-            handler.onGetSceneInfosResult(scenes, errorCode);
+    public void onGetSceneAssetsInfoResult(MetaSceneAssetsInfo[] metaSceneAssetsInfos, int errorCode) {
+        for (IMetaServiceEventHandler handler : metaServiceEventHandlerMap.keySet()) {
+            handler.onGetSceneAssetsInfoResult(metaSceneAssetsInfos, errorCode);
         }
     }
 
     @Override
-    public void onDownloadSceneProgress(long SceneId, int progress, int state) {
-        for (IMetachatEventHandler handler : metaChatEventHandlerMap.keySet()) {
-            handler.onDownloadSceneProgress(SceneId, progress, state);
+    public void onDownloadSceneAssetsProgress(long sceneId, int progress, int state) {
+        for (IMetaServiceEventHandler handler : metaServiceEventHandlerMap.keySet()) {
+            handler.onDownloadSceneAssetsProgress(sceneId, progress, state);
         }
     }
 
@@ -473,8 +467,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 MMKVUtils.getInstance().putValue(MetaConstants.MMKV_ROLE_INFO, JSONArray.toJSONString(roleInfos));
             }
 
-            if (null != metaChatScene) {
-                metaChatScene.setSceneParameters("{\"debugUnity\":true}");
+            if (null != metaScene) {
+                metaScene.setSceneParameters("{\"debugUnity\":true}");
             }
 
             if (spatialAudioEngine != null) {
@@ -486,14 +480,14 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 joinChannel();
             }
         }
-        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
         }
     }
 
     // Just for test
     private void pushVideoFrameToDisplay() {
-        metaChatScene.enableVideoDisplay("1", true);
+        metaScene.enableVideoDisplay("1", true);
         AgoraMediaPlayer.getInstance().play(MetaConstants.VIDEO_URL, 0);
     }
 
@@ -503,41 +497,41 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         isInScene = false;
         AgoraMediaPlayer.getInstance().stop();
         if (errorCode == 0) {
-            metaChatScene.release();
-            metaChatScene = null;
+            metaScene.release();
+            metaScene = null;
         }
 
-        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onLeaveSceneResult(errorCode);
         }
     }
 
     @Override
     public void onReleasedScene(int status) {
-        Log.d(TAG, String.format("[metachat] onReleasedScene %d", status));
-        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
+        Log.d(TAG, String.format("[meta] onReleasedScene %d", status));
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onReleasedScene(status);
         }
     }
 
     @Override
-    public void onSceneVideoFrame(TextureView view, VideoFrame videoFrame) {
-        Log.d(TAG, "onSceneVideoFrame");
-        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
-            handler.onSceneVideoFrame(view, videoFrame);
+    public void onSceneVideoFrameCaptured(TextureView view, VideoFrame videoFrame) {
+        Log.d(TAG, "onSceneVideoFrameCaptured");
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
+            handler.onSceneVideoFrameCaptured(view, videoFrame);
         }
     }
 
     @Override
-    public void onRecvMessageFromScene(byte[] message) {
-        Log.d(TAG, String.format("onRecvMessageFromScene %s", new String(message)));
-        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
-            handler.onRecvMessageFromScene(message);
+    public void onSceneMessageReceived(byte[] message) {
+        Log.d(TAG, String.format("onSceneMessageReceived %s", new String(message)));
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
+            handler.onSceneMessageReceived(message);
         }
     }
 
     @Override
-    public void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
+    public void onUserPositionChanged(String uid, MetaUserPositionInfo posInfo) {
         Log.d(TAG, String.format("onUserPositionChanged %s %s %s %s %s", uid,
                 Arrays.toString(posInfo.mPosition),
                 Arrays.toString(posInfo.mForward),
@@ -563,25 +557,20 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
         }
 
-        for (IMetachatSceneEventHandler handler : metaChatSceneEventHandlerMap.keySet()) {
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onUserPositionChanged(uid, posInfo);
         }
     }
 
-    @Override
-    public void onEnumerateVideoDisplaysResult(String[] displayIds) {
-
-    }
-
-    public MetachatSceneInfo getSceneInfo() {
+    public MetaSceneAssetsInfo getSceneInfo() {
         return sceneInfo;
     }
 
     @Override
     public void onMediaVideoFramePushed(VideoFrame frame) {
         Log.i(TAG, "onMediaVideoFramePushed");
-        if (null != metaChatScene) {
-            metaChatScene.pushVideoFrameToDisplay("1", frame);
+        if (null != metaScene) {
+            metaScene.pushVideoFrameToDisplay("1", frame);
         }
     }
 
@@ -735,12 +724,12 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public void sendSceneMessage(String msg) {
-        if (metaChatScene == null) {
-            Log.e(TAG, "sendMessageToScene metaChatScene is null");
+        if (metaScene == null) {
+            Log.e(TAG, "sendMessageToScene metaScene is null");
             return;
         }
 
-        if (metaChatScene.sendMessageToScene(msg.getBytes()) == 0) {
+        if (metaScene.sendSceneMessage(msg.getBytes()) == 0) {
             Log.i(TAG, "send " + msg + " successful");
         } else {
             Log.e(TAG, "send " + msg + " fail");
@@ -752,8 +741,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         roleInfo = null;
     }
 
-    public boolean isInitMetachat() {
-        return isInitMetachat;
+    public boolean isInitMeta() {
+        return isInitMeta;
     }
 
     public int getSceneId() {
@@ -765,26 +754,26 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public void addSceneView(TextureView view, SceneDisplayConfig config) {
-        if (null != metaChatScene && null != rtcEngine) {
+        if (null != metaScene && null != rtcEngine) {
             Log.i(TAG, "addRenderView view::" + view + ",config:" + config);
             rtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
                     new VideoEncoderConfiguration.VideoDimensions(330, 330),
                     VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
                     STANDARD_BITRATE,
                     VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_LANDSCAPE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
-            metaChatScene.addSceneView(view, config);
+            metaScene.addSceneView(view, config);
         }
     }
 
     public void enableSceneVideo(TextureView view, boolean enable) {
-        if (null != metaChatScene) {
-            metaChatScene.enableSceneVideo(view, enable);
+        if (null != metaScene) {
+            metaScene.enableSceneVideoCapture(view, enable);
         }
     }
 
     public void removeSceneView(TextureView view) {
-        if (null != metaChatScene) {
-            metaChatScene.removeSceneView(view);
+        if (null != metaScene) {
+            metaScene.removeSceneView(view);
         }
     }
 

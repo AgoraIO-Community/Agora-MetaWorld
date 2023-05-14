@@ -8,11 +8,11 @@ import androidx.lifecycle.ViewModel;
 import java.util.Arrays;
 import java.util.List;
 
+import io.agora.meta.AvatarModelInfo;
+import io.agora.meta.MetaBundleInfo;
+import io.agora.meta.MetaSceneAssetsInfo;
+import io.agora.meta.MetaUserInfo;
 import io.agora.meta.example.inf.IMetaEventHandler;
-import io.agora.metachat.AvatarModelInfo;
-import io.agora.metachat.MetachatBundleInfo;
-import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserInfo;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.MainApplication;
 import io.agora.meta.example.meta.MetaContext;
@@ -24,14 +24,14 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
     private final SingleLiveData<String> avatar = new SingleLiveData<>();
     private final SingleLiveData<String> nickname = new SingleLiveData<>();
     private final SingleLiveData<Integer> sex = new SingleLiveData<>();
-    private final SingleLiveData<List<MetachatSceneInfo>> sceneList = new SingleLiveData<>();
+    private final SingleLiveData<List<MetaSceneAssetsInfo>> sceneList = new SingleLiveData<>();
     private final SingleLiveData<Long> selectScene = new SingleLiveData<>();
     private final SingleLiveData<Boolean> requestDownloading = new SingleLiveData<>();
     private final SingleLiveData<Integer> downloadingProgress = new SingleLiveData<>();
 
     @Override
     protected void onCleared() {
-        MetaContext.getInstance().unregisterMetaChatEventHandler(this);
+        MetaContext.getInstance().unregisterMetaSceneEventHandler(this);
         super.onCleared();
     }
 
@@ -59,7 +59,7 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
         this.sex.postValue(sex);
     }
 
-    public LiveData<List<MetachatSceneInfo>> getSceneList() {
+    public LiveData<List<MetaSceneAssetsInfo>> getSceneList() {
         return sceneList;
     }
 
@@ -76,9 +76,9 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
     }
 
     public void getScenes() {
-        MetaContext metaChatContext = MetaContext.getInstance();
-        metaChatContext.registerMetaChatEventHandler(this);
-        boolean flag = metaChatContext.initialize(
+        MetaContext metaContext = MetaContext.getInstance();
+        metaContext.registerMetaSceneEventHandler(this);
+        boolean flag = metaContext.initialize(
                 MainApplication.mGlobalApplication
         );
         if (flag) {
@@ -86,19 +86,19 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
                 prepareScene(null);
                 selectScene.postValue(0L);
             } else {
-                metaChatContext.getSceneInfos();
+                metaContext.getSceneInfos();
             }
         }
     }
 
-    public void prepareScene(MetachatSceneInfo sceneInfo) {
-        MetaContext metaChatContext = MetaContext.getInstance();
-        metaChatContext.prepareScene(sceneInfo, new AvatarModelInfo() {{
+    public void prepareScene(MetaSceneAssetsInfo sceneInfo) {
+        MetaContext metaContext = MetaContext.getInstance();
+        metaContext.prepareScene(sceneInfo, new AvatarModelInfo() {{
             // TODO choose one
             if (null != sceneInfo) {
-                MetachatBundleInfo[] bundles = sceneInfo.mBundles;
-                for (MetachatBundleInfo bundleInfo : bundles) {
-                    if (bundleInfo.mBundleType == MetachatBundleInfo.BundleType.BUNDLE_TYPE_AVATAR) {
+                MetaBundleInfo[] bundles = sceneInfo.mBundles;
+                for (MetaBundleInfo bundleInfo : bundles) {
+                    if (bundleInfo.mBundleType == MetaBundleInfo.BundleType.BUNDLE_TYPE_AVATAR) {
                         mBundleCode = bundleInfo.mBundleCode;
                         break;
                     }
@@ -112,13 +112,13 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
                 mRemoteVisible = false;
                 mSyncPosition = false;
             }
-        }}, new MetachatUserInfo() {{
+        }}, new MetaUserInfo() {{
             mUserId = KeyCenter.RTM_UID;
             mUserName = MetaContext.getInstance().getRoleInfo().getName() == null ? mUserId : MetaContext.getInstance().getRoleInfo().getName();
             mUserIconUrl = MetaContext.getInstance().getRoleInfo().getAvatarUrl() == null ? "https://accpic.sd-rtn.com/pic/test/png/2.png" : MetaContext.getInstance().getRoleInfo().getAvatarUrl();
         }});
         if (!MetaContext.getInstance().isEnableLocalSceneRes()) {
-            if (metaChatContext.isSceneDownloaded(sceneInfo)) {
+            if (metaContext.isSceneDownloaded(sceneInfo)) {
                 selectScene.postValue(sceneInfo.mSceneId);
             } else {
                 requestDownloading.postValue(true);
@@ -126,29 +126,30 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
         }
     }
 
-    public void downloadScene(MetachatSceneInfo sceneInfo) {
+    public void downloadScene(MetaSceneAssetsInfo sceneInfo) {
         MetaContext.getInstance().downloadScene(sceneInfo);
     }
 
-    public void cancelDownloadScene(MetachatSceneInfo sceneInfo) {
+    public void cancelDownloadScene(MetaSceneAssetsInfo sceneInfo) {
         MetaContext.getInstance().cancelDownloadScene(sceneInfo);
     }
 
+
     @Override
-    public void onGetSceneInfosResult(MetachatSceneInfo[] scenes, int errorCode) {
-        sceneList.postValue(Arrays.asList(scenes));
+    public void onGetSceneAssetsInfoResult(MetaSceneAssetsInfo[] metaSceneAssetsInfos, int errorCode) {
+        sceneList.postValue(Arrays.asList(metaSceneAssetsInfos));
     }
 
     @Override
-    public void onDownloadSceneProgress(long mSceneId, int progress, int state) {
+    public void onDownloadSceneAssetsProgress(long sceneId, int progress, int state) {
         Log.d("progress", String.valueOf(progress));
-        if (state == SceneDownloadState.METACHAT_SCENE_DOWNLOAD_STATE_FAILED) {
+        if (state == SceneDownloadState.META_SCENE_DOWNLOAD_STATE_FAILED) {
             downloadingProgress.postValue(-1);
             return;
         }
         downloadingProgress.postValue(progress);
-        if (state == SceneDownloadState.METACHAT_SCENE_DOWNLOAD_STATE_DOWNLOADED) {
-            selectScene.postValue(mSceneId);
+        if (state == SceneDownloadState.META_SCENE_DOWNLOAD_STATE_DOWNLOADED) {
+            selectScene.postValue(sceneId);
         }
     }
 }

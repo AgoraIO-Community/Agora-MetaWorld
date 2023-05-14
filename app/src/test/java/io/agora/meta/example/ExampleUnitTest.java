@@ -1,4 +1,4 @@
-package io.agora.metachat.example;
+package io.agora.meta.example;
 
 import org.junit.Test;
 

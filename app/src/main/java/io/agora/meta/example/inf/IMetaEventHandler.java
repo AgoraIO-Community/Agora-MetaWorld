@@ -3,15 +3,16 @@ package io.agora.meta.example.inf;
 import android.view.TextureView;
 
 import io.agora.base.VideoFrame;
-import io.agora.metachat.IMetachatEventHandler;
-import io.agora.metachat.IMetachatScene;
-import io.agora.metachat.IMetachatSceneEventHandler;
-import io.agora.metachat.MetachatSceneInfo;
-import io.agora.metachat.MetachatUserPositionInfo;
+import io.agora.meta.IMetaScene;
+import io.agora.meta.IMetaSceneEventHandler;
+import io.agora.meta.IMetaServiceEventHandler;
+import io.agora.meta.MetaSceneAssetsInfo;
+import io.agora.meta.MetaUserPositionInfo;
 
-public interface IMetaEventHandler extends IMetachatEventHandler, IMetachatSceneEventHandler {
+public interface IMetaEventHandler extends IMetaServiceEventHandler, IMetaSceneEventHandler {
+
     @Override
-    default void onCreateSceneResult(IMetachatScene scene, int errorCode) {
+    default void onCreateSceneResult(IMetaScene scene, int errorCode) {
 
     }
 
@@ -20,18 +21,19 @@ public interface IMetaEventHandler extends IMetachatEventHandler, IMetachatScene
 
     }
 
+
     @Override
-    default void onRequestToken() {
+    default void onTokenWillExpire() {
 
     }
 
     @Override
-    default void onGetSceneInfosResult(MetachatSceneInfo[] sceneInfos, int errorCode) {
+    default void onGetSceneAssetsInfoResult(MetaSceneAssetsInfo[] metaSceneAssetsInfos, int errorCode) {
 
     }
 
     @Override
-    default void onDownloadSceneProgress(long sceneId, int progress, int state) {
+    default void onDownloadSceneAssetsProgress(long sceneId, int progress, int state) {
 
     }
 
@@ -46,19 +48,15 @@ public interface IMetaEventHandler extends IMetachatEventHandler, IMetachatScene
     }
 
     @Override
-    default void onRecvMessageFromScene(byte[] message) {
+    default void onSceneMessageReceived(byte[] message) {
 
     }
 
     @Override
-    default void onUserPositionChanged(String uid, MetachatUserPositionInfo posInfo) {
+    default void onUserPositionChanged(String uid, MetaUserPositionInfo posInfo) {
 
     }
 
-    @Override
-    default void onEnumerateVideoDisplaysResult(String[] displayIds) {
-
-    }
 
     @Override
     default void onReleasedScene(int status) {
@@ -66,7 +64,17 @@ public interface IMetaEventHandler extends IMetachatEventHandler, IMetachatScene
     }
 
     @Override
-    default void onSceneVideoFrame(TextureView view, VideoFrame videoFrame) {
+    default void onSceneVideoFrameCaptured(TextureView view, VideoFrame videoFrame) {
+
+    }
+
+    @Override
+    default void onAddSceneViewResult(TextureView view, int errorCode) {
+
+    }
+
+    @Override
+    default void onRemoveSceneViewResult(TextureView view, int errorCode) {
 
     }
 }

@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
-import io.agora.metachat.MetachatUserInfo;
+import io.agora.meta.MetaUserInfo;
 import io.agora.meta.example.databinding.ItemUserListBinding;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
-    private final MetachatUserInfo[] localDataSet;
+    private final MetaUserInfo[] localDataSet;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -35,7 +35,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
      * @param dataSet String[] containing the data to populate views to be used
      *                by RecyclerView.
      */
-    public UserAdapter(MetachatUserInfo[] dataSet) {
+    public UserAdapter(MetaUserInfo[] dataSet) {
         localDataSet = dataSet;
     }
 

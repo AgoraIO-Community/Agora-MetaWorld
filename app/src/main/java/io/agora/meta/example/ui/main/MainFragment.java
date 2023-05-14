@@ -146,19 +146,19 @@ public class MainFragment extends Fragment {
             }
 
         });
-        mViewModel.getSceneList().observe(owner, metachatSceneInfos -> {
+        mViewModel.getSceneList().observe(owner, metaSceneAssetsInfos -> {
             // TODO choose one
-            if (metachatSceneInfos.size() > 0) {
-                for (int a = 0; a < metachatSceneInfos.size(); a++) {
-                    if (metachatSceneInfos.get(a).getSceneId() == MetaContext.getInstance().getSceneId()) {
-                        mViewModel.prepareScene(metachatSceneInfos.get(a));
+            if (metaSceneAssetsInfos.size() > 0) {
+                for (int a = 0; a < metaSceneAssetsInfos.size(); a++) {
+                    if (metaSceneAssetsInfos.get(a).getSceneId() == MetaContext.getInstance().getSceneId()) {
+                        mViewModel.prepareScene(metaSceneAssetsInfos.get(a));
                         break;
                     }
                 }
             }
         });
         mViewModel.getSelectScene().observe(owner, sceneInfo -> {
-            if (!MetaContext.getInstance().isInitMetachat()) {
+            if (!MetaContext.getInstance().isInitMeta()) {
                 return;
             }
 
@@ -177,7 +177,7 @@ public class MainFragment extends Fragment {
             startActivity(intent);
         });
         mViewModel.getRequestDownloading().observe(owner, aBoolean -> {
-            if (!MetaContext.getInstance().isInitMetachat()) {
+            if (!MetaContext.getInstance().isInitMeta()) {
                 return;
             }
             if (aBoolean) {
@@ -189,7 +189,7 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getDownloadingProgress().observe(owner, integer -> {
-            if (!MetaContext.getInstance().isInitMetachat()) {
+            if (!MetaContext.getInstance().isInitMeta()) {
                 return;
             }
             if (integer >= 0) {
@@ -233,12 +233,12 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        if (!MetaContext.getInstance().isInitMetachat() && progressDialog != null && progressDialog.isShowing()) {
+        if (!MetaContext.getInstance().isInitMeta() && progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
             progressDialog = null;
         }
 
-        if (!MetaContext.getInstance().isInitMetachat() && DownloadingChooserDialog != null && DownloadingChooserDialog.isShowing()) {
+        if (!MetaContext.getInstance().isInitMeta() && DownloadingChooserDialog != null && DownloadingChooserDialog.isShowing()) {
             DownloadingChooserDialog.dismiss();
             DownloadingChooserDialog = null;
         }
