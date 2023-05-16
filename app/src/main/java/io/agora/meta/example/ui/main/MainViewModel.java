@@ -31,7 +31,7 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
 
     @Override
     protected void onCleared() {
-        MetaContext.getInstance().unregisterMetaSceneEventHandler(this);
+        MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
         super.onCleared();
     }
 
@@ -77,7 +77,7 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
 
     public void getScenes() {
         MetaContext metaContext = MetaContext.getInstance();
-        metaContext.registerMetaSceneEventHandler(this);
+        metaContext.registerMetaServiceEventHandler(this);
         boolean flag = metaContext.initialize(
                 MainApplication.mGlobalApplication
         );

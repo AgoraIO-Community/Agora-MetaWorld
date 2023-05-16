@@ -40,6 +40,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.agora.base.VideoFrame;
 import io.agora.meta.IMetaScene;
+import io.agora.meta.IMetaSceneEventHandler;
 import io.agora.meta.SceneDisplayConfig;
 import io.agora.meta.example.MainActivity;
 import io.agora.meta.example.adapter.DressTypeAdapter;
@@ -640,34 +641,60 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     }
 
     @Override
+    public void onAddSceneViewResult(TextureView view, int errorCode) {
+        if (view.equals(mLocalAvatarTextureView)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, mEnableRemotePreviewAvatar);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onRemoveSceneViewResult(TextureView view, int errorCode) {
+        if (view.equals(mLocalAvatarTextureView)) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    removeLocalSurfaceView();
+                    removeRemoteSurfaceView();
+                    MetaContext.getInstance().leaveScene();
+                }
+            });
+        }
+    }
+
+    @Override
     public void onSceneMessageReceived(byte[] message) {
         String jsonStr = new String(message);
         Log.e(TAG, "onRecvMessageFromScene jsonStr:" + jsonStr);
-        try {
-            JSONObject jsonObject = JSON.parseObject(jsonStr);
-            if (!TextUtils.isEmpty(jsonObject.getString("key"))) {
-                if (MetaConstants.SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, mEnableRemotePreviewAvatar);
-                        }
-                    });
-                } else if (MetaConstants.SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
-                    //maybe to do something
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            removeLocalSurfaceView();
-                            removeRemoteSurfaceView();
-                            MetaContext.getInstance().leaveScene();
-                        }
-                    });
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            JSONObject jsonObject = JSON.parseObject(jsonStr);
+//            if (!TextUtils.isEmpty(jsonObject.getString("key"))) {
+//                if (MetaConstants.SCENE_MESSAGE_ADD_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            MetaContext.getInstance().enableSceneVideo(mLocalAvatarTextureView, mEnableRemotePreviewAvatar);
+//                        }
+//                    });
+//                } else if (MetaConstants.SCENE_MESSAGE_REMOVE_SCENE_VIEW_SUCCESS.equals(jsonObject.getString("key"))) {
+//                    //maybe to do something
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            removeLocalSurfaceView();
+//                            removeRemoteSurfaceView();
+//                            MetaContext.getInstance().leaveScene();
+//                        }
+//                    });
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -969,7 +996,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                maybeCreateScene();
+                // maybeCreateScene();
             }
         });
 
