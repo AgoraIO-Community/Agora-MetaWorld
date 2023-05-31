@@ -302,11 +302,9 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         MetaSceneConfig sceneConfig = new MetaSceneConfig();
         sceneConfig.mActivityContext = activityContext;
         //sceneConfig.mSyncMode = MetachatSceneConfig.StateSyncMode.STATE_SYNC_MODE_NONE;
-        if (currentScene == MetaConstants.SCENE_GAME) {
-            sceneConfig.mEnableFaceCapture = true;
-            sceneConfig.mFaceCaptureAppId = KeyCenter.FACE_CAP_APP_ID;
-            sceneConfig.mFaceCaptureCertificate = KeyCenter.FACE_CAP_APP_KEY;
-        }
+        sceneConfig.mEnableFaceCapture = true;
+        sceneConfig.mFaceCaptureAppId = KeyCenter.FACE_CAP_APP_ID;
+        sceneConfig.mFaceCaptureCertificate = KeyCenter.FACE_CAP_APP_KEY;
         int ret = -1;
         if (metaScene == null) {
             ret = metaService.createScene(sceneConfig);
@@ -324,6 +322,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             localUserAvatar.setModelInfo(modelInfo);
             if (null != roleInfo) {
                 JSONObject jsonObject = new JSONObject();
+                jsonObject.put("2dbg", "");
                 jsonObject.put("avatar", roleInfo.getAvatarType());
                 jsonObject.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
                 jsonObject.put("face", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
