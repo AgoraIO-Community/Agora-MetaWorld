@@ -1,8 +1,16 @@
 <resources>
-    <string name="app_name">MetaChatExample</string>
+    <string name="app_name">AgoraMetaExample</string>
     <string name="hide_local_view">隐藏本地视角</string>
     <string name="show_local_view">显示本地视角</string>
     <string name="hide_remote_view">隐藏远端视角</string>
     <string name="show_remote_view">显示远端视角</string>
     <string name="uid_label">uid:%1$d</string>
+    <string name="cancel">取消</string>
+    <string name="save">保存</string>
+    <string name="dress_setting">换装</string>
+    <string name="face_setting">捏脸</string>
+    <string name="face_shape_label">%1s:%2d</string>
+    <string name="btn_switch_remote_preview_avatar">切换远端显示Avatar</string>
+    <string name="btn_switch_remote_preview_camera">切换远端显示摄像头</string>
+
 </resources>
