@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId "io.agora.meta.example"
-        minSdk 24
+        minSdk 22
         targetSdk 33
         versionCode 40130
         versionName "401.30.0605.1"
