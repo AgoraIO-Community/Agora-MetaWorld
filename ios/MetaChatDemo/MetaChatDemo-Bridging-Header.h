@@ -19,4 +19,4 @@
 #import "GuideAlertViewController.h"
 #import "KTVConsoleManager.h"
 #import "UIViewController+Extension.h"
-#import <AgoraRtcKit/AgoraMetachatKit.h>
+#import <AgoraRtcKit/AgoraMetaServiceKit.h>

@@ -90,7 +90,7 @@
 
 - (void)broadcoastConsoleMessage {
     KTVConsoleManager *console = _console;
-    [[MetaChatEngine sharedEngine] broadcastKTVConsoleMessageWithIsOriginal:console.originalSong localVoicepitch:console.localVoicePitch accompanyVolumn:console.accompanyVolume audioEffect:console.audioEffectPreset.preset];
+    [[MetaServiceEngine sharedEngine] broadcastKTVConsoleMessageWithIsOriginal:console.originalSong localVoicepitch:console.localVoicePitch accompanyVolumn:console.accompanyVolume audioEffect:console.audioEffectPreset.preset];
 
 }
 

@@ -11,9 +11,6 @@ import Zip
 
 let kOnConnectionStateChangedNotifyName = NSNotification.Name(rawValue: "onConnectionStateChanged")
 
-let SCREEN_WIDTH: CGFloat = UIScreen.main.bounds.size.width
-let SCREEN_HEIGHT: CGFloat = UIScreen.main.bounds.size.height
-
 class SelSexCell: UIView {
     @IBOutlet weak var selectedBack: UIView!
     @IBOutlet weak var selectedButton: UIButton!
@@ -134,7 +131,7 @@ class MetaChatLoginViewController: UIViewController {
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
     #if DEBUG
-    private var currentSceneId: Int = 23
+    private var currentSceneId: Int = 15
     #elseif TEST
     private var currentSceneId: Int = 4
     #else
@@ -143,11 +140,11 @@ class MetaChatLoginViewController: UIViewController {
     
     var sceneVC: MetaChatSceneViewController!
         
-    private let libraryPath = NSHomeDirectory() + "/Library/Caches/23"
+    private let libraryPath = NSHomeDirectory() + "/Library/Caches/15"
     
     var selSex: Int = 0    //0未选择，1男，2女
     
-    var sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.none // 0: broadcast  1: audience
+//    var sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.none // 0: broadcast  1: audience
     
     var currentSelBtnTag: Int = 0
     
@@ -155,9 +152,11 @@ class MetaChatLoginViewController: UIViewController {
     
     var avatarUrlArray = ["https://accpic.sd-rtn.com/pic/test/png/2.png", "https://accpic.sd-rtn.com/pic/test/png/4.png", "https://accpic.sd-rtn.com/pic/test/png/1.png", "https://accpic.sd-rtn.com/pic/test/png/3.png", "https://accpic.sd-rtn.com/pic/test/png/6.png", "https://accpic.sd-rtn.com/pic/test/png/5.png"]
     
-    var currentSceneInfo: AgoraMetachatSceneInfo?
+    var currentSceneInfo: AgoraMetaSceneInfo?
     var isEntering: Bool = false
     var fromMainScene: Bool = false
+    
+    var mainView: UIView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -184,7 +183,7 @@ class MetaChatLoginViewController: UIViewController {
 //            return
 //        }
 //        FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
-        let path = Bundle.main.path(forResource: "23", ofType: "zip")
+        let path = Bundle.main.path(forResource: "15", ofType: "zip")
         try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: NSHomeDirectory() + "/Library/Caches/"), overwrite: true, password: nil) { progress in
             print("zip progress = \(progress)")
         } fileOutputHandler: { unzippedFile in
@@ -237,7 +236,7 @@ class MetaChatLoginViewController: UIViewController {
     
     @IBAction func cancelDownloadHandler(_ sender: Any) {
         downloadingBack.isHidden = true
-        MetaChatEngine.sharedEngine.metachatKit?.cancelDownloadScene(currentSceneId)
+        MetaServiceEngine.sharedEngine.metaService?.cancelDownloadSceneAssets(currentSceneId)
     }
     
     func checkValid() -> Bool {
@@ -285,58 +284,56 @@ class MetaChatLoginViewController: UIViewController {
             defaultStand.set(true, forKey: key)
         }
         
-//        MetaChatEngine.sharedEngine.resolution = CGSizeMake(view.bounds.size.width * UIScreen.main.scale, view.bounds.size.height * UIScreen.main.scale)
-        MetaChatEngine.sharedEngine.resolution = CGSizeMake(240, 240);
+        MetaServiceEngine.sharedEngine.resolution = CGSizeMake(240, 240);
         
-        MetaChatEngine.sharedEngine.createRtcEngine()
+        MetaServiceEngine.sharedEngine.createRtcEngine()
         
-        MetaChatEngine.sharedEngine.createMetachatKit(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
-        
-//        if sceneBroadcastMode == .audience {
-//            let mockRenderView = MockRenderView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
-//            mockRenderView.layer.contentsScale = UIScreen.main.scale
-//            MetaChatEngine.sharedEngine.mockRenderView = mockRenderView
-//            onSceneReady(AgoraMetachatSceneInfo())
-//            
-//            indicatorView?.stopAnimating()
-//            isEntering = false
-//            return
-//        }
+        MetaServiceEngine.sharedEngine.createMetaService(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
                         
-        MetaChatEngine.sharedEngine.metachatKit?.getSceneInfos()
+        MetaServiceEngine.sharedEngine.metaService?.getSceneAssetsInfo()
         
-        if self.hasUserDressInfo(self.selSex) && self.fromMainScene == false {
-            kSceneIndex = 0
+        // 设置进入不同场景
+        if true {
+            kSceneIndex = .chat
             switchOrientation(isPortrait: false, isFullScreen: isEnter)
         } else {
-            kSceneIndex = 1
+            kSceneIndex = .live
             switchOrientation(isPortrait: true, isFullScreen: isEnter)
         }
+        
+//        if self.hasUserDressInfo(self.selSex) && self.fromMainScene == false {
+//            kSceneIndex = .chat
+//            switchOrientation(isPortrait: false, isFullScreen: isEnter)
+//        } else {
+//            kSceneIndex = .live
+//            switchOrientation(isPortrait: true, isFullScreen: isEnter)
+//        }
     }
     
-    func onSceneReady(_ sceneInfo: AgoraMetachatSceneInfo) {
+    func onSceneReady(_ sceneInfo: AgoraMetaSceneInfo) {
+//        self.createScene(sceneInfo)
         self.joinChannel(sceneInfo)
     }
     
-    func joinChannel(_ sceneInfo: AgoraMetachatSceneInfo) {
-        MetaChatEngine.sharedEngine.joinRtcChannel { [weak self] in
+    func joinChannel(_ sceneInfo: AgoraMetaSceneInfo) {
+        MetaServiceEngine.sharedEngine.joinRtcChannel { [weak self] in
             guard let wSelf = self else {return}
             wSelf.createScene(sceneInfo)
         }
     }
     
-    func createScene(_ sceneInfo: AgoraMetachatSceneInfo) {
+    func createScene(_ sceneInfo: AgoraMetaSceneInfo) {
         DispatchQueue.main.async {
             self.downloadingBack.isHidden = true
             
             let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
             guard let sceneViewController = storyBoard.instantiateViewController(withIdentifier: "SceneViewController") as? MetaChatSceneViewController else { return }
             sceneViewController.currentGender = self.selSex - 1
-            sceneViewController.sceneBroadcastMode = self.sceneBroadcastMode
+//            sceneViewController.sceneBroadcastMode = self.sceneBroadcastMode
             sceneViewController.delegate = self
             sceneViewController.modalPresentationStyle = .fullScreen
-            MetaChatEngine.sharedEngine.createScene(sceneViewController, sceneBroadcastMode: self.sceneBroadcastMode)
-            MetaChatEngine.sharedEngine.currentSceneInfo = sceneInfo
+            MetaServiceEngine.sharedEngine.createScene(sceneViewController/*, sceneBroadcastMode: self.sceneBroadcastMode*/)
+            MetaServiceEngine.sharedEngine.currentSceneInfo = sceneInfo
             self.sceneVC = sceneViewController
         }
     }
@@ -361,7 +358,7 @@ extension MetaChatLoginViewController: SelSexAlertDelegate {
     
     func onSelectSex(index: Int) {
         selSex = index + 1
-        sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.init(rawValue: UInt(index)) ?? .none
+//        sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.init(rawValue: UInt(index)) ?? .none
         
         if currentSelBtnTag == 1001 {
             if selSex == 1 {
@@ -392,22 +389,42 @@ extension MetaChatLoginViewController: SelAvatarAlertDelegate {
     }
 }
 
-extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
-    func onCreateSceneResult(_ scene: AgoraMetachatScene?, errorCode: Int) {
+extension MetaChatLoginViewController: AgoraMetaEventDelegate {
+    func onTokenWillExpire() {
+        
+    }
+    
+    func onCreateSceneResult(_ scene: AgoraMetaScene?, errorCode: Int) {
         if errorCode != 0 {
             print("create scene error: \(errorCode)")
             return
         }
         
-        MetaChatEngine.sharedEngine.metachatScene = scene
+        MetaServiceEngine.sharedEngine.metaScene = scene
         DispatchQueue.main.async {
+            var width = self.view.frame.width
+            var height = self.view.frame.height
+            if kSceneIndex == .chat {
+                if width < height {
+                    let temp = width
+                    width = height
+                    height = temp
+                }
+            }
+            
+            guard let view = scene?.createRenderView(CGRect(x: 0, y: 0, width: width, height: height)) else { return }
+            self.mainView = view
+            
+            MetaServiceEngine.sharedEngine.rtcEngine?.enableVideo()
+            
+            self.sceneVC.sceneView = self.mainView
             if self.presentedViewController == nil {
                 self.present(self.sceneVC, animated: true)
             }
         }
     }
     
-    func onConnectionStateChanged(_ state: AgoraMetachatConnectionStateType, reason: AgoraMetachatConnectionChangedReasonType) {
+    func onConnectionStateChanged(_ state: AgoraMetaConnectionStateType, reason: AgoraMetaConnectionChangedReasonType) {
         if state == .disconnected {
             DispatchQueue.main.async {
                 self.indicatorView?.stopAnimating()
@@ -415,8 +432,8 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
                 self.indicatorView = nil
             }
         } else if state == .aborted {
-            MetaChatEngine.sharedEngine.leaveRtcChannel()
-            MetaChatEngine.sharedEngine.leaveScene()
+            MetaServiceEngine.sharedEngine.leaveRtcChannel()
+            MetaServiceEngine.sharedEngine.leaveScene()
             DispatchQueue.main.async {
                 DLog("state == \(state.rawValue), reason == \(reason.rawValue)")
                 NotificationCenter.default.post(name: kOnConnectionStateChangedNotifyName, object: nil, userInfo: ["state":state.rawValue,"reason":reason.rawValue])
@@ -429,7 +446,7 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         
     }
     
-    func onGetSceneInfosResult(_ scenes: NSMutableArray, errorCode: Int) {
+    func onGetSceneAssetsInfoResult(_ scenes: NSMutableArray, errorCode: Int) {
         self.isEntering = false
         
         DispatchQueue.main.async {
@@ -454,21 +471,21 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
             return
         }
         
-        guard let firstScene = scenes.compactMap({ $0 as? AgoraMetachatSceneInfo }).first(where: { $0.sceneId == currentSceneId }) else {
+        guard let firstScene = scenes.compactMap({ $0 as? AgoraMetaSceneInfo }).first(where: { $0.sceneId == currentSceneId }) else {
             return
         }
         
         currentSceneInfo = firstScene
         
-        let metachatKit = MetaChatEngine.sharedEngine.metachatKit
+        let metaService = MetaServiceEngine.sharedEngine.metaService
         let totalSize = firstScene.totalSize / 1024 / 1024
-        if metachatKit?.isSceneDownloaded(currentSceneId) != 1 {
+        if metaService?.isSceneAssetsDownloaded(currentSceneId) != 1 {
             DispatchQueue.main.async {
                 let alertController = UIAlertController.init(title: "下载提示", message: "首次进入MetaChat场景需下载\(totalSize)M数据包", preferredStyle:.alert)
                 
                 alertController.addAction(UIAlertAction.init(title: "下次再说", style: .cancel, handler: nil))
                 alertController.addAction(UIAlertAction.init(title: "立即下载", style: .default, handler: { UIAlertAction in
-                    metachatKit?.downloadScene(self.currentSceneId)
+                    metaService?.downloadSceneAssets(self.currentSceneId)
                     self.downloadingBack.isHidden = false
                 }))
                 
@@ -482,7 +499,7 @@ extension MetaChatLoginViewController: AgoraMetachatEventDelegate {
         }
     }
     
-    func onDownloadSceneProgress(_ sceneId: Int, progress: Int, state: AgoraMetachatDownloadStateType) {
+    func onDownloadSceneAssetsProgress(_ sceneId: Int, progress: Int, state: AgoraMetaDownloadStateType) {
         DispatchQueue.main.async {
             self.downloadingProgress.progress = Float(progress)/100.0
         }

@@ -1,5 +1,5 @@
 //
-//  MetaChatEngine.swift
+//  MetaServiceEngine.swift
 //  MetaChatDemo
 //
 //  Created by 胡润辰 on 2022/4/27.
@@ -8,12 +8,17 @@
 import Foundation
 import AgoraRtcKit
 
-//private let kAdvertisingURL = "https://test.cdn.sbnh.cn/9ad87c1738bf0485b7f243ee5cfb409f.mp4" // 宣传片地址
-private let kAdvertisingURL = "http://agora.fronted.love/yyl.mov" // 宣传片地址
+private let kAdvertisingURL = "https://download.agora.io/demo/test/agora_meta_ads.mov" // 宣传片地址
 private let npcTableFileName = "tableNPC"
 private let npc1MoveFileName = "moveNPC1"
 private let npc2MoveFileName = "moveNPC2"
-var kSceneIndex: Int = 1
+
+enum MetaChatSceneIndex: Int {
+    case live = 0
+    case chat = 1
+}
+
+var kSceneIndex: MetaChatSceneIndex = .chat
 
 enum MetaChatDisplayID:Int32 {
     case tv = 0
@@ -33,8 +38,8 @@ protocol RTCEngineInternalDelegate: NSObject {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason)
 }
 
-class MetaChatEngine: NSObject {
-    @objc static let sharedEngine = MetaChatEngine()
+class MetaServiceEngine: NSObject {
+    @objc static let sharedEngine = MetaServiceEngine()
 
     @objc var rtcEngine: AgoraRtcEngineKit?
     var localSpatial: AgoraLocalSpatialAudioKit?
@@ -53,13 +58,12 @@ class MetaChatEngine: NSObject {
     /// 移动NPC2
     private var moveNPCPlayerMgr2: MetaChatPlayerManager?
     
-    var metachatKit: AgoraMetachatKit?
+    var metaService: AgoraMetaServiceKit?
     var playerName: String?
-    var currentSceneInfo: AgoraMetachatSceneInfo?
-    var metachatScene: AgoraMetachatScene?
-    var currentUserInfo: AgoraMetachatUserInfo?
-    var localUserAvatar: AgoraMetachatLocalUserAvatar?
-    var currentDressInfo: AgoraMetachatDressInfo?
+    var currentSceneInfo: AgoraMetaSceneInfo?
+    var metaScene: AgoraMetaScene?
+    var currentUserInfo: AgoraMetaUserInfo?
+    var localUserAvatar: AgoraMetaLocalUserAvatar?
     var mockRenderView: MockRenderView?
     var braodcaster: String = ""
     var resolution: CGSize?
@@ -77,18 +81,23 @@ class MetaChatEngine: NSObject {
         rtcEngineConfig.areaCode = .global
         rtcEngine = AgoraRtcEngineKit.sharedEngine(with: rtcEngineConfig, delegate: self)
         // enable face detect extension
-        rtcEngine?.enableExtension(withVendor: "agora_video_filters_face_capture", extension: "face_capture", enabled: true)
-        rtcEngine?.setExtensionPropertyWithVendor("agora_video_filters_face_capture",
-                                                  extension: "face_capture", key: "face_capture_options", value: "{\"activationInfo\":{\"faceCapAppId\":\"0efd4ee02dd488c7c30cedd37b9b9b15\",\"faceCapAppKey\":\"e40886b37528408fe33b14871c516ed1\",\"agoraAppId\":\"4d4bf997732c4309911147503e91e338\",\"agoraRtmToken\":\"\(token)\",\"agoraUid\":\"\(KeyCenter.RTC_UID)\"},\"enable\":1}")
+//        var res = rtcEngine?.enableExtension(withVendor: "agora_video_filters_face_capture", extension: "face_capture", enabled: true, sourceType: .primaryCamera)
+//        res = rtcEngine?.setExtensionPropertyWithVendor("agora_video_filters_face_capture",
+//                                                  extension: "face_capture", key: "face_capture_options", value: "{\"activationInfo\":{\"faceCapAppId\":\"0efd4ee02dd488c7c30cedd37b9b9b15\",\"faceCapAppKey\":\"e40886b37528408fe33b14871c516ed1\",\"agoraAppId\":\"4d4bf997732c4309911147503e91e338\",\"agoraRtmToken\":\"\(token)\",\"agoraUid\":\"\(KeyCenter.RTC_UID)\"},\"enable\":1}")
+////
+//        res = rtcEngine?.enableExtension(withVendor: "agora_video_filters_metakit", extension: "metakit", enabled: true, sourceType: .primaryCamera)
+
         rtcEngine?.setVideoFrameDelegate(self)
         rtcEngine?.setParameters("{\"rtc.audio.force_bluetooth_a2dp\": true}")
         rtcEngine?.setChannelProfile(.liveBroadcasting)
         rtcEngine?.setClientRole(.broadcaster)
-        rtcEngine?.enableVideo()
-        rtcEngine?.setExternalVideoSource(true, useTexture: true, sourceType: .videoFrame)
-        
+//        rtcEngine?.enableVideo()
+//        rtcEngine?.setExternalVideoSource(true, useTexture: true, sourceType: .videoFrame)
+
         let vec = AgoraVideoEncoderConfiguration(size: resolution!, frameRate: .fps30, bitrate: AgoraVideoBitrateStandard, orientationMode: .adaptative, mirrorMode: .enabled)
         rtcEngine?.setVideoEncoderConfiguration(vec)
+        
+//        rtcEngine?.startPreview()
     }
     
     func createMVStream() {
@@ -98,42 +107,45 @@ class MetaChatEngine: NSObject {
         rtcEngine?.createDataStream(&mvStreamId, config: config)
     }
         
-    func createMetachatKit(userName: String, avatarUrl: String, delegate: AgoraMetachatEventDelegate?) {
+    func createMetaService(userName: String, avatarUrl: String, delegate: AgoraMetaEventDelegate?) {
         playerName = userName
                 
-        currentUserInfo = AgoraMetachatUserInfo.init()
+        currentUserInfo = AgoraMetaUserInfo.init()
         currentUserInfo?.userId = KeyCenter.RTM_UID
         currentUserInfo?.userName = userName
         currentUserInfo?.userIconUrl = avatarUrl
         
-        let metaChatconfig = AgoraMetachatConfig()
-        metaChatconfig.appId = KeyCenter.APP_ID
-        metaChatconfig.rtmToken = KeyCenter.RTM_TOKEN ?? ""
-        metaChatconfig.userId = KeyCenter.RTM_UID
-        metaChatconfig.delegate = delegate
+        let metaServiceConfig = AgoraMetaServiceConfig()
+        metaServiceConfig.appId = KeyCenter.APP_ID
+        metaServiceConfig.rtmToken = KeyCenter.RTM_TOKEN ?? ""
+        metaServiceConfig.userId = KeyCenter.RTM_UID
+        metaServiceConfig.delegate = delegate
         
         let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
-        metaChatconfig.localDownloadPath = paths.first!
-        metaChatconfig.rtcEngine = rtcEngine
-        metachatKit = AgoraMetachatKit.sharedMetachatWithConfig(_: metaChatconfig)
+        metaServiceConfig.localDownloadPath = paths.first!
+        metaServiceConfig.rtcEngine = rtcEngine
+        metaService = AgoraMetaServiceKit.sharedMetaServiceWithConfig(_: metaServiceConfig)
         
         createMVStream()
     }
 
-    func createScene(_ delegate: MetaChatSceneViewController, sceneBroadcastMode: AgoraMetachatSceneBroadcastMode) {
-        let config = AgoraMetachatSceneConfig()
+    func createScene(_ delegate: MetaChatSceneViewController/*, sceneBroadcastMode: AgoraMetachatSceneBroadcastMode*/) {
+        let config = AgoraMetaSceneConfig()
         config.delegate = delegate
+        config.enableFaceCapture = true
+        config.faceCaptureCertificate = KeyCenter.FACE_CAPTURE_CERTIFICATE
+        config.faceCaptureAppId = KeyCenter.FACE_CAPTURE_APP_ID
 //        config.sceneBroadcastMode = sceneBroadcastMode
-        metachatKit?.createScene(config)
+        metaService?.createScene(config)
     }
     
     
-    func enterScene(view: UIView & AgoraMetaViewProtocol, sceneBroadcastMode: AgoraMetachatSceneBroadcastMode) {
+    func enterScene(view: UIView/*, sceneBroadcastMode: AgoraMetachatSceneBroadcastMode*/) {
         guard let sceneInfo = currentSceneInfo else {
             return
         }
         
-        let avatarInfo = AgoraMetachatAvatarModelInfo.init()
+        let avatarInfo = AgoraMetaAvatarModelInfo.init()
         for info in sceneInfo.bundles {
             if info.bundleType == .avatar {
                 avatarInfo.bundleCode = info.bundleCode;
@@ -144,29 +156,33 @@ class MetaChatEngine: NSObject {
         avatarInfo.remoteVisible = true
         avatarInfo.syncPosition = true
         
-        let enterSceneConfig = AgoraMetachatEnterSceneConfig()
+        let enterSceneConfig = AgoraMetaEnterSceneConfig()
         enterSceneConfig.roomName = KeyCenter.CHANNEL_ID
         enterSceneConfig.sceneView = view
         enterSceneConfig.sceneId = sceneInfo.sceneId
-        let dict = ["sceneIndex": kSceneIndex]
+//        let paths = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)
+//        enterSceneConfig.scenePath = paths.first! + "/15"
+        let dict = ["sceneIndex": kSceneIndex.rawValue]
         let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
         let extraInfo = String(data: data!, encoding: String.Encoding.utf8)
-        enterSceneConfig.extraCustomInfo = extraInfo!.data(using: String.Encoding.utf8)
+        enterSceneConfig.extraInfo = extraInfo!.data(using: String.Encoding.utf8)
 //        if sceneBroadcastMode == .audience {
 //            enterSceneConfig.broadcaster = braodcaster
 //        }
         
-        localUserAvatar = metachatScene?.getLocalUserAvatar()
+        localUserAvatar = metaScene?.getLocalUserAvatar()
         localUserAvatar?.setUserInfo(currentUserInfo)
         localUserAvatar?.setModelInfo(avatarInfo)
-        localUserAvatar?.setDressInfo(currentDressInfo)
+
+        let dict1 = ["avatar": "girl", "dress": [10000, 10100], "face": [["key": "eyeBlink_L", "val": 30] as [String : Any]], "2dbg": ""] as [String : Any]
+        let data1 = try? JSONSerialization.data(withJSONObject: dict1, options: [])
+        let extraInfo1 = String(data: data1!, encoding: String.Encoding.utf8)
+        localUserAvatar?.setExtraInfo(extraInfo1!.data(using: String.Encoding.utf8))
         
-//        metachatScene?.enableBroadcast(true)
-//        metachatScene?.enableVideo(MetaChatSceneViewController.renderView, enable: true)
+//        metaScene?.enableBroadcast(true)
+//        metaScene?.enableVideo(MetaChatSceneViewController.renderView, enable: true)
         
-        metachatScene?.enter(enterSceneConfig)
-        
-        metachatScene?.enableUserPositionNotification(true)
+        metaScene?.enter(enterSceneConfig)
     }
     
     func updateIsVisitor(isVisitor: Bool) {
@@ -174,7 +190,7 @@ class MetaChatEngine: NSObject {
         guard let sceneInfo = currentSceneInfo else {
             return
         }
-        let avatarInfo = AgoraMetachatAvatarModelInfo.init()
+        let avatarInfo = AgoraMetaAvatarModelInfo.init()
         for info in sceneInfo.bundles {
             if info.bundleType == .avatar {
                 avatarInfo.bundleCode = info.bundleCode;
@@ -184,7 +200,7 @@ class MetaChatEngine: NSObject {
         avatarInfo.localVisible = true
         avatarInfo.remoteVisible = true
         avatarInfo.syncPosition = !isVisitor
-        localUserAvatar = metachatScene?.getLocalUserAvatar()
+        localUserAvatar = metaScene?.getLocalUserAvatar()
         localUserAvatar?.setUserInfo(currentUserInfo)
         localUserAvatar?.setModelInfo(avatarInfo)
         localUserAvatar?.applyInfo()
@@ -204,6 +220,13 @@ class MetaChatEngine: NSObject {
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
             success()
        })
+//        let mediaOptions = AgoraRtcChannelMediaOptions()
+//        mediaOptions.publishCameraTrack = true
+//        rtcEngine?.joinChannel(byToken: KeyCenter.RTC_TOKEN, channelId: KeyCenter.CHANNEL_ID, uid: KeyCenter.RTC_UID, mediaOptions: mediaOptions) { String, UInt, Int in
+//            DLog("joinChannel 回调 ======= ",String,UInt,Int)
+//             self.rtcEngine?.muteAllRemoteAudioStreams(true)
+//             success()
+//        }
     }
     
     func leaveRtcChannel() {
@@ -217,7 +240,7 @@ class MetaChatEngine: NSObject {
     }
     
     func leaveScene() {
-        metachatScene?.leave()
+        metaScene?.leave()
         
         tvPlayerMgr?.destroy()
         tableNPCPlayerMgr?.destroy()
@@ -233,8 +256,8 @@ class MetaChatEngine: NSObject {
     
     func resetMetachat() {
         
-        metachatScene?.destroy()
-        metachatScene = nil
+        metaScene?.destroy()
+        metaScene = nil
         
         currentSceneInfo = nil
         
@@ -267,6 +290,7 @@ class MetaChatEngine: NSObject {
         canvas0?.uid = KeyCenter.RTC_UID
         canvas0?.renderMode = .hidden
         canvas0?.view = view
+        canvas0?.position = .postCaptureOrigin
         rtcEngine?.setupLocalVideo(canvas0)
         rtcEngine?.startPreview()
     }
@@ -277,27 +301,27 @@ class MetaChatEngine: NSObject {
     
     // 创建并打开电视播放器
     func createAndOpenTVPlayer(resourceUrl:String = kAdvertisingURL, firstOpenCompleted: @escaping ((_ player: AgoraRtcMediaPlayerProtocol)->()), playBackAllLoopsCompleted:(()->())?) {
-//        tvPlayerMgr = MetaChatPlayerManager(displayId: .tv, resourceUrl: resourceUrl, metachatScene: metachatScene, rtcEngine: rtcEngine)
-//        tvPlayerMgr?.player?.setVideoFrameDelegate(self)
-//        tvPlayerMgr?.openComplteted = { player, isfirstOpen in
-//            if isfirstOpen {
-//                player.mute(true)
-//                firstOpenCompleted(player)
-//            }
-//            KTVConsoleManager.shared().resetConfig()
-//        }
-//
-//        tvPlayerMgr?.playBackAllLoopsCompleted = { _ in
-//            playBackAllLoopsCompleted?()
-//        }
-//        tvPlayerMgr?.didChangedToPosition = { [weak self] player, position in
-//            guard let wSelf  = self else { return }
-//            if wSelf.isSinging {
-//                let mvUrl = player.getPlaySrc()
-//                wSelf.broadcastKTVSeekMessage(mvUrl: mvUrl, position: position)
-//            }
-//        }
-//        initalConsoleConfig()
+        tvPlayerMgr = MetaChatPlayerManager(displayId: .tv, resourceUrl: resourceUrl, metaScene: metaScene, rtcEngine: rtcEngine)
+        tvPlayerMgr?.player?.setVideoFrameDelegate(self)
+        tvPlayerMgr?.openComplteted = { player, isfirstOpen in
+            if isfirstOpen {
+                player.mute(true)
+                firstOpenCompleted(player)
+            }
+            KTVConsoleManager.shared().resetConfig()
+        }
+
+        tvPlayerMgr?.playBackAllLoopsCompleted = { _ in
+            playBackAllLoopsCompleted?()
+        }
+        tvPlayerMgr?.didChangedToPosition = { [weak self] player, position in
+            guard let wSelf  = self else { return }
+            if wSelf.isSinging {
+                let mvUrl = player.getPlaySrc()
+                wSelf.broadcastKTVSeekMessage(mvUrl: mvUrl, position: position)
+            }
+        }
+        initalConsoleConfig()
     }
     
     func createAndOpenNPCPlayer(tableNPCOpenCompleted: @escaping ((_ player: AgoraRtcMediaPlayerProtocol)->())){
@@ -305,14 +329,14 @@ class MetaChatEngine: NSObject {
             guard let url = Bundle.main.path(forResource: fileName, ofType: "m4a") else { return ""}
             return url
         }
-        tableNPCPlayerMgr = MetaChatPlayerManager(displayId: .npc_table, resourceUrl: filePathWithName(fileName: npcTableFileName), metachatScene: metachatScene, rtcEngine: rtcEngine, openCompleted: { player, _  in
+        tableNPCPlayerMgr = MetaChatPlayerManager(displayId: .npc_table, resourceUrl: filePathWithName(fileName: npcTableFileName), metaScene: metaScene, rtcEngine: rtcEngine, openCompleted: { player, _  in
             player.mute(true)
             tableNPCOpenCompleted(player)
         })
-        moveNPCPlayerMgr1 = MetaChatPlayerManager(displayId: .npc_move1, resourceUrl: filePathWithName(fileName: npc1MoveFileName), metachatScene: metachatScene, rtcEngine: rtcEngine, openCompleted: { player, _ in
+        moveNPCPlayerMgr1 = MetaChatPlayerManager(displayId: .npc_move1, resourceUrl: filePathWithName(fileName: npc1MoveFileName), metaScene: metaScene, rtcEngine: rtcEngine, openCompleted: { player, _ in
             player.mute(true)
         })
-        moveNPCPlayerMgr2 = MetaChatPlayerManager(displayId: .npc_move2, resourceUrl: filePathWithName(fileName: npc2MoveFileName), metachatScene: metachatScene, rtcEngine: rtcEngine, openCompleted: { player, _ in
+        moveNPCPlayerMgr2 = MetaChatPlayerManager(displayId: .npc_move2, resourceUrl: filePathWithName(fileName: npc2MoveFileName), metaScene: metaScene, rtcEngine: rtcEngine, openCompleted: { player, _ in
             player.mute(true)
         })
     }
@@ -341,13 +365,13 @@ class MetaChatEngine: NSObject {
     // 停止投屏
     func stopPushVideo(displayId:UInt32){
         tvPlayerMgr?.player?.stop()
-        metachatScene?.enableVideoDisplay(String(displayId), enable: false)
+        metaScene?.enableVideoDisplay(String(displayId), enable: false)
     }
     
     // 发送消息
     func sendMessage(dic:[String: Any]) {
         if let data = try? JSONSerialization.data(withJSONObject:dic, options: .fragmentsAllowed) {
-            metachatScene?.sendMessage(toScene: data)
+            metaScene?.sendMessage(data)
         }
     }
     
@@ -460,7 +484,7 @@ class MetaChatEngine: NSObject {
     }
 }
 
-extension MetaChatEngine: AgoraRtcEngineDelegate {
+extension MetaServiceEngine: AgoraRtcEngineDelegate {
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
         localSpatial?.removeRemotePosition(uid)
@@ -515,7 +539,7 @@ extension MetaChatEngine: AgoraRtcEngineDelegate {
     }
 }
 
-extension MetaChatEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
+extension MetaServiceEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
     
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didReceiveVideoFrame videoFrame: AgoraOutputVideoFrame) {
         guard let pixelBuffer = videoFrame.pixelBuffer, let data = LibyuvHelper.i420Buffer(of: pixelBuffer) else {
@@ -527,20 +551,20 @@ extension MetaChatEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
         vf.strideInPixels = Int32(videoFrame.width)
         vf.height = Int32(videoFrame.height)
         vf.dataBuf = data
-        metachatScene?.pushVideoFrame(toDisplay: "1", frame: vf)
+        metaScene?.pushVideoFrame(toDisplay: "1", frame: vf)
         DLog("didReceive videoFrame:  width = \(videoFrame.width), height = \(videoFrame.height)", Thread.current,"time === ", Date.timeIntervalSinceReferenceDate)
     }
 }
 
-extension MetaChatEngine: AgoraVideoFrameDelegate {
+extension MetaServiceEngine: AgoraVideoFrameDelegate {
     func onCapture(_ videoFrame: AgoraOutputVideoFrame) -> Bool {
-        if let faceStr = videoFrame.metaInfo["KEY_FACE_CAPTURE"] as? String {
-            
-            let dict = ["key": "faceCapture",
-                        "value": faceStr
-            ]
-            sendMessage(dic: dict)
-        }
+//        if let faceStr = videoFrame.metaInfo["KEY_FACE_CAPTURE"] as? String {
+//
+//            let dict = ["key": "faceCapture",
+//                        "value": faceStr
+//            ]
+//            sendMessage(dic: dict)
+//        }
         return true
     }
 }

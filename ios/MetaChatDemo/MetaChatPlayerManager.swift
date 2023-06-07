@@ -22,10 +22,10 @@ class MetaChatPlayerManager: NSObject {
     /// 播放进度发送变化
     var didChangedToPosition:((_ player: AgoraRtcMediaPlayerProtocol, _ postion: Int)->())?
     
-    init(displayId: MetaChatDisplayID,resourceUrl url:String, metachatScene: AgoraMetachatScene?,rtcEngine: AgoraRtcEngineKit?, openCompleted: ((_ player: AgoraRtcMediaPlayerProtocol, _ isFirstOpen: Bool)->())? = nil) {
+    init(displayId: MetaChatDisplayID,resourceUrl url:String, metaScene: AgoraMetaScene?,rtcEngine: AgoraRtcEngineKit?, openCompleted: ((_ player: AgoraRtcMediaPlayerProtocol, _ isFirstOpen: Bool)->())? = nil) {
         super.init()
         
-        metachatScene?.enableVideoDisplay("1", enable: true)
+        metaScene?.enableVideoDisplay("1", enable: true)
         let npcPlayer = rtcEngine?.createMediaPlayer(with: self)
         npcPlayer?.setLoopCount(-1)
         npcPlayer?.adjustPlayoutVolume(15)
