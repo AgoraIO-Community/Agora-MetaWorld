@@ -72,28 +72,6 @@
 		F03050622A14EF6800D8D7D3 /* boy.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F03050602A14EF6800D8D7D3 /* boy.bundle */; };
 		F045EDE72994E39300E7F96C /* menus.json in Resources */ = {isa = PBXBuildFile; fileRef = F045EDE62994E39300E7F96C /* menus.json */; };
 		F045EDE92995132500E7F96C /* ActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F045EDE82995132500E7F96C /* ActionView.swift */; };
-		F05BEE022A29E74000F22665 /* AgoraDav1d.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1C298658EB00C0C0F9 /* AgoraDav1d.framework */; };
-		F05BEE032A29E74000F22665 /* AgoraDav1d.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1C298658EB00C0C0F9 /* AgoraDav1d.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE042A29E74000F22665 /* AgoraFaceCaptureExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F09D829D29C95FE3007DAA7F /* AgoraFaceCaptureExtension.framework */; };
-		F05BEE052A29E74100F22665 /* AgoraFaceCaptureExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F09D829D29C95FE3007DAA7F /* AgoraFaceCaptureExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE062A29E74100F22665 /* Agorafdkaac.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1F298658EB00C0C0F9 /* Agorafdkaac.framework */; };
-		F05BEE072A29E74100F22665 /* Agorafdkaac.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1F298658EB00C0C0F9 /* Agorafdkaac.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE082A29E74100F22665 /* Agoraffmpeg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1E298658EB00C0C0F9 /* Agoraffmpeg.framework */; };
-		F05BEE092A29E74100F22665 /* Agoraffmpeg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1E298658EB00C0C0F9 /* Agoraffmpeg.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE0A2A29E74100F22665 /* AgoraMetaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F038493029EFD21600021B0B /* AgoraMetaKit.framework */; };
-		F05BEE0B2A29E74100F22665 /* AgoraMetaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F038493029EFD21600021B0B /* AgoraMetaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE0C2A29E74100F22665 /* AgoraMetaKitExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F038492F29EFD21600021B0B /* AgoraMetaKitExtension.framework */; };
-		F05BEE0D2A29E74100F22665 /* AgoraMetaKitExtension.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F038492F29EFD21600021B0B /* AgoraMetaKitExtension.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE0E2A29E74100F22665 /* AgoraRtcKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D20298658EB00C0C0F9 /* AgoraRtcKit.framework */; };
-		F05BEE0F2A29E74100F22665 /* AgoraRtcKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D20298658EB00C0C0F9 /* AgoraRtcKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE102A29E74100F22665 /* AgoraRtmKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D19298658EA00C0C0F9 /* AgoraRtmKit.framework */; };
-		F05BEE112A29E74100F22665 /* AgoraRtmKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D19298658EA00C0C0F9 /* AgoraRtmKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE122A29E74100F22665 /* AgoraRtmLoader.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1A298658EA00C0C0F9 /* AgoraRtmLoader.framework */; };
-		F05BEE132A29E74100F22665 /* AgoraRtmLoader.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1A298658EA00C0C0F9 /* AgoraRtmLoader.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE142A29E74100F22665 /* AgoraSoundTouch.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1B298658EA00C0C0F9 /* AgoraSoundTouch.framework */; };
-		F05BEE152A29E74100F22665 /* AgoraSoundTouch.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F0011D1B298658EA00C0C0F9 /* AgoraSoundTouch.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		F05BEE162A29E74100F22665 /* FaceCapture.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F09D829A29C95FDE007DAA7F /* FaceCapture.framework */; };
-		F05BEE172A29E74100F22665 /* FaceCapture.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F09D829A29C95FDE007DAA7F /* FaceCapture.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F063CEAA298CA98F00BBBE2B /* motions.json in Resources */ = {isa = PBXBuildFile; fileRef = F063CEA9298CA98F00BBBE2B /* motions.json */; };
 		F06FE0AC29C04EAA008CC2E7 /* VideoCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06FE0AB29C04EAA008CC2E7 /* VideoCollectionView.swift */; };
 		F07B72FB292C817A00ED399C /* KTVDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F07B72EB292C817A00ED399C /* KTVDataManager.m */; };
@@ -124,30 +102,6 @@
 		F3BA5F4228194F2200821E23 /* MetaChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BA5F4128194F2200821E23 /* MetaChatEngine.swift */; };
 		F3D54E992819788C00C5F41A /* MetaChatSceneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F303917C2817F0E1004A6A40 /* MetaChatSceneViewController.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		F05BEE182A29E74100F22665 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				F05BEE092A29E74100F22665 /* Agoraffmpeg.framework in Embed Frameworks */,
-				F05BEE152A29E74100F22665 /* AgoraSoundTouch.framework in Embed Frameworks */,
-				F05BEE0F2A29E74100F22665 /* AgoraRtcKit.framework in Embed Frameworks */,
-				F05BEE072A29E74100F22665 /* Agorafdkaac.framework in Embed Frameworks */,
-				F05BEE0B2A29E74100F22665 /* AgoraMetaKit.framework in Embed Frameworks */,
-				F05BEE032A29E74000F22665 /* AgoraDav1d.framework in Embed Frameworks */,
-				F05BEE132A29E74100F22665 /* AgoraRtmLoader.framework in Embed Frameworks */,
-				F05BEE052A29E74100F22665 /* AgoraFaceCaptureExtension.framework in Embed Frameworks */,
-				F05BEE112A29E74100F22665 /* AgoraRtmKit.framework in Embed Frameworks */,
-				F05BEE172A29E74100F22665 /* FaceCapture.framework in Embed Frameworks */,
-				F05BEE0D2A29E74100F22665 /* AgoraMetaKitExtension.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2611B3EA28741A1E0053E24E /* LibyuvHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LibyuvHelper.h; sourceTree = "<group>"; };
@@ -501,21 +455,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F05BEE082A29E74100F22665 /* Agoraffmpeg.framework in Frameworks */,
-				F05BEE0E2A29E74100F22665 /* AgoraRtcKit.framework in Frameworks */,
 				A815942C286F910400ACD6F1 /* Pods_MetaChatDemo.framework in Frameworks */,
-				F05BEE142A29E74100F22665 /* AgoraSoundTouch.framework in Frameworks */,
 				E7E263E1282ABD08002FE8DB /* libssl.a in Frameworks */,
-				F05BEE162A29E74100F22665 /* FaceCapture.framework in Frameworks */,
-				F05BEE0C2A29E74100F22665 /* AgoraMetaKitExtension.framework in Frameworks */,
-				F05BEE022A29E74000F22665 /* AgoraDav1d.framework in Frameworks */,
-				F05BEE122A29E74100F22665 /* AgoraRtmLoader.framework in Frameworks */,
-				F05BEE102A29E74100F22665 /* AgoraRtmKit.framework in Frameworks */,
-				F05BEE042A29E74000F22665 /* AgoraFaceCaptureExtension.framework in Frameworks */,
 				E7E263DF282ABD08002FE8DB /* libcrypto.a in Frameworks */,
-				F05BEE062A29E74100F22665 /* Agorafdkaac.framework in Frameworks */,
 				F355AB372823B98400656A67 /* libz.tbd in Frameworks */,
-				F05BEE0A2A29E74100F22665 /* AgoraMetaKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1133,7 +1076,6 @@
 				F348D1552811637A00039743 /* Resources */,
 				2639A71E282E2A4D0037E056 /* ShellScript */,
 				9A5E90FC34F32E570FD93226 /* [CP] Embed Pods Frameworks */,
-				F05BEE182A29E74100F22665 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
