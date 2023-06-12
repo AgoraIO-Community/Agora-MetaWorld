@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="33dp"
             android:layout_marginTop="53dp"
-            android:text="MetaChat"
+            android:text="Meta"
             android:textColor="#ff8342e4"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"

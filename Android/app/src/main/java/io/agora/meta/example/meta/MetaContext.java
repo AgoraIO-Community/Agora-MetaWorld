@@ -190,7 +190,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 // Log.i(TAG, "agora_video_filters_metakit enableExtension ret:" + metakitRet);
 
                 rtcEngine.enableAudio();
-                rtcEngine.enableVideo();
+                //rtcEngine.enableVideo();
 
                 rtcEngine.setAudioProfile(
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
@@ -301,8 +301,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
         MetaSceneConfig sceneConfig = new MetaSceneConfig();
         sceneConfig.mActivityContext = activityContext;
-        //sceneConfig.mSyncMode = MetachatSceneConfig.StateSyncMode.STATE_SYNC_MODE_NONE;
-        sceneConfig.mEnableFaceCapture = true;
+        sceneConfig.mEnableFaceCapture = false;
         sceneConfig.mFaceCaptureAppId = KeyCenter.FACE_CAP_APP_ID;
         sceneConfig.mFaceCaptureCertificate = KeyCenter.FACE_CAP_APP_KEY;
         int ret = -1;
@@ -819,5 +818,11 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         UnityRoleInfo unityRoleInfo = new UnityRoleInfo();
         unityRoleInfo.setGender(roleInfo.getGender());
         return unityRoleInfo;
+    }
+
+    public void enableVoiceDriveAvatar(boolean enable) {
+        if (null != metaScene) {
+            metaScene.enableVoiceDriveAvatar(enable);
+        }
     }
 }

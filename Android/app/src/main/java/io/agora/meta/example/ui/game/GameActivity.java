@@ -997,9 +997,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             @Override
             public void run() {
                 // maybeCreateScene();
+                MetaContext.getInstance().enableVoiceDriveAvatar(true);
             }
         });
-
     }
 
     @Override

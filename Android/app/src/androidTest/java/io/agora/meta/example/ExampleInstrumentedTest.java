@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("io.agora.metachat.example", appContext.getPackageName());
+        assertEquals("io.agora.meta.example", appContext.getPackageName());
     }
 }
