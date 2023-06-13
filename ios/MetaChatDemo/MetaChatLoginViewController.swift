@@ -143,6 +143,7 @@ class MetaChatLoginViewController: UIViewController {
     private let libraryPath = NSHomeDirectory() + "/Library/Caches/15"
     
     var selSex: Int = 0    //0未选择，1男，2女
+    var selScene: MetaChatSceneIndex = .chat
     
 //    var sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.none // 0: broadcast  1: audience
     
@@ -217,8 +218,8 @@ class MetaChatLoginViewController: UIViewController {
         } else if sender.tag == 1002 {
             selRoleIcon.image = UIImage.init(named: "arrow-up")
             frame.origin.y = 80
-            selSexAlert.selManCell.selectedLabel.text = "主播"
-            selSexAlert.selWomanCell.selectedLabel.text = "观众"
+            selSexAlert.selManCell.selectedLabel.text = "元语聊"
+            selSexAlert.selWomanCell.selectedLabel.text = "元直播"
         }
 //        selSexAlert.frame = frame
         currentSelBtnTag = sender.tag
@@ -293,11 +294,10 @@ class MetaChatLoginViewController: UIViewController {
         MetaServiceEngine.sharedEngine.metaService?.getSceneAssetsInfo()
         
         // 设置进入不同场景
-        if true {
-            kSceneIndex = .chat
+        kSceneIndex = selScene
+        if kSceneIndex == .chat {
             switchOrientation(isPortrait: false, isFullScreen: isEnter)
         } else {
-            kSceneIndex = .live
             switchOrientation(isPortrait: true, isFullScreen: isEnter)
         }
         
@@ -358,7 +358,6 @@ extension MetaChatLoginViewController: SelSexAlertDelegate {
     
     func onSelectSex(index: Int) {
         selSex = index + 1
-//        sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.init(rawValue: UInt(index)) ?? .none
         
         if currentSelBtnTag == 1001 {
             if selSex == 1 {
@@ -368,9 +367,11 @@ extension MetaChatLoginViewController: SelSexAlertDelegate {
             }
         } else {
             if selSex == 1 {
-                selRoleLabel.text = "主播"
+                selRoleLabel.text = "元语聊"
+                selScene = .chat
             } else if selSex == 2 {
-                selRoleLabel.text = "观众"
+                selRoleLabel.text = "元直播"
+                selScene = .live
             }
         }
         
