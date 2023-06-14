@@ -87,6 +87,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private SurfaceView mLocalPreviewSurfaceView;
 
     private TextureView mLocalAvatarTextureView;
+    private TextureView mLocalAvatarTextureView1;
+    private TextureView mLocalAvatarTextureView2;
+    private TextureView mLocalAvatarTextureView3;
+    private TextureView mLocalAvatarTextureView4;
 
     private SurfaceTexture mSaveLocalAvatarSurfaceTexture;
 
@@ -281,34 +285,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalPreviewSurfaceView, KeyCenter.RTC_UID));
 
-        mLocalAvatarTextureView = new TextureView(this);
-        mLocalAvatarTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
-                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
-                addLocalAvatarView();
-            }
 
-            @Override
-            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
-
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
-
-            }
-        });
-
-
-        //for init TextureView
-        //binding.unity.addView(mLocalAvatarTextureView, 1, new ViewGroup.LayoutParams(0, 0));
-        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView, KeyCenter.RTC_UID));
+        addLocalTextureView();
 
         if (mLocalViewAdapter == null) {
             mLocalViewAdapter = new SurfaceViewAdapter(getApplicationContext());
@@ -324,11 +302,11 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         binding.rvLocalView.setVisibility(View.VISIBLE);
     }
 
-    private void addLocalAvatarView() {
+    private void addLocalAvatarView(TextureView textureView) {
         SceneDisplayConfig sceneDisplayConfig = new SceneDisplayConfig();
         sceneDisplayConfig.width = mLocalPreviewSurfaceView.getMeasuredWidth();
         sceneDisplayConfig.height = mLocalPreviewSurfaceView.getMeasuredHeight();
-        MetaContext.getInstance().addSceneView(mLocalAvatarTextureView, sceneDisplayConfig);
+        MetaContext.getInstance().addSceneView(textureView, sceneDisplayConfig);
     }
 
     private void localAvatarViewReady() {
@@ -358,12 +336,20 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         ViewGroup viewGroup = (ViewGroup) mLocalAvatarTextureView.getParent();
         if (viewGroup.getChildCount() >= 1) {
             viewGroup.removeView(mLocalAvatarTextureView);
+            viewGroup.removeView(mLocalAvatarTextureView1);
+            viewGroup.removeView(mLocalAvatarTextureView2);
+            viewGroup.removeView(mLocalAvatarTextureView3);
+            viewGroup.removeView(mLocalAvatarTextureView4);
         }
         RtcEngine rtcEngine = MetaContext.getInstance().getRtcEngine();
         rtcEngine.stopPreview();
         mLocalSurfaceViewList.clear();
         binding.rvLocalView.setVisibility(View.GONE);
         mLocalAvatarTextureView = null;
+        mLocalAvatarTextureView1 = null;
+        mLocalAvatarTextureView2 = null;
+        mLocalAvatarTextureView3 = null;
+        mLocalAvatarTextureView4 = null;
         mFrameWidth = -1;
         mFrameHeight = -1;
     }
@@ -588,6 +574,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             } else if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
                 initDressTypeView();
                 initFaceTypeView();
+            }
+
+            if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
+                MetaContext.getInstance().enableSceneVideo(mTextureView, true);
             }
         });
         resetSceneState();
@@ -1005,5 +995,132 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     @Override
     public void onLeaveChannel(IRtcEngineEventHandler.RtcStats stats) {
         mJoinChannelSuccess = false;
+    }
+
+    private void addLocalTextureView() {
+        mLocalAvatarTextureView = new TextureView(this);
+        mLocalAvatarTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+                addLocalAvatarView(mLocalAvatarTextureView);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView, KeyCenter.RTC_UID));
+
+        mLocalAvatarTextureView1 = new TextureView(this);
+        mLocalAvatarTextureView1.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+                addLocalAvatarView(mLocalAvatarTextureView1);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView1, KeyCenter.RTC_UID));
+
+        mLocalAvatarTextureView2 = new TextureView(this);
+        mLocalAvatarTextureView2.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+                addLocalAvatarView(mLocalAvatarTextureView2);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView2, KeyCenter.RTC_UID));
+
+        mLocalAvatarTextureView3 = new TextureView(this);
+        mLocalAvatarTextureView3.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+                addLocalAvatarView(mLocalAvatarTextureView3);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView3, KeyCenter.RTC_UID));
+
+        mLocalAvatarTextureView4 = new TextureView(this);
+        mLocalAvatarTextureView4.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            @Override
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
+                Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+                addLocalAvatarView(mLocalAvatarTextureView4);
+            }
+
+            @Override
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surface, int width, int height) {
+
+            }
+
+            @Override
+            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surface) {
+                return false;
+            }
+
+            @Override
+            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surface) {
+
+            }
+        });
+        mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView4, KeyCenter.RTC_UID));
     }
 }

@@ -414,7 +414,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         int ret = Constants.ERR_OK;
         if (metaScene != null) {
             ret += rtcEngine.leaveChannel();
-            enableSceneVideo(this.sceneView, false);
             ret += metaScene.leaveScene();
         }
         if (spatialAudioEngine != null) {
@@ -423,7 +422,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         }
         Log.d(TAG, "leaveScene success");
         return ret == Constants.ERR_OK;
-
     }
 
     @Override
@@ -482,8 +480,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 pushVideoFrameToDisplay();
-                joinChannel();
             }
+            joinChannel();
         }
         for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
@@ -638,6 +636,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             currentScene = MetaConstants.SCENE_GAME;
             needSaveDressInfo = false;
         }
+        //for test dress scene
+        currentScene = MetaConstants.SCENE_DRESS;
     }
 
     private void checkRoleInfoRes() {
