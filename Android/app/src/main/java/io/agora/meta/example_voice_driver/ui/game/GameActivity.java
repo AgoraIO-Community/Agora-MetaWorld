@@ -853,9 +853,6 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     @Override
     public void onUserOffline(int uid, int reason) {
-        if (MetaConstants.SCENE_GAME != MetaContext.getInstance().getCurrentScene()) {
-            return;
-        }
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
