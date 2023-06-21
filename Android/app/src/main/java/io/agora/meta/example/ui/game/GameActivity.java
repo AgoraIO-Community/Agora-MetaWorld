@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.io.File;
@@ -38,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.agora.base.JavaI420Buffer;
 import io.agora.base.VideoFrame;
 import io.agora.meta.IMetaScene;
 import io.agora.meta.IMetaSceneEventHandler;
@@ -54,6 +56,7 @@ import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
 import io.agora.meta.example.meta.MetaContext;
 import io.agora.meta.example.models.FaceParameterItem;
+import io.agora.meta.example.models.UnityMessage;
 import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.SurfaceViewInfo;
 import io.agora.meta.example.models.manifest.FaceBlendShape;
@@ -111,6 +114,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private boolean mJoinChannelSuccess;
 
     private boolean mEnableRemotePreviewAvatar;
+
+    private int mViewMode = 0;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -199,8 +204,14 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         initMainUnityView();
 
+        initView();
+
         initListener();
         // MetaContext.getInstance().joinChannel();
+    }
+
+    private void initView() {
+        binding.uidTv.setText("UID:" + KeyCenter.RTC_UID);
     }
 
     private void initLocalSurfaceView() {
@@ -302,6 +313,77 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         binding.rvLocalView.setVisibility(View.VISIBLE);
     }
 
+    private void addVideoFrameObserver() {
+        RtcEngine rtcEngine = MetaContext.getInstance().getRtcEngine();
+
+        rtcEngine.registerVideoFrameObserver(new IVideoFrameObserver() {
+            @Override
+            public boolean onCaptureVideoFrame(VideoFrame videoFrame) {
+                MetaContext.getInstance().pushExternalVideoFrame(videoFrame);
+//                if (null != videoFrame.getMetaInfo() && videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).size() > 0) {
+//                    FaceCaptureInfo faceCaptureInfo = (FaceCaptureInfo) videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).get(0);
+//                    UnityMessage unityMessage = new UnityMessage();
+//                    unityMessage.setKey(MetaConstants.KEY_UNITY_MESSAGE_FACE_CAPTURE);
+//                    unityMessage.setValue(faceCaptureInfo.toString());
+//                    MetaContext.getInstance().sendSceneMessage(JSONObject.toJSONString(unityMessage));
+//                }
+                return false;
+            }
+
+            @Override
+            public boolean onPreEncodeVideoFrame(VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public boolean onScreenCaptureVideoFrame(VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public boolean onPreEncodeScreenVideoFrame(VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public boolean onMediaPlayerVideoFrame(VideoFrame videoFrame, int mediaPlayerId) {
+                return false;
+            }
+
+            @Override
+            public boolean onRenderVideoFrame(String channelId, int uid, VideoFrame videoFrame) {
+                return false;
+            }
+
+            @Override
+            public int getVideoFrameProcessMode() {
+                return 0;
+            }
+
+            @Override
+            public int getVideoFormatPreference() {
+                return 0;
+            }
+
+            @Override
+            public boolean getRotationApplied() {
+                return false;
+            }
+
+            @Override
+            public boolean getMirrorApplied() {
+                return false;
+            }
+
+            @Override
+            public int getObservedFramePosition() {
+                return 0;
+            }
+        });
+
+
+    }
+
     private void addLocalAvatarView(TextureView textureView) {
         SceneDisplayConfig sceneDisplayConfig = new SceneDisplayConfig();
         sceneDisplayConfig.width = mLocalPreviewSurfaceView.getMeasuredWidth();
@@ -381,7 +463,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             isEnterScene.set(false);
             MetaContext.getInstance().cancelRoleDressInfo(MetaContext.getInstance().getRoleInfo().getName()
                     , MetaContext.getInstance().getRoleInfo().getGender());
-            MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
+            //MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
             MetaContext.getInstance().leaveScene();
         });
 
@@ -390,7 +472,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             isEnterScene.set(false);
             MetaContext.getInstance().saveRoleDressInfo(MetaContext.getInstance().getRoleInfo().getName()
                     , MetaContext.getInstance().getRoleInfo().getGender());
-            MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
+            //MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
             MetaContext.getInstance().leaveScene();
         });
 
@@ -462,6 +544,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         RxView.clicks(binding.faceSettingBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
             binding.dressSettingLayout.setVisibility(View.GONE);
             binding.faceSettingLayout.setVisibility(View.VISIBLE);
+        });
+
+        RxView.clicks(binding.zoomAvatarBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            updateViewMode();
         });
 
 
@@ -536,6 +622,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
     private void maybeCreateScene() {
         Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
+        if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
+            mSurfaceSizeChange = true;
+        }
         if (mReCreateScene && mSurfaceSizeChange && mIsFront /*&& mJoinChannelSuccess*/) {
             resetSceneState();
             resetViewVisibility();
@@ -548,6 +637,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         mReCreateScene = false;
         mSurfaceSizeChange = false;
         mEnableRemotePreviewAvatar = true;
+        mViewMode = 0;
     }
 
 
@@ -572,8 +662,11 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                 initLocalSurfaceView();
                 initRemoteSurfaceView();
             } else if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
+                addVideoFrameObserver();
                 initDressTypeView();
                 initFaceTypeView();
+                updateViewMode();
+                pushEmptyFrame();
             }
 
             if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
@@ -1122,5 +1215,23 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             }
         });
         mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalAvatarTextureView4, KeyCenter.RTC_UID));
+    }
+
+    private void updateViewMode() {
+        UnityMessage message = new UnityMessage();
+        message.setKey("setCamera");
+        JSONObject valueJson = new JSONObject();
+        valueJson.put("viewMode", ++mViewMode % 3);
+        message.setValue(valueJson.toJSONString());
+        MetaContext.getInstance().sendSceneMessage(JSONObject.toJSONString(message));
+    }
+
+    private void pushEmptyFrame() {
+        JavaI420Buffer i420Buffer = JavaI420Buffer.allocate(240, 240);
+        i420Buffer.getDataY().put(new byte[0], 0, 0);
+        i420Buffer.getDataU().put(new byte[0], 0, 0);
+        i420Buffer.getDataV().put(new byte[0], 0, 0);
+        VideoFrame emptyFrame = new VideoFrame(i420Buffer, 0, System.currentTimeMillis());
+        MetaContext.getInstance().pushExternalVideoFrame(emptyFrame);
     }
 }

@@ -191,6 +191,13 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 rtcEngine.registerExtension("agora_video_filters_metakit", "metakit", Constants.MediaSourceType.CUSTOM_VIDEO_SOURCE);
                 rtcEngine.setExternalVideoSource(true, true, Constants.ExternalVideoSourceType.VIDEO_FRAME);
 
+                rtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                        new VideoEncoderConfiguration.VideoDimensions(240, 240),
+                        VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
+                        STANDARD_BITRATE,
+                        VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_LANDSCAPE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
+
+
                 rtcEngine.enableAudio();
                 //rtcEngine.enableVideo();
 

@@ -163,6 +163,17 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/uid_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/uid_color"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/save_btn"
         android:layout_width="wrap_content"
@@ -191,6 +202,15 @@
         android:visibility="gone"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dress_setting_bt" />
+
+    <Button
+        android:id="@+id/zoom_avatar_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zoom_avatar_setting"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/face_setting_bt" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dress_setting_layout"
@@ -251,7 +271,7 @@
         android:id="@+id/scene_dress_and_face_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="cancel_bt,save_btn,dress_setting_bt,face_setting_bt,dress_setting_layout,face_setting_layout" />
+        app:constraint_referenced_ids="cancel_bt,uid_tv,save_btn,dress_setting_bt,face_setting_bt,dress_setting_layout,zoom_avatar_bt,face_setting_layout" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
