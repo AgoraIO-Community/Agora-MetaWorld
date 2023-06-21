@@ -13,7 +13,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="io.agora.meta.example.ui.main.MainFragment">
+        tools:context="io.agora.meta.example_voice_driver.ui.main.MainFragment">
 
         <TextView
             android:id="@+id/title"

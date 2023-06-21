@@ -4,4 +4,4 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.agora.meta.example.MainActivity" />
+    tools:context="io.agora.meta.example_voice_driver.MainActivity" />
