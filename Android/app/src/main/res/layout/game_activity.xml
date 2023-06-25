@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context="io.agora.meta.example.ui.game.GameActivity">
+    tools:context="io.agora.meta.example_voice_driver.ui.game.GameActivity">
 
     <FrameLayout
         android:id="@+id/unity"
@@ -134,24 +134,15 @@
         android:padding="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintWidth_max="@dimen/local_view_max_width" />
+        app:layout_constraintRight_toRightOf="parent" />
+    <!--app:layout_constraintWidth_max="@dimen/local_view_max_width"-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_remote_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="@dimen/remote_view_max_width" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/scene_game_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="back,card,users,mic,speaker,dress_setting,btn_switch_local_view,btn_switch_remote_view,btn_switch_remote_preview,rv_local_view,rv_remote_view" />
+        app:constraint_referenced_ids="back,card,users,mic,speaker,dress_setting,btn_switch_local_view,btn_switch_remote_view,btn_switch_remote_preview,rv_local_view" />
 
 
     <Button
@@ -161,6 +152,17 @@
         android:text="@string/cancel"
         android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/uid_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/uid_color"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
@@ -192,10 +194,21 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/dress_setting_bt" />
 
+    <Button
+        android:id="@+id/zoom_avatar_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/zoom_avatar_setting"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dress_setting_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
@@ -224,6 +237,7 @@
         android:id="@+id/face_setting_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
@@ -247,11 +261,22 @@
             app:layout_constraintRight_toRightOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_remote_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_max="@dimen/remote_view_max_width" />
+
     <androidx.constraintlayout.widget.Group
         android:id="@+id/scene_dress_and_face_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="cancel_bt,save_btn,dress_setting_bt,face_setting_bt,dress_setting_layout,face_setting_layout" />
+        app:constraint_referenced_ids="cancel_bt,uid_tv,save_btn,zoom_avatar_bt,rv_remote_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

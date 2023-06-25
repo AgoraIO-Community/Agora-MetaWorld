@@ -15,4 +15,14 @@ FACE_CAP_APP_ID=xxxxx
 FACE_CAP_APP_KEY=xxxxx
 ```
 
-3.Run the example
+3.add dependencies in your build.gradle
+```groovy
+    implementation(['com.squareup.okhttp3:logging-interceptor:3.9.0',
+                    'com.squareup.retrofit2:retrofit:2.3.0',
+                    'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
+                    'com.squareup.retrofit2:converter-gson:2.3.0'])
+    implementation(["io.reactivex.rxjava2:rxandroid:2.0.1",
+                    "io.reactivex.rxjava2:rxjava:2.1.3"])
+```
+
+4.Run the example

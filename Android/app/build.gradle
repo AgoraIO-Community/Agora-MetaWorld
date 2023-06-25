@@ -12,11 +12,11 @@ android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "io.agora.meta.example"
-        minSdk 24
+        applicationId "io.agora.meta.example_voice_driver"
+        minSdk 22
         targetSdk 33
         versionCode 40130
-        versionName "401.30.0605.1"
+        versionName "401.30.11.0621.1"
         flavorDimensions "versionCode"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

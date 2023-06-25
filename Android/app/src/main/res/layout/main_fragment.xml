@@ -13,14 +13,14 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="io.agora.meta.example.ui.main.MainFragment">
+        tools:context="io.agora.meta.example_voice_driver.ui.main.MainFragment">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="33dp"
             android:layout_marginTop="53dp"
-            android:text="MetaChat"
+            android:text="Meta"
             android:textColor="#ff8342e4"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"

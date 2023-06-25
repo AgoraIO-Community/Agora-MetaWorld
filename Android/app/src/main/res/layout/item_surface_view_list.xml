@@ -10,6 +10,8 @@
     android:theme="@style/Theme.MaterialComponents.NoActionBar"
     app:cardCornerRadius="10dp"
     app:cardElevation="0dp"
+    app:strokeColor="#0066cc"
+    app:strokeWidth="2dp"
     app:state_dragged="true">
 
     <FrameLayout
