@@ -153,7 +153,7 @@
                                             <constraint firstAttribute="width" constant="18" id="l4z-C6-VfF"/>
                                         </constraints>
                                     </imageView>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请选择场景" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxR-3Y-8tT">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请选择角色" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IxR-3Y-8tT">
                                         <rect key="frame" x="59" y="18" width="77" height="18"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <color key="textColor" red="0.63137254899999995" green="0.5450980392" blue="0.69019607839999997" alpha="1" colorSpace="calibratedRGB"/>
@@ -1219,7 +1219,12 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWD-KH-ANa">
-                                <rect key="frame" x="24" y="76" width="59" height="35"/>
+                                <rect key="frame" x="24" y="76" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="EzB-qc-zaC"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="取消">
                                     <color key="baseBackgroundColor" systemColor="systemGray3Color"/>
@@ -1229,7 +1234,12 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K8a-cn-rGm">
-                                <rect key="frame" x="292" y="75" width="59" height="35"/>
+                                <rect key="frame" x="271" y="75" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="wTv-lf-XXT"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="保存">
                                     <color key="baseBackgroundColor" systemColor="systemGray3Color"/>
@@ -1287,7 +1297,12 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0i1-R3-yuk">
-                                <rect key="frame" x="300" y="231" width="59" height="35"/>
+                                <rect key="frame" x="279" y="231" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="bJ8-5a-pMt"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="美型"/>
                                 <connections>
@@ -1295,11 +1310,39 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cao-5a-01r">
-                                <rect key="frame" x="300" y="188" width="59" height="35"/>
+                                <rect key="frame" x="279" y="188" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="mEp-GZ-aHV"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="换装"/>
                                 <connections>
                                     <action selector="changeDress:" destination="cqu-SK-y4U" eventType="touchUpInside" id="S8I-XB-aUy"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p2F-YB-cdW">
+                                <rect key="frame" x="186" y="231" width="120" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="remove view"/>
+                                <connections>
+                                    <action selector="removeRenderView:" destination="cqu-SK-y4U" eventType="touchUpInside" id="CY5-PB-lVk"/>
+                                </connections>
+                            </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6pP-6q-iVJ">
+                                <rect key="frame" x="279" y="274" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="k5M-aU-eYl"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="视角"/>
+                                <connections>
+                                    <action selector="changeViewMode:" destination="cqu-SK-y4U" eventType="touchUpInside" id="mjm-Rq-EH0"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1318,16 +1361,18 @@
                             <constraint firstItem="mez-jP-OER" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="82" id="LDp-UP-8D6"/>
                             <constraint firstItem="Sp2-OA-YVr" firstAttribute="centerY" secondItem="riK-nH-01w" secondAttribute="centerY" id="Q0r-Ic-tQH"/>
                             <constraint firstItem="XGu-gV-95P" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="21" id="Q4u-Rm-rae"/>
+                            <constraint firstItem="6pP-6q-iVJ" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="224" id="QiN-oB-wXD"/>
                             <constraint firstItem="xRw-TD-JqE" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="21" id="Qrz-Gf-x0N"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="bottom" secondItem="nEc-f2-QIO" secondAttribute="bottom" constant="-3" id="R1s-Db-4bw"/>
                             <constraint firstItem="mez-jP-OER" firstAttribute="leading" secondItem="BoX-nc-3L3" secondAttribute="trailing" constant="8" symbolic="YES" id="SNm-yS-3xv"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="0i1-R3-yuk" secondAttribute="trailing" constant="16" id="SRw-wd-hzp"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="nEc-f2-QIO" secondAttribute="trailing" constant="24" id="WlL-S9-VQk"/>
-                            <constraint firstItem="P4h-vr-gEz" firstAttribute="centerY" secondItem="hBW-xQ-aH9" secondAttribute="centerY" constant="-4" id="YEf-ES-Fl2"/>
+                            <constraint firstItem="P4h-vr-gEz" firstAttribute="centerY" secondItem="hBW-xQ-aH9" secondAttribute="centerY" constant="-7" id="YEf-ES-Fl2"/>
                             <constraint firstItem="Q0S-rm-lxb" firstAttribute="leading" secondItem="GxO-iP-H1G" secondAttribute="leading" constant="24" id="ZdB-aH-OqP"/>
                             <constraint firstItem="XWD-KH-ANa" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="26" id="Zsm-zT-6z6"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="K8a-cn-rGm" secondAttribute="trailing" constant="24" id="cXL-sq-eta"/>
                             <constraint firstItem="XWD-KH-ANa" firstAttribute="leading" secondItem="GxO-iP-H1G" secondAttribute="leading" constant="24" id="dWS-Hp-plq"/>
+                            <constraint firstItem="p2F-YB-cdW" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="181" id="dbq-Ou-bta"/>
                             <constraint firstItem="ARO-VQ-dTE" firstAttribute="centerY" secondItem="riK-nH-01w" secondAttribute="centerY" id="h5k-Ux-yIc"/>
                             <constraint firstItem="hBW-xQ-aH9" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="26" id="j1w-b8-lZ5"/>
                             <constraint firstItem="BoX-nc-3L3" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="82" id="j4o-El-AmD"/>
@@ -1338,6 +1383,8 @@
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="bottom" secondItem="Q0S-rm-lxb" secondAttribute="bottom" id="pon-Dp-oCn"/>
                             <constraint firstItem="SqB-vc-uPF" firstAttribute="leading" secondItem="P4h-vr-gEz" secondAttribute="trailing" constant="-6" id="tM9-45-14J"/>
                             <constraint firstItem="RRN-Sl-36O" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="21" id="uyv-nt-jWA"/>
+                            <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="p2F-YB-cdW" secondAttribute="trailing" constant="69" id="vVR-5w-l4D"/>
+                            <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="6pP-6q-iVJ" secondAttribute="trailing" constant="16" id="wsD-b4-ALZ"/>
                             <constraint firstItem="xRw-TD-JqE" firstAttribute="trailing" secondItem="GxO-iP-H1G" secondAttribute="trailing" constant="-40" id="x4m-SJ-2yS"/>
                             <constraint firstItem="0i1-R3-yuk" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="181" id="x9n-fC-2hC"/>
                             <constraint firstItem="cao-5a-01r" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="138" id="ziz-g2-Eba"/>
@@ -1367,6 +1414,7 @@
                         <outlet property="userListTableV" destination="lpL-Fb-eN0" id="uLc-Mr-Ppo"/>
                         <outlet property="userMicB" destination="xRw-TD-JqE" id="sxe-dV-WyZ"/>
                         <outlet property="userSpeakerB" destination="XGu-gV-95P" id="Ca8-vQ-aRk"/>
+                        <outlet property="viewBtn" destination="6pP-6q-iVJ" id="nIj-Nu-WNc"/>
                         <outlet property="visitorIcon" destination="Yse-XW-VXL" id="IjJ-HF-FWY"/>
                         <outlet property="visitorTextView" destination="7I6-2G-Sg4" id="HeS-4h-1R6"/>
                         <outlet property="visitorTipBack" destination="ARO-VQ-dTE" id="oUL-z1-xuw"/>

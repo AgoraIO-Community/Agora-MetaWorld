@@ -13,6 +13,7 @@ private let npcTableFileName = "tableNPC"
 private let npc1MoveFileName = "moveNPC1"
 private let npc2MoveFileName = "moveNPC2"
 
+// 场景index
 enum MetaChatSceneIndex: Int {
     case live = 0
     case chat = 1
@@ -74,6 +75,7 @@ class MetaServiceEngine: NSObject {
         super.init()
     }
     
+    // 创建rtc engine
     func createRtcEngine() {
         guard let token = KeyCenter.RTM_TOKEN else { return }
         let rtcEngineConfig = AgoraRtcEngineConfig()
@@ -91,15 +93,15 @@ class MetaServiceEngine: NSObject {
         rtcEngine?.setParameters("{\"rtc.audio.force_bluetooth_a2dp\": true}")
         rtcEngine?.setChannelProfile(.liveBroadcasting)
         rtcEngine?.setClientRole(.broadcaster)
-//        rtcEngine?.enableVideo()
-//        rtcEngine?.setExternalVideoSource(true, useTexture: true, sourceType: .videoFrame)
+        
+        var ret = rtcEngine?.registerExtension(withVendor: "agora_video_filters_metakit", extension: "metakit", sourceType: .customVideo)
+        rtcEngine?.setExternalVideoSource(true, useTexture: true, sourceType: .videoFrame)
 
         let vec = AgoraVideoEncoderConfiguration(size: resolution!, frameRate: .fps30, bitrate: AgoraVideoBitrateStandard, orientationMode: .adaptative, mirrorMode: .enabled)
         rtcEngine?.setVideoEncoderConfiguration(vec)
-        
-//        rtcEngine?.startPreview()
     }
     
+    // 创建MV data stream
     func createMVStream() {
         let config = AgoraDataStreamConfig()
         config.ordered = true
@@ -107,6 +109,7 @@ class MetaServiceEngine: NSObject {
         rtcEngine?.createDataStream(&mvStreamId, config: config)
     }
         
+    // 创建meta service
     func createMetaService(userName: String, avatarUrl: String, delegate: AgoraMetaEventDelegate?) {
         playerName = userName
                 
@@ -129,17 +132,18 @@ class MetaServiceEngine: NSObject {
         createMVStream()
     }
 
+    // 创建场景
     func createScene(_ delegate: MetaChatSceneViewController/*, sceneBroadcastMode: AgoraMetachatSceneBroadcastMode*/) {
         let config = AgoraMetaSceneConfig()
         config.delegate = delegate
-        config.enableFaceCapture = true
-        config.faceCaptureCertificate = KeyCenter.FACE_CAPTURE_CERTIFICATE
-        config.faceCaptureAppId = KeyCenter.FACE_CAPTURE_APP_ID
+//        config.enableFaceCapture = false
+//        config.faceCaptureCertificate = KeyCenter.FACE_CAPTURE_CERTIFICATE
+//        config.faceCaptureAppId = KeyCenter.FACE_CAPTURE_APP_ID
 //        config.sceneBroadcastMode = sceneBroadcastMode
         metaService?.createScene(config)
     }
     
-    
+    // 进入场景
     func enterScene(view: UIView/*, sceneBroadcastMode: AgoraMetachatSceneBroadcastMode*/) {
         guard let sceneInfo = currentSceneInfo else {
             return
@@ -166,21 +170,15 @@ class MetaServiceEngine: NSObject {
         let data = try? JSONSerialization.data(withJSONObject: dict, options: [])
         let extraInfo = String(data: data!, encoding: String.Encoding.utf8)
         enterSceneConfig.extraInfo = extraInfo!.data(using: String.Encoding.utf8)
-//        if sceneBroadcastMode == .audience {
-//            enterSceneConfig.broadcaster = braodcaster
-//        }
         
         localUserAvatar = metaScene?.getLocalUserAvatar()
         localUserAvatar?.setUserInfo(currentUserInfo)
         localUserAvatar?.setModelInfo(avatarInfo)
 
-        let dict1 = ["avatar": "girl", "dress": [10000, 10100], "face": [["key": "eyeBlink_L", "val": 30] as [String : Any]], "2dbg": ""] as [String : Any]
+        let dict1 = ["avatar": "boy", "dress": [10000, 10100], "face": [["key": "eyeBlink_L", "val": 30] as [String : Any]], "2dbg": ""] as [String : Any]
         let data1 = try? JSONSerialization.data(withJSONObject: dict1, options: [])
         let extraInfo1 = String(data: data1!, encoding: String.Encoding.utf8)
         localUserAvatar?.setExtraInfo(extraInfo1!.data(using: String.Encoding.utf8))
-        
-//        metaScene?.enableBroadcast(true)
-//        metaScene?.enableVideo(MetaChatSceneViewController.renderView, enable: true)
         
         metaScene?.enter(enterSceneConfig)
     }
@@ -206,6 +204,7 @@ class MetaServiceEngine: NSObject {
         localUserAvatar?.applyInfo()
     }
     
+    // 加入频道
     func joinRtcChannel(success: @escaping () -> Void) {
         let localSpatialConfig = AgoraLocalSpatialAudioConfig()
         localSpatialConfig.rtcEngine = self.rtcEngine
@@ -220,15 +219,9 @@ class MetaServiceEngine: NSObject {
             self.rtcEngine?.muteAllRemoteAudioStreams(true)
             success()
        })
-//        let mediaOptions = AgoraRtcChannelMediaOptions()
-//        mediaOptions.publishCameraTrack = true
-//        rtcEngine?.joinChannel(byToken: KeyCenter.RTC_TOKEN, channelId: KeyCenter.CHANNEL_ID, uid: KeyCenter.RTC_UID, mediaOptions: mediaOptions) { String, UInt, Int in
-//            DLog("joinChannel 回调 ======= ",String,UInt,Int)
-//             self.rtcEngine?.muteAllRemoteAudioStreams(true)
-//             success()
-//        }
     }
     
+    // 离开频道
     func leaveRtcChannel() {
         AgoraLocalSpatialAudioKit.destroy()
         localSpatial = nil
@@ -239,6 +232,7 @@ class MetaServiceEngine: NSObject {
         rtcEngine?.leaveChannel()
     }
     
+    // 离开场景
     func leaveScene() {
         metaScene?.leave()
         
@@ -254,8 +248,8 @@ class MetaServiceEngine: NSObject {
         isSinging = false
     }
     
+    // 销毁场景
     func resetMetachat() {
-        
         metaScene?.destroy()
         metaScene = nil
         
@@ -282,6 +276,7 @@ class MetaServiceEngine: NSObject {
 //        rtcEngine?.muteAllRemoteAudioStreams(isMute)
     }
     
+    // 开启相机预览
     func startPreview(_ view: UIView) {
         if canvas0 != nil {
             canvas0 = nil
@@ -295,6 +290,7 @@ class MetaServiceEngine: NSObject {
         rtcEngine?.startPreview()
     }
     
+    // 关闭相机预览
     func stopPreview() {
         rtcEngine?.stopPreview()
     }
@@ -324,6 +320,7 @@ class MetaServiceEngine: NSObject {
         initalConsoleConfig()
     }
     
+    // 创建并打开NPC播放器
     func createAndOpenNPCPlayer(tableNPCOpenCompleted: @escaping ((_ player: AgoraRtcMediaPlayerProtocol)->())){
         func filePathWithName(fileName:String) -> String{
             guard let url = Bundle.main.path(forResource: fileName, ofType: "m4a") else { return ""}
@@ -341,6 +338,7 @@ class MetaServiceEngine: NSObject {
         })
     }
     
+    // 修改电视URL
     func changeTVUrl(_ newUrl: String) {
         tvPlayerMgr?.changeTVUrl(newUrl)
     }
@@ -354,10 +352,12 @@ class MetaServiceEngine: NSObject {
         console.setRtcEngine(rtcEngine, player: player)
     }
     
+    // 重置电视URL
     func resetTV() {
         changeTVUrl(kAdvertisingURL)
     }
     
+    // 关闭电视
     func setTVoff() {
         stopPushVideo(displayId: UInt32(MetaChatDisplayID.tv.rawValue))
     }
@@ -388,6 +388,7 @@ class MetaServiceEngine: NSObject {
         }
     }
     
+    // 更新播放器空间位置
     func updateSpatialForMediaPlayer(id:ObjectID, postion: [NSNumber], forward:[NSNumber] = [0,0,1]) {
         var player: AgoraRtcMediaPlayerProtocol?
         
@@ -442,6 +443,7 @@ class MetaServiceEngine: NSObject {
         }
     }
     
+    // 处理消息
     func handleKTVSeekMessage(_ message:[String: Any])  {
         // 如果正在唱歌 不接收别人的seek消息
         if isSinging {
@@ -484,6 +486,7 @@ class MetaServiceEngine: NSObject {
     }
 }
 
+// RTC Engine代理
 extension MetaServiceEngine: AgoraRtcEngineDelegate {
 
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
@@ -533,12 +536,15 @@ extension MetaServiceEngine: AgoraRtcEngineDelegate {
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, firstRemoteVideoDecodedOfUid uid: UInt, size: CGSize, elapsed: Int) {
+        DLog("firstRemoteVideoDecodedOfUid  === 加入的uid \(uid)")
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.delegate?.rtcEngine(engine, firstRemoteVideoDecodedOfUid: uid, size: size, elapsed: elapsed)
         }
     }
 }
 
+
+// 播放器代理
 extension MetaServiceEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
     
     func AgoraRtcMediaPlayer(_ playerKit: AgoraRtcMediaPlayerProtocol, didReceiveVideoFrame videoFrame: AgoraOutputVideoFrame) {
@@ -546,25 +552,27 @@ extension MetaServiceEngine: AgoraRtcMediaPlayerVideoFrameDelegate {
             return
         }
         
+//        let vf = AgoraVideoFrame()
+//        vf.format = 1
+//        vf.strideInPixels = Int32(videoFrame.width)
+//        vf.height = Int32(videoFrame.height)
+//        vf.dataBuf = data
+//        metaScene?.pushVideoFrame(toDisplay: "1", frame: vf)
+//        DLog("didReceive videoFrame:  width = \(videoFrame.width), height = \(videoFrame.height)", Thread.current,"time === ", Date.timeIntervalSinceReferenceDate)
+        
         let vf = AgoraVideoFrame()
-        vf.format = 1
-        vf.strideInPixels = Int32(videoFrame.width)
-        vf.height = Int32(videoFrame.height)
-        vf.dataBuf = data
-        metaScene?.pushVideoFrame(toDisplay: "1", frame: vf)
-        DLog("didReceive videoFrame:  width = \(videoFrame.width), height = \(videoFrame.height)", Thread.current,"time === ", Date.timeIntervalSinceReferenceDate)
+        vf.format = 12
+        vf.textureBuf = pixelBuffer
+        MetaChatSceneViewController.frameIndex += 1
+        vf.time = CMTimeMake(value: Int64(MetaChatSceneViewController.frameIndex), timescale: 30)
+        MetaServiceEngine.sharedEngine.rtcEngine?.pushExternalVideoFrame(vf)
     }
 }
 
+// 纹理回调代理
 extension MetaServiceEngine: AgoraVideoFrameDelegate {
     func onCapture(_ videoFrame: AgoraOutputVideoFrame) -> Bool {
-//        if let faceStr = videoFrame.metaInfo["KEY_FACE_CAPTURE"] as? String {
-//
-//            let dict = ["key": "faceCapture",
-//                        "value": faceStr
-//            ]
-//            sendMessage(dic: dict)
-//        }
+
         return true
     }
 }

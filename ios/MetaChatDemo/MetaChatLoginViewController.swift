@@ -130,20 +130,13 @@ class MetaChatLoginViewController: UIViewController {
     
     @IBOutlet weak var cancelDownloadButton: UIButton!
     
-    #if DEBUG
-    private var currentSceneId: Int = 15
-    #elseif TEST
-    private var currentSceneId: Int = 4
-    #else
-    private var currentSceneId: Int = 8
-    #endif
+    private var currentSceneId: Int = 24
     
     var sceneVC: MetaChatSceneViewController!
         
     private let libraryPath = NSHomeDirectory() + "/Library/Caches/15"
     
     var selSex: Int = 0    //0未选择，1男，2女
-    var selScene: MetaChatSceneIndex = .chat
     
 //    var sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.none // 0: broadcast  1: audience
     
@@ -180,10 +173,6 @@ class MetaChatLoginViewController: UIViewController {
     }
 
     private func moveFileHandler() {
-//        if FileManager.default.fileExists(atPath: libraryPath + "20", isDirectory: nil) {
-//            return
-//        }
-//        FileManager.default.createFile(atPath: libraryPath, contents: nil, attributes: nil)
         let path = Bundle.main.path(forResource: "15", ofType: "zip")
         try? Zip.unzipFile(URL(fileURLWithPath: path ?? ""), destination: URL(fileURLWithPath: NSHomeDirectory() + "/Library/Caches/"), overwrite: true, password: nil) { progress in
             print("zip progress = \(progress)")
@@ -218,8 +207,8 @@ class MetaChatLoginViewController: UIViewController {
         } else if sender.tag == 1002 {
             selRoleIcon.image = UIImage.init(named: "arrow-up")
             frame.origin.y = 80
-            selSexAlert.selManCell.selectedLabel.text = "元语聊"
-            selSexAlert.selWomanCell.selectedLabel.text = "元直播"
+            selSexAlert.selManCell.selectedLabel.text = "主播"
+            selSexAlert.selWomanCell.selectedLabel.text = "观众"
         }
 //        selSexAlert.frame = frame
         currentSelBtnTag = sender.tag
@@ -285,19 +274,29 @@ class MetaChatLoginViewController: UIViewController {
             defaultStand.set(true, forKey: key)
         }
         
+//        let pcm = NSHomeDirectory() + "/Library/Caches/" + "pcm.bin"
+//        let bs = NSHomeDirectory() + "/Library/Caches/" + "bs.bin"
+//        if !FileManager.default.fileExists(atPath: pcm, isDirectory: nil) {
+//            FileManager.default.createFile(atPath: pcm, contents: nil, attributes: nil)
+//        }
+//        if !FileManager.default.fileExists(atPath: bs, isDirectory: nil) {
+//            FileManager.default.createFile(atPath: bs, contents: nil, attributes: nil)
+//        }
+        
         MetaServiceEngine.sharedEngine.resolution = CGSizeMake(240, 240);
-        
+        // 创建RTC Engine
         MetaServiceEngine.sharedEngine.createRtcEngine()
-        
+        // 创建meta service
         MetaServiceEngine.sharedEngine.createMetaService(userName: userNameTF.text!, avatarUrl: avatarUrlArray[selAvatarIndex], delegate: self)
-                        
+        // 获取场景信息
         MetaServiceEngine.sharedEngine.metaService?.getSceneAssetsInfo()
         
         // 设置进入不同场景
-        kSceneIndex = selScene
-        if kSceneIndex == .chat {
+        if false {
+            kSceneIndex = .chat
             switchOrientation(isPortrait: false, isFullScreen: isEnter)
         } else {
+            kSceneIndex = .live
             switchOrientation(isPortrait: true, isFullScreen: isEnter)
         }
         
@@ -311,10 +310,11 @@ class MetaChatLoginViewController: UIViewController {
     }
     
     func onSceneReady(_ sceneInfo: AgoraMetaSceneInfo) {
-//        self.createScene(sceneInfo)
-        self.joinChannel(sceneInfo)
+        self.createScene(sceneInfo)
+//        self.joinChannel(sceneInfo)
     }
     
+    // 加入频道
     func joinChannel(_ sceneInfo: AgoraMetaSceneInfo) {
         MetaServiceEngine.sharedEngine.joinRtcChannel { [weak self] in
             guard let wSelf = self else {return}
@@ -322,6 +322,7 @@ class MetaChatLoginViewController: UIViewController {
         }
     }
     
+    // 创建场景
     func createScene(_ sceneInfo: AgoraMetaSceneInfo) {
         DispatchQueue.main.async {
             self.downloadingBack.isHidden = true
@@ -358,6 +359,7 @@ extension MetaChatLoginViewController: SelSexAlertDelegate {
     
     func onSelectSex(index: Int) {
         selSex = index + 1
+//        sceneBroadcastMode = AgoraMetachatSceneBroadcastMode.init(rawValue: UInt(index)) ?? .none
         
         if currentSelBtnTag == 1001 {
             if selSex == 1 {
@@ -367,11 +369,9 @@ extension MetaChatLoginViewController: SelSexAlertDelegate {
             }
         } else {
             if selSex == 1 {
-                selRoleLabel.text = "元语聊"
-                selScene = .chat
+                selRoleLabel.text = "主播"
             } else if selSex == 2 {
-                selRoleLabel.text = "元直播"
-                selScene = .live
+                selRoleLabel.text = "观众"
             }
         }
         
@@ -395,12 +395,13 @@ extension MetaChatLoginViewController: AgoraMetaEventDelegate {
         
     }
     
+    // 创建场景完成回调
     func onCreateSceneResult(_ scene: AgoraMetaScene?, errorCode: Int) {
         if errorCode != 0 {
             print("create scene error: \(errorCode)")
             return
         }
-        
+        scene?.enableVoiceDriveAvatar(true)
         MetaServiceEngine.sharedEngine.metaScene = scene
         DispatchQueue.main.async {
             var width = self.view.frame.width
@@ -425,6 +426,7 @@ extension MetaChatLoginViewController: AgoraMetaEventDelegate {
         }
     }
     
+    // 连接状态变化回调
     func onConnectionStateChanged(_ state: AgoraMetaConnectionStateType, reason: AgoraMetaConnectionChangedReasonType) {
         if state == .disconnected {
             DispatchQueue.main.async {
@@ -447,6 +449,7 @@ extension MetaChatLoginViewController: AgoraMetaEventDelegate {
         
     }
     
+    // 获取场景资源信息回调
     func onGetSceneAssetsInfoResult(_ scenes: NSMutableArray, errorCode: Int) {
         self.isEntering = false
         
@@ -500,6 +503,7 @@ extension MetaChatLoginViewController: AgoraMetaEventDelegate {
         }
     }
     
+    // 下载进度回调
     func onDownloadSceneAssetsProgress(_ sceneId: Int, progress: Int, state: AgoraMetaDownloadStateType) {
         DispatchQueue.main.async {
             self.downloadingProgress.progress = Float(progress)/100.0
