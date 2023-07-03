@@ -35,4 +35,8 @@ public class MetaConstants {
     public static final String AVATAR_TYPE_BOY = "boy";
     public static final String AVATAR_TYPE_GIRL = "girl";
     public static final String AVATAR_TYPE_HUAMULAN = "huamulan";
+
+    public static final int AUDIO_SAMPLE_RATE = 16000;
+    public static final int AUDIO_SAMPLE_NUM_OF_CHANNEL = 1;
+    public static final int AUDIO_BITS_PER_SAMPLE = 16;
 }

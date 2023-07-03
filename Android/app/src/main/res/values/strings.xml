@@ -13,5 +13,7 @@
     <string name="face_shape_label">%1s:%2d</string>
     <string name="btn_switch_remote_preview_avatar">切换远端显示Avatar</string>
     <string name="btn_switch_remote_preview_camera">切换远端显示摄像头</string>
+    <string name="play_local_audio">播放本地音频</string>
+    <string name="stop_local_audio">停止本地音频</string>
 
 </resources>

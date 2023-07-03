@@ -490,7 +490,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 pushVideoFrameToDisplay();
             }
-            joinChannel();
         }
         for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
@@ -832,6 +831,12 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     public void enableVoiceDriveAvatar(boolean enable) {
         if (null != metaScene) {
             metaScene.enableVoiceDriveAvatar(enable);
+        }
+    }
+
+    public void pushAudioToDriveAvatar(byte[] data, long timestamp) {
+        if (null != metaScene) {
+            metaScene.pushAudioToDriveAvatar(data, timestamp, MetaConstants.AUDIO_SAMPLE_RATE, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL);
         }
     }
 }

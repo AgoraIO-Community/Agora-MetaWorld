@@ -58,6 +58,7 @@ import io.agora.meta.example_voice_driver.models.manifest.DressItemResource;
 import io.agora.meta.example_voice_driver.models.SurfaceViewInfo;
 import io.agora.meta.example_voice_driver.models.manifest.FaceBlendShape;
 import io.agora.meta.example_voice_driver.models.manifest.FaceBlendShapeItem;
+import io.agora.meta.example_voice_driver.utils.AudioFileReader;
 import io.agora.meta.example_voice_driver.utils.DressAndFaceDataUtils;
 import io.agora.meta.example_voice_driver.utils.KeyCenter;
 import io.agora.meta.example_voice_driver.utils.MetaConstants;
@@ -113,6 +114,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private boolean mEnableRemotePreviewAvatar;
 
     private int mViewMode = 0;
+
+    private AudioFileReader mAudioFileReader;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -447,6 +450,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             MetaContext.getInstance().resetRoleInfo();
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView1);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView2);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView3);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView4);
             } else {
                 MetaContext.getInstance().leaveScene();
             }
@@ -551,6 +558,18 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             binding.btnSwitchRemotePreview.setText(mEnableRemotePreviewAvatar ? getApplicationContext().getResources().getString(R.string.btn_switch_remote_preview_camera) :
                     getApplicationContext().getResources().getString(R.string.btn_switch_remote_preview_avatar));
         });
+
+        RxView.clicks(binding.playLocalAudioBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (null != mAudioFileReader) {
+                mAudioFileReader.start();
+            }
+        });
+
+        RxView.clicks(binding.stopLocalAudioBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (null != mAudioFileReader) {
+                mAudioFileReader.stop();
+            }
+        });
     }
 
     private void initMainUnityView() {
@@ -612,6 +631,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
         MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
+
+        if (null != mAudioFileReader) {
+            mAudioFileReader.stop();
+        }
     }
 
     private void maybeCreateScene() {
@@ -667,6 +690,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().enableSceneVideo(mTextureView, true);
             }
+            MetaContext.getInstance().joinChannel();
         });
         resetSceneState();
     }
@@ -1070,6 +1094,13 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             public void run() {
                 // maybeCreateScene();
                 MetaContext.getInstance().enableVoiceDriveAvatar(true);
+
+                mAudioFileReader = new AudioFileReader(GameActivity.this, new AudioFileReader.OnAudioReadListener() {
+                    @Override
+                    public void onAudioRead(byte[] buffer, long timestamp) {
+                        MetaContext.getInstance().pushAudioToDriveAvatar(buffer, timestamp);
+                    }
+                });
             }
         });
     }
