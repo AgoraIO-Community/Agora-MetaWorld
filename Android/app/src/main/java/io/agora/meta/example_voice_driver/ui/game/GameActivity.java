@@ -941,7 +941,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             return;
         }
 
-        if (null == mDressResourceDataList) {
+        if (null == mDressResourceDataList || mDressResourceDataList.size() == 0) {
             Log.i(TAG, "dress resource list is null");
             return;
         }
@@ -1029,7 +1029,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             return;
         }
 
-        if (null == mFaceBlendShapeDataList) {
+        if (null == mFaceBlendShapeDataList || mFaceBlendShapeDataList.size() == 0) {
             Log.i(TAG, "face data list is null");
             return;
         }

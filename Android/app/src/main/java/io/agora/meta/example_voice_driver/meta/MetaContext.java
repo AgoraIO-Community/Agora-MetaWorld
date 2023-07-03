@@ -625,18 +625,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
 
             roleInfo = new RoleInfo();
-            roleInfo.setName(name);
-            roleInfo.setGender(gender);
-            switch (gender) {
-                case MetaConstants.GENDER_BOY:
-                    roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_BOY);
-                    break;
-                case MetaConstants.GENDER_GIRL:
-                    roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_GIRL);
-                    break;
-                default:
-                    break;
-            }
             roleInfos.add(roleInfo);
 
             needSaveDressInfo = true;
@@ -644,6 +632,22 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             currentScene = MetaConstants.SCENE_GAME;
             needSaveDressInfo = false;
         }
+        roleInfo.setName(name);
+        roleInfo.setGender(gender);
+        switch (gender) {
+            case MetaConstants.GENDER_HUAMULAN:
+                roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_HUAMULAN);
+                break;
+            case MetaConstants.GENDER_BOY:
+                roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_BOY);
+                break;
+            case MetaConstants.GENDER_GIRL:
+                roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_GIRL);
+                break;
+            default:
+                break;
+        }
+
         //for test dress scene
         currentScene = MetaConstants.SCENE_DRESS;
     }
@@ -745,10 +749,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                     }
                 }
             }
-        }
-
-        if (null != roleInfo) {
-            roleInfo.setName(name);
         }
     }
 

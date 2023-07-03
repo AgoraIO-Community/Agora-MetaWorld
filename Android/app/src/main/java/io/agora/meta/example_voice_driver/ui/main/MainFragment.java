@@ -74,15 +74,12 @@ public class MainFragment extends Fragment {
         });
         SexAdapter adapter = new SexAdapter(requireContext());
         binding.spinner.setAdapter(adapter);
+        binding.spinner.setSelection(MetaConstants.GENDER_GIRL);
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 adapter.check(i);
-                if (i == 0) {
-                    mViewModel.setSex(MetaConstants.GENDER_BOY);
-                } else {
-                    mViewModel.setSex(MetaConstants.GENDER_GIRL);
-                }
+                mViewModel.setSex(i);
             }
 
             @Override
@@ -95,7 +92,7 @@ public class MainFragment extends Fragment {
                 Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
             } else {
                 MetaContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
-                        mViewModel.getSex().getValue() == null ? MetaConstants.GENDER_BOY : mViewModel.getSex().getValue());
+                        mViewModel.getSex().getValue() == null ? MetaConstants.GENDER_HUAMULAN : mViewModel.getSex().getValue());
                 MetaContext.getInstance().getRoleInfo().setAvatarUrl(mViewModel.getAvatar().getValue());
                 mViewModel.getScenes();
             }
@@ -138,10 +135,18 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getSex().observe(owner, i -> {
-            if (i == MetaConstants.GENDER_BOY) {
-                binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[0]);
-            } else {
-                binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[1]);
+            switch (i) {
+                case MetaConstants.GENDER_HUAMULAN:
+                    binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[0]);
+                    break;
+                case MetaConstants.GENDER_BOY:
+                    binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[1]);
+                    break;
+                case MetaConstants.GENDER_GIRL:
+                    binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[2]);
+                    break;
+                default:
+                    break;
             }
 
         });

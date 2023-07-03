@@ -29,12 +29,15 @@ public class MetaConstants {
     public static final String KEY_FACE_CAPTURE_INFO = "FaceCaptureInfo";
 
 
-    public static final int GENDER_BOY = 0;
-    public static final int GENDER_GIRL = 1;
+    public static final int GENDER_HUAMULAN = 0;
+    public static final int GENDER_BOY = 1;
+    public static final int GENDER_GIRL = 2;
 
+
+    public static final String AVATAR_TYPE_HUAMULAN = "huamulan";
     public static final String AVATAR_TYPE_BOY = "boy";
     public static final String AVATAR_TYPE_GIRL = "girl";
-    public static final String AVATAR_TYPE_HUAMULAN = "huamulan";
+
 
     public static final int AUDIO_SAMPLE_RATE = 16000;
     public static final int AUDIO_SAMPLE_NUM_OF_CHANNEL = 1;
