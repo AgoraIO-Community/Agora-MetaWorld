@@ -16,7 +16,7 @@ android {
         minSdk 22
         targetSdk 33
         versionCode 40130
-        versionName "401.30.11.0703.3"
+        versionName "401.30.11.0703.4"
         flavorDimensions "versionCode"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
