@@ -74,7 +74,7 @@ public class MainFragment extends Fragment {
         });
         SexAdapter adapter = new SexAdapter(requireContext());
         binding.spinner.setAdapter(adapter);
-        binding.spinner.setSelection(MetaConstants.GENDER_GIRL);
+        binding.spinner.setSelection(MetaConstants.GENDER_HUAMULAN);
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
