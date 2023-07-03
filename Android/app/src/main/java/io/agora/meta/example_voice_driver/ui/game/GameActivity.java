@@ -58,6 +58,7 @@ import io.agora.meta.example_voice_driver.models.manifest.DressItemResource;
 import io.agora.meta.example_voice_driver.models.SurfaceViewInfo;
 import io.agora.meta.example_voice_driver.models.manifest.FaceBlendShape;
 import io.agora.meta.example_voice_driver.models.manifest.FaceBlendShapeItem;
+import io.agora.meta.example_voice_driver.utils.AudioFileReader;
 import io.agora.meta.example_voice_driver.utils.DressAndFaceDataUtils;
 import io.agora.meta.example_voice_driver.utils.KeyCenter;
 import io.agora.meta.example_voice_driver.utils.MetaConstants;
@@ -113,6 +114,8 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
     private boolean mEnableRemotePreviewAvatar;
 
     private int mViewMode = 0;
+
+    private AudioFileReader mAudioFileReader;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final ObservableBoolean enableMic = new ObservableBoolean(true);
@@ -444,9 +447,14 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
+            exit();
             MetaContext.getInstance().resetRoleInfo();
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView1);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView2);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView3);
+                MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView4);
             } else {
                 MetaContext.getInstance().leaveScene();
             }
@@ -455,6 +463,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RxView.clicks(binding.cancelBt).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
+            exit();
             MetaContext.getInstance().cancelRoleDressInfo(MetaContext.getInstance().getRoleInfo().getName()
                     , MetaContext.getInstance().getRoleInfo().getGender());
             //MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
@@ -464,6 +473,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RxView.clicks(binding.saveBtn).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
+            exit();
             MetaContext.getInstance().saveRoleDressInfo(MetaContext.getInstance().getRoleInfo().getName()
                     , MetaContext.getInstance().getRoleInfo().getGender());
             //MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
@@ -551,6 +561,18 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             binding.btnSwitchRemotePreview.setText(mEnableRemotePreviewAvatar ? getApplicationContext().getResources().getString(R.string.btn_switch_remote_preview_camera) :
                     getApplicationContext().getResources().getString(R.string.btn_switch_remote_preview_avatar));
         });
+
+        RxView.clicks(binding.playLocalAudioBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (null != mAudioFileReader) {
+                mAudioFileReader.start();
+            }
+        });
+
+        RxView.clicks(binding.stopLocalAudioBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (null != mAudioFileReader) {
+                mAudioFileReader.stop();
+            }
+        });
     }
 
     private void initMainUnityView() {
@@ -614,6 +636,12 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
     }
 
+    private void exit() {
+        if (null != mAudioFileReader) {
+            mAudioFileReader.stop();
+        }
+    }
+
     private void maybeCreateScene() {
         Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mSurfaceSizeChange=" + mSurfaceSizeChange + ",mIsFront=" + mIsFront + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
         if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
@@ -667,6 +695,10 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().enableSceneVideo(mTextureView, true);
             }
+
+            MetaContext.getInstance().updatePublishCustomAudioTrackChannelOptions(true, MetaConstants.AUDIO_SAMPLE_RATE, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL, true, false);
+
+            MetaContext.getInstance().joinChannel();
         });
         resetSceneState();
     }
@@ -909,7 +941,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             return;
         }
 
-        if (null == mDressResourceDataList) {
+        if (null == mDressResourceDataList || mDressResourceDataList.size() == 0) {
             Log.i(TAG, "dress resource list is null");
             return;
         }
@@ -997,7 +1029,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             return;
         }
 
-        if (null == mFaceBlendShapeDataList) {
+        if (null == mFaceBlendShapeDataList || mFaceBlendShapeDataList.size() == 0) {
             Log.i(TAG, "face data list is null");
             return;
         }
@@ -1070,6 +1102,14 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             public void run() {
                 // maybeCreateScene();
                 MetaContext.getInstance().enableVoiceDriveAvatar(true);
+
+                mAudioFileReader = new AudioFileReader(GameActivity.this, new AudioFileReader.OnAudioReadListener() {
+                    @Override
+                    public void onAudioRead(byte[] buffer, long timestamp) {
+                        MetaContext.getInstance().pushAudioToDriveAvatar(buffer, timestamp);
+                        MetaContext.getInstance().pushExternalAudioFrame(buffer, timestamp);
+                    }
+                });
             }
         });
     }

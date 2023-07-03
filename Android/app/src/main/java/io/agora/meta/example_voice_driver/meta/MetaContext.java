@@ -490,7 +490,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 pushVideoFrameToDisplay();
             }
-            joinChannel();
         }
         for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
             handler.onEnterSceneResult(errorCode);
@@ -626,18 +625,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
 
             roleInfo = new RoleInfo();
-            roleInfo.setName(name);
-            roleInfo.setGender(gender);
-            switch (gender) {
-                case MetaConstants.GENDER_BOY:
-                    roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_BOY);
-                    break;
-                case MetaConstants.GENDER_GIRL:
-                    roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_GIRL);
-                    break;
-                default:
-                    break;
-            }
             roleInfos.add(roleInfo);
 
             needSaveDressInfo = true;
@@ -645,6 +632,22 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             currentScene = MetaConstants.SCENE_GAME;
             needSaveDressInfo = false;
         }
+        roleInfo.setName(name);
+        roleInfo.setGender(gender);
+        switch (gender) {
+            case MetaConstants.GENDER_HUAMULAN:
+                roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_HUAMULAN);
+                break;
+            case MetaConstants.GENDER_BOY:
+                roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_BOY);
+                break;
+            case MetaConstants.GENDER_GIRL:
+                roleInfo.setAvatarType(MetaConstants.AVATAR_TYPE_GIRL);
+                break;
+            default:
+                break;
+        }
+
         //for test dress scene
         currentScene = MetaConstants.SCENE_DRESS;
     }
@@ -747,10 +750,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                 }
             }
         }
-
-        if (null != roleInfo) {
-            roleInfo.setName(name);
-        }
     }
 
     public void sendSceneMessage(String msg) {
@@ -832,6 +831,30 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     public void enableVoiceDriveAvatar(boolean enable) {
         if (null != metaScene) {
             metaScene.enableVoiceDriveAvatar(enable);
+        }
+    }
+
+    public void pushAudioToDriveAvatar(byte[] data, long timestamp) {
+        if (null != metaScene) {
+            metaScene.pushAudioToDriveAvatar(data, timestamp, MetaConstants.AUDIO_SAMPLE_RATE, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL);
+        }
+    }
+
+    public int pushExternalAudioFrame(byte[] data, long timestamp) {
+        if (null != rtcEngine) {
+            return rtcEngine.pushExternalAudioFrame(data, timestamp);
+        }
+        return -1;
+    }
+
+    public void updatePublishCustomAudioTrackChannelOptions(boolean enable, int sampleRate, int channels, int sourceNumber, boolean localPlayback, boolean publish) {
+        if (null != rtcEngine) {
+            ChannelMediaOptions option = new ChannelMediaOptions();
+            option.publishCustomAudioTrack = enable;
+            rtcEngine.updateChannelMediaOptions(option);
+
+            rtcEngine.setExternalAudioSource(enable, sampleRate, channels, sourceNumber, localPlayback, publish);
+
         }
     }
 }
