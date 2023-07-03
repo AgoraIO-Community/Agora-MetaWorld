@@ -447,6 +447,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RxView.clicks(binding.back).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
+            exit();
             MetaContext.getInstance().resetRoleInfo();
             if (MetaConstants.SCENE_GAME == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().removeSceneView(mLocalAvatarTextureView);
@@ -462,6 +463,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RxView.clicks(binding.cancelBt).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
+            exit();
             MetaContext.getInstance().cancelRoleDressInfo(MetaContext.getInstance().getRoleInfo().getName()
                     , MetaContext.getInstance().getRoleInfo().getGender());
             //MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
@@ -471,6 +473,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
 
         RxView.clicks(binding.saveBtn).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
+            exit();
             MetaContext.getInstance().saveRoleDressInfo(MetaContext.getInstance().getRoleInfo().getName()
                     , MetaContext.getInstance().getRoleInfo().getGender());
             //MetaContext.getInstance().setNextScene(MetaConstants.SCENE_GAME);
@@ -631,7 +634,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
         enableSpeaker.removeOnPropertyChangedCallback(callback);
         isBroadcaster.removeOnPropertyChangedCallback(callback);
         MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
+    }
 
+    private void exit() {
         if (null != mAudioFileReader) {
             mAudioFileReader.stop();
         }
@@ -690,6 +695,9 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
             if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().enableSceneVideo(mTextureView, true);
             }
+
+            MetaContext.getInstance().updatePublishCustomAudioTrackChannelOptions(true, MetaConstants.AUDIO_SAMPLE_RATE, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL, true, false);
+
             MetaContext.getInstance().joinChannel();
         });
         resetSceneState();
@@ -1099,6 +1107,7 @@ public class GameActivity extends Activity implements IMetaEventHandler, IRtcEve
                     @Override
                     public void onAudioRead(byte[] buffer, long timestamp) {
                         MetaContext.getInstance().pushAudioToDriveAvatar(buffer, timestamp);
+                        MetaContext.getInstance().pushExternalAudioFrame(buffer, timestamp);
                     }
                 });
             }

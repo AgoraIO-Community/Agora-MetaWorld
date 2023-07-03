@@ -839,4 +839,22 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             metaScene.pushAudioToDriveAvatar(data, timestamp, MetaConstants.AUDIO_SAMPLE_RATE, MetaConstants.AUDIO_SAMPLE_NUM_OF_CHANNEL);
         }
     }
+
+    public int pushExternalAudioFrame(byte[] data, long timestamp) {
+        if (null != rtcEngine) {
+            return rtcEngine.pushExternalAudioFrame(data, timestamp);
+        }
+        return -1;
+    }
+
+    public void updatePublishCustomAudioTrackChannelOptions(boolean enable, int sampleRate, int channels, int sourceNumber, boolean localPlayback, boolean publish) {
+        if (null != rtcEngine) {
+            ChannelMediaOptions option = new ChannelMediaOptions();
+            option.publishCustomAudioTrack = enable;
+            rtcEngine.updateChannelMediaOptions(option);
+
+            rtcEngine.setExternalAudioSource(enable, sampleRate, channels, sourceNumber, localPlayback, publish);
+
+        }
+    }
 }
