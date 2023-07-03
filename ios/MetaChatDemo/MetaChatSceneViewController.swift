@@ -138,6 +138,11 @@ class MetaChatSceneViewController: UIViewController {
     var faceIndex = 0
     @IBOutlet weak var viewBtn: UIButton!
     
+    private lazy var audioFileReader = AVAudioFileReader()
+    private var audioTimer: DispatchSourceTimer?
+    private var audioSampleRate: UInt32 = 0
+    private var audioChannels: UInt32 = 0
+    
     /// 设置主界面UI
     func setUI() {
         openMicB.setImage(UIImage.init(named: "onbtn"), for: .normal)
@@ -206,6 +211,8 @@ class MetaChatSceneViewController: UIViewController {
         setupRemoteVideoCV()
         setupLocalVideoCV()
 //        setupPreviewView()
+        
+        setExternalAudioSource()
         
         let hideGesture = UITapGestureRecognizer.init(target: self, action: #selector(hideKeyboard))
         hideGesture.delegate = self
@@ -628,6 +635,44 @@ class MetaChatSceneViewController: UIViewController {
 //        localVideoCV.collectionView.reloadData()
     }
     
+    func setExternalAudioSource() {
+        guard let path = Bundle.main.path(forResource: "test1", ofType: "wav") else { return }
+        let opened = audioFileReader.audioFileOpen(path)
+        if opened {
+            audioSampleRate = audioFileReader.audioFileSampleRate()
+            audioChannels = audioFileReader.audioFileChannels()
+        }
+    }
+    
+    @IBAction func pushAudio(_ sender: UIButton) {
+        guard let scene = MetaServiceEngine.sharedEngine.metaScene else { return }
+        let pushQueue = DispatchQueue(label: "External push audio queue")
+        let timer = DispatchSource.makeTimerSource(queue: pushQueue)
+        timer.schedule(wallDeadline: .now(), repeating: 0.04)
+        
+        timer.setEventHandler { [weak self] in
+            guard let self = self else {
+                return
+            }
+            let data: Data? = self.audioFileReader.audioFileRead()
+            if let nsData = data as NSData? {
+                let pointer = UnsafeMutableRawPointer(mutating: nsData.bytes)
+                let samples = self.audioFileReader.audioFileSampleRate() * self.audioFileReader.audioFileChannels() * 40 / 1000;
+                scene.pushAudio(toDriveAvatar: pointer, samples: UInt(samples), sampleRate: Int(audioSampleRate), channels: Int(audioChannels))
+            }
+        }
+        
+        timer.resume()
+        audioTimer = timer
+    }
+    
+    @IBAction func stopPushAudio(_ sender: UIButton) {
+        audioFileReader.audioFileClose()
+        guard let timer = audioTimer else { return }
+        timer.cancel()
+        
+        audioTimer = nil
+    }
     // 移除渲染view
     @IBAction func removeRenderView(_ sender: UIButton) {
         guard let view = self.localVideoCV.items[1] as? UIView else { return }

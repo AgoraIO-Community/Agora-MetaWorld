@@ -66,6 +66,7 @@
 		F0197E43292E0A2200D55E52 /* shoes_icon1.png in Resources */ = {isa = PBXBuildFile; fileRef = F0197E3B292E0A2100D55E52 /* shoes_icon1.png */; };
 		F0197E44292E0A2200D55E52 /* clothes_icon1.png in Resources */ = {isa = PBXBuildFile; fileRef = F0197E3C292E0A2100D55E52 /* clothes_icon1.png */; };
 		F0197E45292E0A2200D55E52 /* clothes_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = F0197E3D292E0A2100D55E52 /* clothes_icon.png */; };
+		F01DAB8D2A52A48300194FC3 /* AVAudioFileReader.m in Sources */ = {isa = PBXBuildFile; fileRef = F01DAB8C2A52A48300194FC3 /* AVAudioFileReader.m */; };
 		F030505B2A14EF3600D8D7D3 /* ZRCustomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F030505A2A14EF3500D8D7D3 /* ZRCustomView.swift */; };
 		F030505D2A14EF6000D8D7D3 /* AaManifest.txt in Resources */ = {isa = PBXBuildFile; fileRef = F030505C2A14EF6000D8D7D3 /* AaManifest.txt */; };
 		F03050612A14EF6800D8D7D3 /* girl.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F030505F2A14EF6800D8D7D3 /* girl.bundle */; };
@@ -339,6 +340,8 @@
 		F0197E3B292E0A2100D55E52 /* shoes_icon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shoes_icon1.png; sourceTree = "<group>"; };
 		F0197E3C292E0A2100D55E52 /* clothes_icon1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clothes_icon1.png; sourceTree = "<group>"; };
 		F0197E3D292E0A2100D55E52 /* clothes_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clothes_icon.png; sourceTree = "<group>"; };
+		F01DAB8B2A52A48300194FC3 /* AVAudioFileReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVAudioFileReader.h; sourceTree = "<group>"; };
+		F01DAB8C2A52A48300194FC3 /* AVAudioFileReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AVAudioFileReader.m; sourceTree = "<group>"; };
 		F030505A2A14EF3500D8D7D3 /* ZRCustomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZRCustomView.swift; sourceTree = "<group>"; tabWidth = 4; };
 		F030505C2A14EF6000D8D7D3 /* AaManifest.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AaManifest.txt; sourceTree = "<group>"; };
 		F030505F2A14EF6800D8D7D3 /* girl.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = girl.bundle; sourceTree = "<group>"; };
@@ -663,6 +666,8 @@
 		A88331F1287C36B800BC2FEE /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				F01DAB8B2A52A48300194FC3 /* AVAudioFileReader.h */,
+				F01DAB8C2A52A48300194FC3 /* AVAudioFileReader.m */,
 				A8C702FC289A74270037EE20 /* Utils.swift */,
 				A88331F2287C36D000BC2FEE /* EXT_UIColor.swift */,
 				A883323E28868E5600BC2FEE /* NSString+MetaChat.h */,
@@ -1270,6 +1275,7 @@
 				A8833216287EB13200BC2FEE /* KTVHaveChosenCell.m in Sources */,
 				A801FDEC288FC23B00037560 /* KTVSingingCell.m in Sources */,
 				A801FDE9288FA9E100037560 /* UIViewController+RotationControl.m in Sources */,
+				F01DAB8D2A52A48300194FC3 /* AVAudioFileReader.m in Sources */,
 				A801FDE6288E480100037560 /* GuideAlertViewController.m in Sources */,
 				F045EDE92995132500E7F96C /* ActionView.swift in Sources */,
 				F348D15B2811637A00039743 /* AppDelegate.swift in Sources */,
