@@ -175,7 +175,7 @@ class MetaServiceEngine: NSObject {
         localUserAvatar?.setUserInfo(currentUserInfo)
         localUserAvatar?.setModelInfo(avatarInfo)
 
-        let dict1 = ["avatar": "boy", "dress": [10000, 10100], "face": [["key": "eyeBlink_L", "val": 30] as [String : Any]], "2dbg": ""] as [String : Any]
+        let dict1 = ["avatar": "huamulan", "dress": [10000, 10100], "face": [["key": "eyeBlink_L", "val": 30] as [String : Any]], "2dbg": ""] as [String : Any]
         let data1 = try? JSONSerialization.data(withJSONObject: dict1, options: [])
         let extraInfo1 = String(data: data1!, encoding: String.Encoding.utf8)
         localUserAvatar?.setExtraInfo(extraInfo1!.data(using: String.Encoding.utf8))
