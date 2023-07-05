@@ -188,8 +188,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
                 // int metakitRet = rtcEngine.enableExtension("agora_video_filters_metakit", "metakit", true, Constants.MediaSourceType.PRIMARY_CAMERA_SOURCE);
                 // Log.i(TAG, "agora_video_filters_metakit enableExtension ret:" + metakitRet);
-                rtcEngine.registerExtension("agora_video_filters_metakit", "metakit", Constants.MediaSourceType.CUSTOM_VIDEO_SOURCE);
-                rtcEngine.setExternalVideoSource(true, true, Constants.ExternalVideoSourceType.VIDEO_FRAME);
+                //rtcEngine.registerExtension("agora_video_filters_metakit", "metakit", Constants.MediaSourceType.CUSTOM_VIDEO_SOURCE);
+                //rtcEngine.setExternalVideoSource(true, true, Constants.ExternalVideoSourceType.VIDEO_FRAME);
 
                 rtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
                         new VideoEncoderConfiguration.VideoDimensions(240, 240),
@@ -310,6 +310,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
         MetaSceneConfig sceneConfig = new MetaSceneConfig();
         sceneConfig.mActivityContext = activityContext;
+        sceneConfig.mEnableVoiceDriveAvatar = true;
         sceneConfig.mEnableFaceCapture = false;
         sceneConfig.mFaceCaptureAppId = KeyCenter.FACE_CAP_APP_ID;
         sceneConfig.mFaceCaptureCertificate = KeyCenter.FACE_CAP_APP_KEY;
