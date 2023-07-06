@@ -78,7 +78,7 @@ class CustomDialog {
         ): MaterialDialog {
             return MaterialDialog(context).show {
                 title(text = "下载提示")
-                message(text = "首次进入Meta场景需下载350M数据包")
+                message(text = "首次进入Meta场景需下载90M数据包")
                 positiveButton(text = "立即下载", click = positive)
                 negativeButton(text = "下次再说", click = negative)
             }
@@ -90,7 +90,7 @@ class CustomDialog {
         ): MaterialDialog {
             return MaterialDialog(context).show {
                 title(text = "下载中")
-                message(text = "首次进入Meta场景需下载350M数据包")
+                message(text = "首次进入Meta场景需下载90M数据包")
                 customView(
                     view = ProgressBarBinding.inflate(LayoutInflater.from(context)).root,
                     horizontalPadding = true,
