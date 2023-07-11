@@ -74,7 +74,7 @@ public class MainFragment extends Fragment {
         });
         SexAdapter adapter = new SexAdapter(requireContext());
         binding.spinner.setAdapter(adapter);
-        binding.spinner.setSelection(MetaConstants.GENDER_HUAMULAN);
+        binding.spinner.setSelection(0);
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -91,8 +91,8 @@ public class MainFragment extends Fragment {
             if (TextUtils.isEmpty(binding.nickname.getText().toString())) {
                 Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
             } else {
-                MetaContext.getInstance().initRoleInfo(binding.nickname.getText().toString(),
-                        mViewModel.getSex().getValue() == null ? MetaConstants.GENDER_HUAMULAN : mViewModel.getSex().getValue());
+                MetaContext.getInstance().initRoleInfo(getContext(), binding.nickname.getText().toString(),
+                        mViewModel.getSex().getValue() == null ? 0 : mViewModel.getSex().getValue());
                 MetaContext.getInstance().getRoleInfo().setAvatarUrl(mViewModel.getAvatar().getValue());
                 mViewModel.getScenes();
             }
@@ -135,20 +135,7 @@ public class MainFragment extends Fragment {
             }
         });
         mViewModel.getSex().observe(owner, i -> {
-            switch (i) {
-                case MetaConstants.GENDER_HUAMULAN:
-                    binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[0]);
-                    break;
-                case MetaConstants.GENDER_BOY:
-                    binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[1]);
-                    break;
-                case MetaConstants.GENDER_GIRL:
-                    binding.sex.setText(context.getResources().getStringArray(R.array.sex_array)[2]);
-                    break;
-                default:
-                    break;
-            }
-
+            binding.sex.setText(context.getResources().getStringArray(R.array.avatar_model)[i]);
         });
         mViewModel.getSceneList().observe(owner, metaSceneAssetsInfos -> {
             // TODO choose one

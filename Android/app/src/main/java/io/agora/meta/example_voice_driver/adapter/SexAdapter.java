@@ -24,7 +24,7 @@ public class SexAdapter extends ArrayAdapter<CharSequence> {
                 context,
                 R.layout.item_spinner,
                 android.R.id.text1,
-                context.getResources().getStringArray(R.array.sex_array)
+                context.getResources().getStringArray(R.array.avatar_model)
         );
         margin = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
