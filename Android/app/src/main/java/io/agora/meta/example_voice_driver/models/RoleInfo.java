@@ -24,7 +24,6 @@ public class RoleInfo {
     public RoleInfo() {
         name = "";
         gender = -1;
-        avatarType = MetaConstants.AVATAR_TYPE_BOY;
         dressResourceMap = new HashMap<>();
         faceParameterResourceMap = new HashMap<>();
     }
