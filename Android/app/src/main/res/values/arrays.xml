@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="avatar_model">
+        <item>米娜</item>
         <item>kda</item>
         <item>花木兰</item>
         <item>男</item>
@@ -8,6 +9,7 @@
     </string-array>
 
     <string-array name="avatar_model_value">
+        <item>mina</item>
         <item>kda</item>
         <item>huamulan</item>
         <item>boy</item>
