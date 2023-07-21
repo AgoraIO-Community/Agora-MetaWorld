@@ -756,19 +756,19 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public void addSceneView(TextureView view, SceneDisplayConfig config) {
-        if (null != metaScene && null != rtcEngine) {
+        if (null != metaScene) {
             Log.i(TAG, "addRenderView view::" + view + ",config:" + config);
-            rtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
-                    new VideoEncoderConfiguration.VideoDimensions(330, 330),
-                    VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
-                    STANDARD_BITRATE,
-                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_LANDSCAPE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
             metaScene.addSceneView(view, config);
         }
     }
 
     public void enableSceneVideo(TextureView view, boolean enable) {
-        if (null != metaScene) {
+        if (null != metaScene && null != rtcEngine) {
+            rtcEngine.setVideoEncoderConfiguration(new VideoEncoderConfiguration(
+                    new VideoEncoderConfiguration.VideoDimensions(view.getWidth(), view.getHeight()),
+                    VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
+                    STANDARD_BITRATE,
+                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
             metaScene.enableSceneVideoCapture(view, enable);
         }
     }
