@@ -15,5 +15,11 @@
     <string name="btn_switch_remote_preview_camera">切换远端显示摄像头</string>
     <string name="play_local_audio">播放本地音频</string>
     <string name="stop_local_audio">停止本地音频</string>
+    <string name="input_nickname">请输入昵称</string>
+    <string name="input_room_name">请输入房间名称</string>
+    <string name="select_model">请选择avatar</string>
+    <string name="select_scene">请选择场景</string>
+    <string name="enter">进入</string>
+    <string name="agora_io">Agora.io</string>
 
 </resources>

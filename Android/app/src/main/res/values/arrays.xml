@@ -15,4 +15,17 @@
         <item>boy</item>
         <item>girl</item>
     </string-array>
+
+    <string-array name="scene">
+        <item>捏脸换装</item>
+        <item>跑图面补</item>
+        <item>语聊</item>
+    </string-array>
+
+    <string-array name="scene_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>
