@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.agora.base.VideoFrame;
@@ -32,6 +33,7 @@ import io.agora.meta.MetaServiceConfig;
 import io.agora.meta.MetaUserInfo;
 import io.agora.meta.MetaUserPositionInfo;
 import io.agora.meta.SceneDisplayConfig;
+import io.agora.meta.example.R;
 import io.agora.meta.example.config.Config;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
@@ -78,7 +80,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     private ILocalUserAvatar localUserAvatar;
     private boolean isInScene;
     private int currentScene;
-    private int nextScene;
     private RoleInfo roleInfo;
     private List<RoleInfo> roleInfos;
     private boolean needSaveDressInfo;
@@ -94,7 +95,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         metaSceneEventHandlerMap = new ConcurrentHashMap<>();
         isInScene = false;
         currentScene = MetaConstants.SCENE_NONE;
-        nextScene = MetaConstants.SCENE_NONE;
         roleInfo = null;
         needSaveDressInfo = false;
         isInitMeta = false;
@@ -180,7 +180,6 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
 
                 rtcEngine.enableAudio();
-                //rtcEngine.enableVideo();
 
                 rtcEngine.setAudioProfile(
                         Constants.AUDIO_PROFILE_DEFAULT, Constants.AUDIO_SCENARIO_GAME_STREAMING
@@ -212,6 +211,12 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             }
         }
         return ret == Constants.ERR_OK;
+    }
+
+    public void enableVideo() {
+        if (null != rtcEngine) {
+            rtcEngine.enableVideo();
+        }
     }
 
     public void joinChannel() {
@@ -290,10 +295,13 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
         MetaSceneConfig sceneConfig = new MetaSceneConfig();
         sceneConfig.mActivityContext = activityContext;
-        if (MetaConstants.SCENE_VOICE_CHAT == currentScene) {
+        if (MetaConstants.SCENE_DRESS == currentScene) {
+            sceneConfig.mEnableLipSync = false;
+            sceneConfig.mEnableFaceCapture = false;
+        } else if (MetaConstants.SCENE_VOICE_CHAT == currentScene) {
             sceneConfig.mEnableLipSync = true;
             sceneConfig.mEnableFaceCapture = false;
-        } else if (MetaConstants.SCENE_DRESS == currentScene || MetaConstants.SCENE_COFFEE == currentScene) {
+        } else if (MetaConstants.SCENE_COFFEE == currentScene) {
             sceneConfig.mEnableLipSync = false;
             sceneConfig.mEnableFaceCapture = true;
         }
@@ -386,6 +394,18 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
             modelInfo.mRemoteVisible = false;
             modelInfo.mSyncPosition = false;
         }
+
+        if (null != localUserAvatar && Constants.ERR_OK == localUserAvatar.setModelInfo(modelInfo)) {
+            ret += localUserAvatar.applyInfo();
+        }
+        return ret == Constants.ERR_OK;
+    }
+
+    public boolean updateVoiceChatRole() {
+        int ret = Constants.ERR_OK;
+        modelInfo.mLocalVisible = true;
+        modelInfo.mRemoteVisible = true;
+        modelInfo.mSyncPosition = true;
 
         if (null != localUserAvatar && Constants.ERR_OK == localUserAvatar.setModelInfo(modelInfo)) {
             ret += localUserAvatar.applyInfo();
@@ -544,6 +564,14 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     @Override
+    public void onUserStateChanged(String uid, int state) {
+        Log.d(TAG, String.format("onUserStateChanged %s %d", uid, state));
+        for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
+            handler.onUserStateChanged(uid, state);
+        }
+    }
+
+    @Override
     public void onUserPositionChanged(String uid, MetaUserPositionInfo posInfo) {
         Log.d(TAG, String.format("onUserPositionChanged %s %s %s %s %s", uid,
                 Arrays.toString(posInfo.mPosition),
@@ -648,16 +676,8 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         return currentScene;
     }
 
-    public int getNextScene() {
-        return nextScene;
-    }
-
     public void setCurrentScene(int currentScene) {
         this.currentScene = currentScene;
-    }
-
-    public void setNextScene(int nextScene) {
-        this.nextScene = nextScene;
     }
 
     public void sendRoleDressInfo(int[] resIdArray) {
@@ -737,7 +757,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public int getSceneId() {
-        return MetaConstants.SCENE_ID_META_1_1_VOICE_DRIVER;
+        return MetaConstants.SCENE_ID_META_1_2;
     }
 
     public RtcEngine getRtcEngine() {
@@ -813,5 +833,14 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     public void setRoomName(String roomName) {
         this.roomName = roomName;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public String getRandomAvatarName(Context context) {
+        String[] avatarNames = context.getResources().getStringArray(R.array.avatar_model_value);
+        return avatarNames[new Random().nextInt(avatarNames.length)];
     }
 }

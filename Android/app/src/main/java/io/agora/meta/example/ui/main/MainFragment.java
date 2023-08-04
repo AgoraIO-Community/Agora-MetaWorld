@@ -1,8 +1,10 @@
 package io.agora.meta.example.ui.main;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -41,6 +44,7 @@ import io.agora.meta.example.R;
 import io.agora.meta.example.adapter.SpinnerAdapter;
 import io.agora.meta.example.ui.game.CoffeeActivity;
 import io.agora.meta.example.utils.MetaConstants;
+import io.agora.rtc2.Constants;
 
 public class MainFragment extends Fragment {
     private static final String TAG = MainFragment.class.getSimpleName();
@@ -100,15 +104,12 @@ public class MainFragment extends Fragment {
 
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
-            if (TextUtils.isEmpty(binding.nickname.getText().toString())) {
-                Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
-            }
-            if (TextUtils.isEmpty(binding.roomName.getText().toString())) {
-                Toast.makeText(requireActivity(), "请输入房间名称", Toast.LENGTH_LONG).show();
+            if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene()) {
+                if (checkCameraPermission()) {
+                    enter();
+                }
             } else {
-                MetaContext.getInstance().initRoleInfo(getContext(), binding.nickname.getText().toString(), avatarModelName, mViewModel.getAvatar().getValue());
-                MetaContext.getInstance().setRoomName(binding.roomName.getText().toString());
-                mViewModel.getScenes();
+                enter();
             }
         });
 
@@ -121,6 +122,45 @@ public class MainFragment extends Fragment {
 
         initData();
         return binding.getRoot();
+    }
+
+    private boolean checkCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.i(TAG, "requireActivity().checkSelfPermission(Manifest.permission.CAMERA):" + requireActivity().checkSelfPermission(Manifest.permission.CAMERA));
+            if (requireActivity().checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, 100);
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 100) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 用户授予了相机权限，可以继续使用相机
+                enter();
+            } else {
+                // 用户拒绝了相机权限，您可以根据需要采取适当的操作，例如显示一个提示消息或关闭相机功能
+            }
+        }
+    }
+
+    private void enter() {
+        if (TextUtils.isEmpty(binding.nickname.getText().toString())) {
+            Toast.makeText(requireActivity(), "请输入昵称", Toast.LENGTH_LONG).show();
+        }
+        if (TextUtils.isEmpty(binding.roomName.getText().toString())) {
+            Toast.makeText(requireActivity(), "请输入房间名称", Toast.LENGTH_LONG).show();
+        } else {
+            MetaContext.getInstance().initRoleInfo(getContext(), binding.nickname.getText().toString(), avatarModelName, mViewModel.getAvatar().getValue());
+            MetaContext.getInstance().setRoomName(binding.roomName.getText().toString());
+            mViewModel.getScenes();
+        }
     }
 
     private void initData() {

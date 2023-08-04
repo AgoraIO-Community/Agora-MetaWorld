@@ -21,6 +21,8 @@ public class MetaConstants {
     public static final int SCENE_ID_META_1_0 = 15;
     public static final int SCENE_ID_META_1_1_VOICE_DRIVER = 24;
 
+    public static final int SCENE_ID_META_1_2 = 25;
+
     public static final String KEY_UNITY_MESSAGE_UPDATE_DRESS = "updateDress";
     public static final String KEY_UNITY_MESSAGE_UPDATE_FACE = "updateFace";
     public static final String KEY_UNITY_MESSAGE_FACE_CAPTURE = "faceCapture";
@@ -29,4 +31,6 @@ public class MetaConstants {
     public static final int AUDIO_SAMPLE_RATE = 16000;
     public static final int AUDIO_SAMPLE_NUM_OF_CHANNEL = 1;
     public static final int AUDIO_BITS_PER_SAMPLE = 16;
+
+    public static final int MAX_COUNT_ADD_SCENE_VIEW = 7;
 }

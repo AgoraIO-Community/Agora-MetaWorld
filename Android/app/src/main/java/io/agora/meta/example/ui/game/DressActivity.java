@@ -1,84 +1,52 @@
 package io.agora.meta.example.ui.game;
 
-import static io.agora.rtc2.video.VideoEncoderConfiguration.STANDARD_BITRATE;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.SurfaceTexture;
-import android.os.Bundle;
+
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.SurfaceView;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.alibaba.fastjson.JSONObject;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import io.agora.base.JavaI420Buffer;
-import io.agora.base.VideoFrame;
-import io.agora.meta.IMetaScene;
-import io.agora.meta.SceneDisplayConfig;
+
 import io.agora.meta.example.MainActivity;
-import io.agora.meta.example.R;
 import io.agora.meta.example.adapter.DressTypeAdapter;
 import io.agora.meta.example.adapter.DressTypeAssetAdapter;
 import io.agora.meta.example.adapter.FaceTypeAdapter;
 import io.agora.meta.example.adapter.FaceTypeShapesAdapter;
-import io.agora.meta.example.adapter.SurfaceViewAdapter;
 import io.agora.meta.example.databinding.DressActivityBinding;
-import io.agora.meta.example.dialog.CustomDialog;
-import io.agora.meta.example.inf.IMetaEventHandler;
-import io.agora.meta.example.inf.IRtcEventCallback;
 import io.agora.meta.example.meta.MetaContext;
 import io.agora.meta.example.models.FaceParameterItem;
-import io.agora.meta.example.models.SurfaceViewInfo;
-import io.agora.meta.example.models.UnityMessage;
 import io.agora.meta.example.models.manifest.DressItemResource;
 import io.agora.meta.example.models.manifest.FaceBlendShape;
 import io.agora.meta.example.models.manifest.FaceBlendShapeItem;
-import io.agora.meta.example.utils.AudioFileReader;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MetaConstants;
-import io.agora.rtc2.Constants;
-import io.agora.rtc2.IRtcEngineEventHandler;
-import io.agora.rtc2.RtcEngine;
-import io.agora.rtc2.video.IVideoFrameObserver;
-import io.agora.rtc2.video.VideoCanvas;
-import io.agora.rtc2.video.VideoEncoderConfiguration;
 
-public class DressActivity extends Activity implements IMetaEventHandler, IRtcEventCallback {
+
+public class DressActivity extends BaseGameActivity {
 
     private final String TAG = DressActivity.class.getSimpleName();
     private DressActivityBinding binding;
-
-    private TextureView mTextureView = null;
-    private boolean mReCreateScene;
-    private boolean mIsFront;
-
 
     private DressTypeAdapter mDressTypeAdapter;
     private DressTypeAssetAdapter mDressTypeAssetAdapter;
@@ -91,8 +59,6 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
     private List<FaceBlendShape> mFaceBlendShapeDataList;
     private FaceBlendShape mCurrentFaceBlendShape;
 
-    private boolean mJoinChannelSuccess;
-
     private int mViewMode = 0;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
@@ -101,6 +67,7 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     if (sender == isEnterScene) {
+                        binding.group.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
                         if (isEnterScene.get()) {
                             MetaContext.getInstance().sendRoleDressInfo(Arrays.stream(MetaContext.getInstance().getRoleInfo().getDressResourceMap().values().toArray(new Integer[0])).mapToInt(Integer::valueOf).toArray());
                         }
@@ -108,32 +75,37 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
                 }
             };
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void initLayout() {
+        super.initLayout();
+
         binding = DressActivityBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        MetaContext.getInstance().registerMetaSceneEventHandler(this);
-        MetaContext.getInstance().registerMetaServiceEventHandler(this);
-        MetaContext.getInstance().setRtcEventCallback(this);
-
-        initMainUnityView();
-
-        initView();
-
-        initListener();
     }
 
-    private void initView() {
+
+    @Override
+    public void initView() {
+        super.initView();
         binding.uidTv.setText("UID:" + KeyCenter.RTC_UID);
     }
 
-    @SuppressLint("CheckResult")
-    private void initListener() {
+    @Override
+    protected void registerListener() {
+        super.registerListener();
         isEnterScene.addOnPropertyChangedCallback(callback);
+    }
 
+    @Override
+    protected void unregisterListener() {
+        super.unregisterListener();
+        isEnterScene.removeOnPropertyChangedCallback(callback);
+    }
+
+    @Override
+    @SuppressLint("CheckResult")
+    protected void initClickEvent() {
+        super.initClickEvent();
 
         RxView.clicks(binding.cancelBt).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
             isEnterScene.set(false);
@@ -162,30 +134,9 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
         });
     }
 
-    private void initMainUnityView() {
-        mTextureView = new TextureView(this);
-        mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-            @Override
-            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                mReCreateScene = true;
-                maybeCreateScene();
-            }
-
-            @Override
-            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                Log.i(TAG, "onSurfaceTextureSizeChanged");
-            }
-
-            @Override
-            public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
-                return false;
-            }
-
-            @Override
-            public void onSurfaceTextureUpdated(@NonNull SurfaceTexture surfaceTexture) {
-
-            }
-        });
+    @Override
+    public void initMainUnityView() {
+        super.initMainUnityView();
         ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         binding.unity.addView(mTextureView, 0, layoutParams);
 
@@ -195,31 +146,15 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        mReCreateScene = true;
-
-        maybeCreateScene();
+    protected void resetCreateSceneState() {
+        super.resetCreateSceneState();
+        resetSceneState();
+        resetSceneView();
+        initDressAndFaceData();
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        isEnterScene.removeOnPropertyChangedCallback(callback);
-        MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
-    }
-
-    private void exit() {
-    }
-
-    private void maybeCreateScene() {
-        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene  + ",mIsFront=" + mIsFront + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
-        if (mReCreateScene && mIsFront /*&& mJoinChannelSuccess*/) {
-            resetSceneState();
-            initDressAndFaceData();
-            MetaContext.getInstance().createScene(this, mTextureView);
-        }
+    private void resetSceneView() {
+        binding.group.setVisibility(View.GONE);
     }
 
     private void resetSceneState() {
@@ -245,64 +180,15 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
         resetSceneState();
     }
 
-    @Override
-    public void onLeaveSceneResult(int errorCode) {
-    }
 
     @Override
     public void onReleasedScene(int status) {
+        super.onReleasedScene(status);
         if (status == 0) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    MetaContext.getInstance().destroy();
-                }
-            });
-
             Intent intent = new Intent(DressActivity.this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
-    }
-
-    @Override
-    public void onCreateSceneResult(IMetaScene scene, int errorCode) {
-        //异步线程回调需在主线程处理
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                MetaContext.getInstance().enterScene();
-            }
-        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.i(TAG, "onResume");
-        mIsFront = true;
-        maybeCreateScene();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause");
-        mIsFront = false;
-    }
-
-    @Override
-    public void onBackPressed() {
-    }
-
-    @Override
-    public void setRequestedOrientation(int requestedOrientation) {
-        if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-        } else if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene()) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
-        }
-        super.setRequestedOrientation(requestedOrientation);
     }
 
     private void initDressAndFaceData() {
@@ -459,30 +345,5 @@ public class DressActivity extends Activity implements IMetaEventHandler, IRtcEv
             mFaceTypeShapesAdapter.setDataList(list, MetaContext.getInstance().getRoleInfo().getFaceParameterResourceMap());
             binding.rvFaceTypeShapes.scrollToPosition(0);
         }
-    }
-
-    @Override
-    public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
-        Log.i(TAG, "onJoinChannelSuccess");
-        mJoinChannelSuccess = true;
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-            }
-        });
-    }
-
-    @Override
-    public void onLeaveChannel(IRtcEngineEventHandler.RtcStats stats) {
-        mJoinChannelSuccess = false;
-    }
-
-    private void updateViewMode() {
-        UnityMessage message = new UnityMessage();
-        message.setKey("setCamera");
-        JSONObject valueJson = new JSONObject();
-        valueJson.put("viewMode", ++mViewMode % 3);
-        message.setValue(valueJson.toJSONString());
-        MetaContext.getInstance().sendSceneMessage(JSONObject.toJSONString(message));
     }
 }

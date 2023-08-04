@@ -2,6 +2,8 @@ package io.agora.meta.example.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -96,24 +99,30 @@ public class DressTypeAssetAdapter extends RecyclerView.Adapter<DressTypeAssetAd
                 viewHolder.binding.checkedIcon.setVisibility(View.GONE);
             }
 
-            Glide.with(mContext)
-                    .load(new File(Objects.requireNonNull(mAssetMap.get(resId))))
-                    .into(viewHolder.binding.assetImg);
+            String resPath = mAssetMap.get(resId);
+            if (!TextUtils.isEmpty(resPath)) {
+                viewHolder.binding.layout.setVisibility(View.VISIBLE);
+                Glide.with(mContext)
+                        .load(new File(resPath))
+                        .into(viewHolder.binding.assetImg);
 
-            viewHolder.binding.layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (null != mOnItemClickCallBack) {
-                        mCurrentResId = resId;
+                viewHolder.binding.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != mOnItemClickCallBack) {
+                            mCurrentResId = resId;
 
-                        notifyItemChanged(position);
-                        notifyItemChanged(mCurrentPosition);
+                            notifyItemChanged(position);
+                            notifyItemChanged(mCurrentPosition);
 
-                        mCurrentPosition = position;
-                        mOnItemClickCallBack.onItemClick(resId);
+                            mCurrentPosition = position;
+                            mOnItemClickCallBack.onItemClick(resId);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                viewHolder.binding.layout.setVisibility(View.GONE);
+            }
         }
     }
 

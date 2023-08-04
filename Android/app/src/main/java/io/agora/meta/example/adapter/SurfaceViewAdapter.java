@@ -1,7 +1,9 @@
 package io.agora.meta.example.adapter;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.view.LayoutInflater;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -10,7 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.agora.meta.example.R;
 import io.agora.meta.example.databinding.ItemSurfaceViewListBinding;
@@ -19,11 +23,14 @@ import io.agora.meta.example.models.SurfaceViewInfo;
 public class SurfaceViewAdapter extends RecyclerView.Adapter<SurfaceViewAdapter.ViewHolder> {
 
     private List<SurfaceViewInfo> mViewLists;
-    private Context mContext;
+    private final Context mContext;
+
+    private final Map<TextureView, SurfaceTexture> mDetachedTextureViews;
 
     public SurfaceViewAdapter(Context context) {
         mViewLists = new ArrayList<>();
         mContext = context;
+        mDetachedTextureViews = new HashMap<>();
     }
 
     public void setSurfaceViewData(List<SurfaceViewInfo> list) {
@@ -67,6 +74,7 @@ public class SurfaceViewAdapter extends RecyclerView.Adapter<SurfaceViewAdapter.
                     ViewGroup.LayoutParams.MATCH_PARENT
             ));
 
+
             int uid = mViewLists.get(position).getUid();
             if (uid != 0) {
                 viewHolder.binding.uidTv.setText(String.format(mContext.getResources().getString(R.string.uid_label), uid));
@@ -83,4 +91,38 @@ public class SurfaceViewAdapter extends RecyclerView.Adapter<SurfaceViewAdapter.
         return mViewLists.size();
     }
 
+    @Override
+    public void onViewRecycled(@NonNull ViewHolder holder) {
+        super.onViewRecycled(holder);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        int position = holder.getLayoutPosition();
+        if (position >= mViewLists.size()) {
+            return;
+        }
+        if (mViewLists.get(position).getView() instanceof TextureView) {
+            TextureView textureView = (TextureView) mViewLists.get(position).getView();
+            if (mDetachedTextureViews.containsKey(textureView)) {
+                textureView.setSurfaceTexture(mDetachedTextureViews.get(textureView));
+                mDetachedTextureViews.remove(textureView);
+            }
+        }
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        int position = holder.getLayoutPosition();
+        if (position >= mViewLists.size()) {
+            return;
+        }
+        if (mViewLists.get(position).getView() instanceof TextureView) {
+            TextureView textureView = (TextureView) mViewLists.get(position).getView();
+            mDetachedTextureViews.put(textureView, textureView.getSurfaceTexture());
+        }
+
+    }
 }

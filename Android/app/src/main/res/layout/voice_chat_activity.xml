@@ -8,293 +8,84 @@
     android:background="@color/white"
     tools:context="io.agora.meta.example.ui.game.CoffeeActivity">
 
-    <FrameLayout
-        android:id="@+id/unity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <ImageView
-        android:id="@+id/back"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="86dp"
-        android:layout_marginTop="31dp"
-        android:src="@mipmap/back"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="visible" />
-
-    <include
-        android:id="@+id/card"
-        layout="@layout/card_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/back"
-        app:layout_constraintEnd_toStartOf="@+id/users"
-        app:layout_constraintTop_toTopOf="@+id/back"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/users"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginEnd="4dp"
-        android:src="@mipmap/user_list"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/back"
-        app:layout_constraintEnd_toStartOf="@+id/mic"
-        app:layout_constraintTop_toTopOf="@+id/back"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/mic"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginEnd="4dp"
-        android:src="@mipmap/microphone_on"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/back"
-        app:layout_constraintEnd_toStartOf="@+id/speaker"
-        app:layout_constraintTop_toTopOf="@+id/back"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/speaker"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginEnd="5dp"
-        android:src="@mipmap/voice_on"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/back"
-        app:layout_constraintRight_toLeftOf="@id/dress_setting"
-        app:layout_constraintTop_toTopOf="@+id/back"
-        tools:visibility="visible" />
-
-    <ImageView
-        android:id="@+id/dress_setting"
-        android:layout_width="22dp"
-        android:layout_height="22dp"
-        android:layout_marginEnd="21dp"
-        android:src="@drawable/dress_setting"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/back"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/back"
-        tools:visibility="visible" />
-
-    <Button
-        android:id="@+id/btn_switch_local_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="21dp"
-        android:text="@string/hide_local_view"
-        android:textColor="@color/black"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dress_setting" />
-
-    <Button
-        android:id="@+id/btn_switch_remote_preview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="21dp"
-        android:text="@string/btn_switch_remote_preview_camera"
-        android:textColor="@color/black"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_switch_local_view" />
-
-    <Button
-        android:id="@+id/btn_switch_remote_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:text="@string/hide_remote_view"
-        android:textColor="@color/black"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toStartOf="@id/btn_switch_local_view"
-        app:layout_constraintTop_toBottomOf="@id/dress_setting" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_local_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-    <!--app:layout_constraintWidth_max="@dimen/local_view_max_width"-->
-
-
-    <androidx.constraintlayout.widget.Group
-        android:id="@+id/scene_game_group"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="back,card,users,mic,speaker,dress_setting,btn_switch_local_view,btn_switch_remote_view,btn_switch_remote_preview,rv_local_view" />
-
-
-    <Button
-        android:id="@+id/cancel_bt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/cancel"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/uid_tv"
+        android:id="@+id/room_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/uid_color"
         android:textSize="13sp"
-        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/save_btn"
+        android:id="@+id/exit_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save"
-        android:visibility="gone"
+        android:text="@string/exit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/room_name_tv" />
 
-
-    <Button
-        android:id="@+id/dress_setting_bt"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:text="@string/dress_setting"
-        android:visibility="gone"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/face_setting_bt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/face_setting"
-        android:visibility="gone"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/dress_setting_bt" />
 
     <Button
         android:id="@+id/zoom_avatar_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:text="@string/zoom_avatar_setting"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_name_tv" />
+
+    <Button
+        android:id="@+id/voice_driver_switch_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/voice_driver_local"
+        app:layout_constraintStart_toEndOf="@id/zoom_avatar_bt"
+        app:layout_constraintTop_toBottomOf="@id/room_name_tv" />
 
     <Button
         android:id="@+id/play_local_audio_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:text="@string/play_local_audio"
-        android:visibility="gone"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zoom_avatar_bt" />
 
     <Button
         android:id="@+id/stop_local_audio_bt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:text="@string/stop_local_audio"
-        android:visibility="gone"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/play_local_audio_bt" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/dress_setting_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_dress_type"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/rv_dress_type_asset"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_dress_type_asset"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/face_setting_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_face_type"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:layout_constraintBottom_toTopOf="@id/rv_face_type_shapes"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_face_type_shapes"
-            android:layout_width="0dp"
-            android:layout_height="200dp"
-            android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintStart_toEndOf="@id/play_local_audio_bt"
+        app:layout_constraintTop_toBottomOf="@id/zoom_avatar_bt" />
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_remote_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
+        android:id="@+id/rv_all_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintWidth_max="@dimen/remote_view_max_width" />
+        app:layout_constraintTop_toBottomOf="@id/play_local_audio_bt" />
 
     <androidx.constraintlayout.widget.Group
-        android:id="@+id/scene_dress_and_face_group"
+        android:id="@+id/group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="cancel_bt,uid_tv,save_btn,zoom_avatar_bt,play_local_audio_bt,stop_local_audio_bt,rv_remote_view" />
+        app:constraint_referenced_ids="room_name_tv,voice_driver_switch_bt,exit_btn,zoom_avatar_bt,play_local_audio_bt,stop_local_audio_bt,rv_all_view" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
