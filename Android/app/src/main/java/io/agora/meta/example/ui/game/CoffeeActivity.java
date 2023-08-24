@@ -30,11 +30,13 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import io.agora.base.VideoFrame;
+import io.agora.meta.MetaSceneOptions;
 import io.agora.meta.example.MainActivity;
 import io.agora.meta.example.adapter.SurfaceViewAdapter;
 import io.agora.meta.example.databinding.CoffeeActivityBinding;
 import io.agora.meta.example.dialog.CustomDialog;
 import io.agora.meta.example.meta.MetaContext;
+import io.agora.meta.example.models.RoleInfo;
 import io.agora.meta.example.models.SurfaceViewInfo;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.R;
@@ -139,70 +141,6 @@ public class CoffeeActivity extends BaseGameActivity {
         videoCanvas.position = Constants.VideoModulePosition.VIDEO_MODULE_POSITION_POST_CAPTURER_ORIGIN;
         rtcEngine.setupLocalVideo(videoCanvas);
         rtcEngine.setClientRole(Constants.CLIENT_ROLE_BROADCASTER);
-
-        rtcEngine.registerVideoFrameObserver(new IVideoFrameObserver() {
-            @Override
-            public boolean onCaptureVideoFrame(VideoFrame videoFrame) {
-//                if (null != videoFrame.getMetaInfo() && videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).size() > 0) {
-//                    FaceCaptureInfo faceCaptureInfo = (FaceCaptureInfo) videoFrame.getMetaInfo().getCustomMetaInfo(MetaConstants.KEY_FACE_CAPTURE_INFO).get(0);
-//                    UnityMessage unityMessage = new UnityMessage();
-//                    unityMessage.setKey(MetaConstants.KEY_UNITY_MESSAGE_FACE_CAPTURE);
-//                    unityMessage.setValue(faceCaptureInfo.toString());
-//                    MetaContext.getInstance().sendSceneMessage(JSONObject.toJSONString(unityMessage));
-//                }
-                return false;
-            }
-
-            @Override
-            public boolean onPreEncodeVideoFrame(VideoFrame videoFrame) {
-                return false;
-            }
-
-            @Override
-            public boolean onScreenCaptureVideoFrame(VideoFrame videoFrame) {
-                return false;
-            }
-
-            @Override
-            public boolean onPreEncodeScreenVideoFrame(VideoFrame videoFrame) {
-                return false;
-            }
-
-            @Override
-            public boolean onMediaPlayerVideoFrame(VideoFrame videoFrame, int mediaPlayerId) {
-                return false;
-            }
-
-            @Override
-            public boolean onRenderVideoFrame(String channelId, int uid, VideoFrame videoFrame) {
-                return false;
-            }
-
-            @Override
-            public int getVideoFrameProcessMode() {
-                return 0;
-            }
-
-            @Override
-            public int getVideoFormatPreference() {
-                return 0;
-            }
-
-            @Override
-            public boolean getRotationApplied() {
-                return false;
-            }
-
-            @Override
-            public boolean getMirrorApplied() {
-                return false;
-            }
-
-            @Override
-            public int getObservedFramePosition() {
-                return 0;
-            }
-        });
 
         mLocalSurfaceViewList.add(new SurfaceViewInfo(mLocalPreviewSurfaceView, KeyCenter.RTC_UID));
 
@@ -359,7 +297,7 @@ public class CoffeeActivity extends BaseGameActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        mReCreateScene = true;
+        // mReCreateScene = true;
         //just for call setRequestedOrientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         super.onNewIntent(intent);
@@ -374,7 +312,6 @@ public class CoffeeActivity extends BaseGameActivity {
     }
 
     private void resetSceneState() {
-        mReCreateScene = false;
         mEnableRemotePreviewAvatar = true;
     }
 
@@ -529,10 +466,11 @@ public class CoffeeActivity extends BaseGameActivity {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
                 Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
+                RoleInfo ri = MetaContext.getInstance().getRoleInfo();
                 addLocalAvatarView(mLocalAvatarTextureView,
                         mLocalPreviewSurfaceView.getMeasuredWidth(), mLocalPreviewSurfaceView.getMeasuredHeight(),
                         KeyCenter.RTC_UID,
-                        MetaContext.getInstance().getRandomAvatarName(CoffeeActivity.this.getApplicationContext()));
+                        ri.getAvatarModelName());
             }
 
             @Override

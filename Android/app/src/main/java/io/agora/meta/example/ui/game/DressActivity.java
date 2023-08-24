@@ -158,7 +158,6 @@ public class DressActivity extends BaseGameActivity {
     }
 
     private void resetSceneState() {
-        mReCreateScene = false;
         mViewMode = 0;
     }
 

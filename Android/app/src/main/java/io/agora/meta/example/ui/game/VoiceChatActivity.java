@@ -14,8 +14,11 @@ import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.jakewharton.rxbinding2.view.RxView;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -54,7 +57,11 @@ public class VoiceChatActivity extends BaseGameActivity {
                 @Override
                 public void onPropertyChanged(Observable sender, int propertyId) {
                     if (sender == isEnterScene) {
-                        binding.group.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        if (MetaContext.getInstance().getCurrentScene() == MetaConstants.SCENE_FACE_CAPTURE_CHAT) {
+                            binding.faceCaptureGroup.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        } else {
+                            binding.group.setVisibility(isEnterScene.get() ? View.VISIBLE : View.GONE);
+                        }
                     }
                 }
             };
@@ -223,8 +230,7 @@ public class VoiceChatActivity extends BaseGameActivity {
     }
 
     private void resetSceneState() {
-        mReCreateScene = false;
-        mViewMode = 0;
+        mViewMode = 1;
     }
 
 
@@ -245,6 +251,9 @@ public class VoiceChatActivity extends BaseGameActivity {
             updateViewMode();
             MetaContext.getInstance().updateVoiceChatRole();
 
+            if (MetaConstants.SCENE_FACE_CAPTURE_CHAT == MetaContext.getInstance().getCurrentScene()) {
+                MetaContext.getInstance().enableVideo();
+            }
             MetaContext.getInstance().joinChannel();
         });
         resetSceneState();
@@ -295,15 +304,15 @@ public class VoiceChatActivity extends BaseGameActivity {
 
 
     @Override
-    public void onUserStateChanged(String uid, int state) {
-        Log.i(TAG, "onUserStateChanged uid:" + uid + " state:" + state);
-        super.onUserStateChanged(uid, state);
+    public void onRemoteUserStateChanged(String uid, int state, byte[] extraInfo) {
+        Log.i(TAG, "onRemoteUserStateChanged uid:" + uid + " state:" + state);
+        super.onRemoteUserStateChanged(uid, state, extraInfo);
         if (MetaSceneUserStateType.META_SCENE_USER_STATE_ONLINE == state) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        addLocalTextureView(Integer.parseInt(uid));
+                        addLocalTextureView(Integer.parseInt(uid), extraInfo);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -359,7 +368,11 @@ public class VoiceChatActivity extends BaseGameActivity {
             @Override
             public void run() {
                 MetaSceneOptions options = new MetaSceneOptions();
-                options.mLipSyncMode = MetaSceneOptions.LipSyncMode.LIP_SYNC_MODE_NORMAL;
+                if (MetaContext.getInstance().getCurrentScene() == MetaConstants.SCENE_FACE_CAPTURE_CHAT) {
+                    options.mMotionCaptureType = MetaSceneOptions.MotionCaptureType.MOTION_CAPTURE_TYPE_FACE_CAPTURE;
+                } else {
+                    options.mLipSyncMode = MetaSceneOptions.LipSyncMode.LIP_SYNC_MODE_NORMAL;
+                }
                 options.mPublishBlendShape = true;
                 options.mAutoSubscribeBlendShape = true;
                 MetaContext.getInstance().updateSceneOptions(options);
@@ -376,11 +389,16 @@ public class VoiceChatActivity extends BaseGameActivity {
     }
 
 
-    private void addLocalTextureView(int uid) {
+    private void addLocalTextureView(int uid, byte[] extraInfo) {
         if (mAllSurfaceViewList.size() - 1 >= MetaConstants.MAX_COUNT_ADD_SCENE_VIEW) {
             Log.e(TAG, "add scene view to reach the maximum number");
             return;
         }
+
+        String strExtraInfo = new String(extraInfo, StandardCharsets.UTF_8);
+        JSONObject jsonObject = JSONObject.parseObject(strExtraInfo);
+        String avatarName = jsonObject.getString("avatar");
+
 
         mAddAvatarTextureView = new TextureView(this);
         mAddAvatarTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
@@ -390,7 +408,7 @@ public class VoiceChatActivity extends BaseGameActivity {
                 addLocalAvatarView(mAddAvatarTextureView,
                         mTextureView.getMeasuredWidth(), mTextureView.getMeasuredHeight(),
                         uid,
-                        null);
+                        avatarName);
             }
 
             @Override

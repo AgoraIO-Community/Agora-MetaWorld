@@ -87,5 +87,10 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="room_name_tv,voice_driver_switch_bt,exit_btn,zoom_avatar_bt,play_local_audio_bt,stop_local_audio_bt,rv_all_view" />
 
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/face_capture_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="room_name_tv,exit_btn,zoom_avatar_bt,rv_all_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -121,7 +121,9 @@ public class SurfaceViewAdapter extends RecyclerView.Adapter<SurfaceViewAdapter.
         }
         if (mViewLists.get(position).getView() instanceof TextureView) {
             TextureView textureView = (TextureView) mViewLists.get(position).getView();
-            mDetachedTextureViews.put(textureView, textureView.getSurfaceTexture());
+            if (textureView.getSurfaceTexture() != null) {
+                mDetachedTextureViews.put(textureView, textureView.getSurfaceTexture());
+            }
         }
 
     }

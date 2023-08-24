@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import com.alibaba.fastjson.JSONObject;
 
 import io.agora.meta.IMetaScene;
+import io.agora.meta.MetaSceneOptions;
 import io.agora.meta.SceneDisplayConfig;
 import io.agora.meta.example.inf.IMetaEventHandler;
 import io.agora.meta.example.inf.IRtcEventCallback;
@@ -28,6 +29,8 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
     protected TextureView mTextureView = null;
     protected boolean mReCreateScene;
     protected boolean mIsFront;
+    protected boolean mMainViewAvailable = false;
+    protected boolean mMainViewResized = false;
 
     protected boolean mJoinChannelSuccess;
 
@@ -35,6 +38,8 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate: " + this.getLocalClassName());
+        mReCreateScene = true;
         super.onCreate(savedInstanceState);
         initLayout();
         registerListener();
@@ -45,19 +50,21 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
     }
 
     protected void initLayout() {
-
+        Log.i(TAG, "initLayout: ");
     }
 
     protected void initView() {
-
+        Log.i(TAG, "initView: ");
     }
 
     protected void initData() {
+        Log.i(TAG, "initData: ");
         mViewMode = 0;
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
+        Log.i(TAG, "onNewIntent: " + intent.getDataString());
         super.onNewIntent(intent);
         mReCreateScene = true;
         initData();
@@ -67,23 +74,26 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
     }
 
     protected void registerListener() {
+        Log.i(TAG, "registerListener: ");
         MetaContext.getInstance().registerMetaSceneEventHandler(this);
         MetaContext.getInstance().registerMetaServiceEventHandler(this);
         MetaContext.getInstance().setRtcEventCallback(this);
     }
 
     protected void unregisterListener() {
+        Log.i(TAG, "unregisterListener: ");
         MetaContext.getInstance().unregisterMetaSceneEventHandler(this);
         MetaContext.getInstance().unregisterMetaServiceEventHandler(this);
         MetaContext.getInstance().setRtcEventCallback(null);
     }
 
     protected void initClickEvent() {
-
+        Log.i(TAG, "initClickEvent: ");
     }
 
     @Override
     protected void onResume() {
+        Log.i(TAG, "onResume: " + this.getLocalClassName());
         super.onResume();
         mIsFront = true;
         maybeCreateScene();
@@ -91,29 +101,34 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
 
     @Override
     protected void onPause() {
+        Log.i(TAG, "onPause: " + this.getLocalClassName());
         super.onPause();
         mIsFront = false;
     }
 
     @Override
     protected void onStop() {
+        Log.i(TAG, "onStop: " + this.getLocalClassName());
         super.onStop();
         unregisterListener();
     }
 
     protected void initMainUnityView() {
+        Log.i(TAG, "initMainUnityView: ");
         mTextureView = new TextureView(this);
         mTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
-            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                mReCreateScene = true;
+            public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surfaceTexture, int w, int h) {
+                Log.i(TAG, "onSurfaceTextureAvailable, width=" + w + ", height=" + h);
+                mMainViewAvailable = true;
                 maybeCreateScene();
             }
 
 
             @Override
-            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int i, int i1) {
-                Log.i(TAG, "onSurfaceTextureSizeChanged");
+            public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int w, int h) {
+                Log.i(TAG, "onSurfaceTextureSizeChanged, width=" + w + ", height=" + h);
+                mMainViewResized = true;
                 maybeCreateScene();
             }
 
@@ -130,36 +145,40 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
     }
 
     protected void maybeCreateScene() {
-        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mIsFront=" + mIsFront + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
-        if (mReCreateScene && mIsFront) {
+        Log.i(TAG, "maybeCreateScene,mReCreateScene=" + mReCreateScene + ",mIsFront=" + mIsFront + ",mMainViewAvailable=" + mMainViewAvailable + ",mMainViewResized=" + mMainViewResized + ",mJoinChannelSuccess=" + mJoinChannelSuccess);
+        if (mReCreateScene && mIsFront && mMainViewAvailable/* && mMainViewResized*/) {
             resetCreateSceneState();
             MetaContext.getInstance().createScene(this, mTextureView);
         }
     }
 
     protected void resetCreateSceneState() {
-
+        Log.i(TAG, "resetCreateSceneState: ");
+        mReCreateScene = false;
     }
 
     protected void addLocalAvatarView(TextureView textureView, int width, int height, int uid, String avatarName) {
+        Log.i(TAG, "addLocalAvatarView: uid: " + uid + ", avatar: " + avatarName);
         SceneDisplayConfig sceneDisplayConfig = new SceneDisplayConfig();
-        sceneDisplayConfig.width = width;
-        sceneDisplayConfig.height = height;
+        sceneDisplayConfig.mWidth = width;
+        sceneDisplayConfig.mHeight = height;
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sceneIndex", 0);
         jsonObject.put("userId", String.valueOf(uid));
         if (!TextUtils.isEmpty(avatarName)) {
-            jsonObject.put("avatarName", avatarName);
+            jsonObject.put("avatar", avatarName);
         }
-        sceneDisplayConfig.extraInfo = jsonObject.toJSONString().getBytes();
+        sceneDisplayConfig.mExtraInfo = jsonObject.toJSONString().getBytes();
         MetaContext.getInstance().addSceneView(textureView, sceneDisplayConfig);
     }
 
     protected void exit() {
-
+        Log.i(TAG, "exit: ");
     }
 
     @Override
     public void onReleasedScene(int status) {
+        Log.i(TAG, "onReleasedScene: " + this.getLocalClassName());
         if (status == 0) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -172,6 +191,7 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
 
     @Override
     public void onCreateSceneResult(IMetaScene scene, int errorCode) {
+        Log.i(TAG, "onCreateSceneResult: ");
         //异步线程回调需在主线程处理
         runOnUiThread(new Runnable() {
             @Override
@@ -199,10 +219,12 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
 
     @Override
     public void onLeaveChannel(IRtcEngineEventHandler.RtcStats stats) {
+        Log.i(TAG, "onLeaveChannel: ");
         mJoinChannelSuccess = false;
     }
 
     protected void updateViewMode() {
+        Log.i(TAG, "updateViewMode: ");
         UnityMessage message = new UnityMessage();
         message.setKey("setCamera");
         JSONObject valueJson = new JSONObject();

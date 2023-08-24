@@ -217,6 +217,7 @@ public class MainFragment extends Fragment {
                     cls = CoffeeActivity.class;
                     break;
                 case MetaConstants.SCENE_VOICE_CHAT:
+                case MetaConstants.SCENE_FACE_CAPTURE_CHAT:
                     cls = VoiceChatActivity.class;
                     break;
                 default:

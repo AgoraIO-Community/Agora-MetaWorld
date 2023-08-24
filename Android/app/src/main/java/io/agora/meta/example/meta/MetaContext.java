@@ -50,17 +50,19 @@ import io.agora.meta.example.utils.DressAndFaceDataUtils;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.utils.MMKVUtils;
 import io.agora.meta.example.utils.MetaConstants;
+import io.agora.meta.example.utils.YuvDumper;
 import io.agora.rtc2.ChannelMediaOptions;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.IRtcEngineEventHandler;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.RtcEngineConfig;
+import io.agora.rtc2.video.IVideoFrameObserver;
 import io.agora.rtc2.video.VideoEncoderConfiguration;
 import io.agora.spatialaudio.ILocalSpatialAudioEngine;
 import io.agora.spatialaudio.LocalSpatialAudioConfig;
 import io.agora.spatialaudio.RemoteVoicePositionInfo;
 
-public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaVideoFramePushListener {
+public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaVideoFramePushListener, IVideoFrameObserver {
 
     private final static String TAG = MetaContext.class.getName();
     private volatile static MetaContext instance = null;
@@ -90,6 +92,9 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
 
     private String roomName;
 
+    private int mDumpFrames = 0;
+    private YuvDumper mDumper = null;
+
     private MetaContext() {
         metaServiceEventHandlerMap = new ConcurrentHashMap<>();
         metaSceneEventHandlerMap = new ConcurrentHashMap<>();
@@ -116,6 +121,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     public boolean initialize(Context context) {
+        mDumper = new YuvDumper(context, "capture");
         int ret = Constants.ERR_OK;
         if (rtcEngine == null) {
             try {
@@ -304,6 +310,9 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         } else if (MetaConstants.SCENE_COFFEE == currentScene) {
             sceneConfig.mEnableLipSync = false;
             sceneConfig.mEnableFaceCapture = true;
+        } else if (MetaConstants.SCENE_FACE_CAPTURE_CHAT == currentScene) {
+            sceneConfig.mEnableLipSync = false;
+            sceneConfig.mEnableFaceCapture = true;
         }
         sceneConfig.mFaceCaptureAppId = KeyCenter.FACE_CAP_APP_ID;
         sceneConfig.mFaceCaptureCertificate = KeyCenter.FACE_CAP_APP_KEY;
@@ -318,18 +327,18 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     public void enterScene() {
         checkRoleInfoRes();
 
+        JSONObject avatarJson = new JSONObject();
+        if (null != roleInfo) {
+            avatarJson.put("2dbg", "");
+            avatarJson.put("avatar", roleInfo.getAvatarModelName());
+            avatarJson.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
+            avatarJson.put("face", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
+        }
         if (null != localUserAvatar) {
             localUserAvatar.setUserInfo(userInfo);
             //该model的mBundleType为MetaBundleInfo.BundleType.BUNDLE_TYPE_AVATAR类型
             localUserAvatar.setModelInfo(modelInfo);
-            if (null != roleInfo) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("2dbg", "");
-                jsonObject.put("avatar", roleInfo.getAvatarModelName());
-                jsonObject.put("dress", roleInfo.getDressResourceMap().values().toArray((new Integer[0])));
-                jsonObject.put("face", roleInfo.getFaceParameterResourceMap().values().toArray((new FaceParameterItem[0])));
-                localUserAvatar.setExtraInfo(jsonObject.toJSONString().getBytes());
-            }
+            localUserAvatar.setExtraInfo(avatarJson.toJSONString().getBytes());
         }
         if (null != metaScene) {
             //使能位置信息回调功能
@@ -355,14 +364,23 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
              *     "sceneIndex":0  //0为默认场景，在这里指咖啡厅，1为换装设置场景
              *   }
              */
-            EnterSceneExtraInfo extraInfo = new EnterSceneExtraInfo();
-            if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
-                extraInfo.setSceneIndex(MetaConstants.SCENE_DRESS);
-            } else if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene()) {
-                extraInfo.setSceneIndex(MetaConstants.SCENE_COFFEE);
+            JSONObject extraInfoJson = new JSONObject();
+            if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene()) {
+                extraInfoJson.put("sceneIndex", MetaConstants.SCENE_COFFEE);
+            } else {
+                extraInfoJson = avatarJson;
+                extraInfoJson.put("sceneIndex", MetaConstants.SCENE_DRESS);
             }
+//            EnterSceneExtraInfo extraInfo = new EnterSceneExtraInfo();
+//            if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
+//                extraInfo.setSceneIndex(MetaConstants.SCENE_DRESS);
+//            } else if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene()) {
+//                extraInfo.setSceneIndex(MetaConstants.SCENE_COFFEE);
+//            }
             //加载的场景index
-            config.mExtraInfo = JSONObject.toJSONString(extraInfo).getBytes();
+            config.mDisplayConfig.mWidth = this.sceneView.getMeasuredWidth();
+            config.mDisplayConfig.mHeight = this.sceneView.getMeasuredHeight();
+            config.mDisplayConfig.mExtraInfo = extraInfoJson.toJSONString().getBytes();
             metaScene.enterScene(config);
         }
     }
@@ -393,6 +411,10 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         } else if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
             modelInfo.mRemoteVisible = false;
             modelInfo.mSyncPosition = false;
+        } else if (MetaConstants.SCENE_VOICE_CHAT == MetaContext.getInstance().getCurrentScene() ||
+                MetaConstants.SCENE_FACE_CAPTURE_CHAT == MetaContext.getInstance().getCurrentScene()) {
+            modelInfo.mSyncPosition = true;
+            modelInfo.mRemoteVisible = false;
         }
 
         if (null != localUserAvatar && Constants.ERR_OK == localUserAvatar.setModelInfo(modelInfo)) {
@@ -404,7 +426,7 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     public boolean updateVoiceChatRole() {
         int ret = Constants.ERR_OK;
         modelInfo.mLocalVisible = true;
-        modelInfo.mRemoteVisible = true;
+        modelInfo.mRemoteVisible = false;
         modelInfo.mSyncPosition = true;
 
         if (null != localUserAvatar && Constants.ERR_OK == localUserAvatar.setModelInfo(modelInfo)) {
@@ -564,10 +586,10 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
     }
 
     @Override
-    public void onUserStateChanged(String uid, int state) {
+    public void onRemoteUserStateChanged(String uid, int state, byte[] extraInfo) {
         Log.d(TAG, String.format("onUserStateChanged %s %d", uid, state));
         for (IMetaSceneEventHandler handler : metaSceneEventHandlerMap.keySet()) {
-            handler.onUserStateChanged(uid, state);
+            handler.onRemoteUserStateChanged(uid, state, extraInfo);
         }
     }
 
@@ -777,8 +799,12 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
                     new VideoEncoderConfiguration.VideoDimensions(view.getWidth(), view.getHeight()),
                     VideoEncoderConfiguration.FRAME_RATE.FRAME_RATE_FPS_30,
                     STANDARD_BITRATE,
-                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_PORTRAIT, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
+                    VideoEncoderConfiguration.ORIENTATION_MODE.ORIENTATION_MODE_FIXED_LANDSCAPE, VideoEncoderConfiguration.MIRROR_MODE_TYPE.MIRROR_MODE_DISABLED));
             metaScene.enableSceneVideoCapture(view, enable);
+            if (enable) {
+                mDumper.clearFrames();
+                // rtcEngine.registerVideoFrameObserver(this);
+            }
         }
     }
 
@@ -843,4 +869,75 @@ public class MetaContext implements IMetaEventHandler, AgoraMediaPlayer.OnMediaV
         String[] avatarNames = context.getResources().getStringArray(R.array.avatar_model_value);
         return avatarNames[new Random().nextInt(avatarNames.length)];
     }
+
+    @Override
+    public boolean onCaptureVideoFrame(VideoFrame videoFrame) {
+        Log.d(TAG, "onCaptureVideoFrame: width=" + videoFrame.getBuffer().getWidth() + ", height=" + videoFrame.getBuffer().getHeight());
+        mDumpFrames++;
+        if (mDumpFrames >= 1000 && mDumpFrames <= 1010) {
+            mDumper.pushFrame(videoFrame);
+            if (mDumpFrames == 1010) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDumper.saveToFile();
+                        Log.i(TAG, "dumped file: " + mDumper.getDumpFilePath());
+                    }
+                });
+                t.start();
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onPreEncodeVideoFrame(VideoFrame videoFrame) {
+        return true;
+    }
+
+    @Override
+    public boolean onScreenCaptureVideoFrame(VideoFrame videoFrame) {
+        return true;
+    }
+
+    @Override
+    public boolean onPreEncodeScreenVideoFrame(VideoFrame videoFrame) {
+        return true;
+    }
+
+    @Override
+    public boolean onMediaPlayerVideoFrame(VideoFrame videoFrame,  int mediaPlayerId) {
+        return true;
+    }
+
+    @Override
+    public boolean onRenderVideoFrame(String channelId, int uid, VideoFrame videoFrame) {
+        return true;
+    }
+
+    @Override
+    public int getVideoFrameProcessMode() {
+        return PROCESS_MODE_READ_ONLY;
+    }
+
+    @Override
+    public int getVideoFormatPreference() {
+        return VIDEO_PIXEL_I420;
+    }
+
+    @Override
+    public boolean getRotationApplied() {
+        return true;
+    }
+
+    @Override
+    public boolean getMirrorApplied() {
+        return false;
+    }
+
+    @Override
+    public int getObservedFramePosition() {
+        return POSITION_POST_CAPTURER;
+    }
+
 }

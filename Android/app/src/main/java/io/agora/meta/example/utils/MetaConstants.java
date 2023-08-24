@@ -17,6 +17,7 @@ public class MetaConstants {
     public static final int SCENE_COFFEE = 1;
 
     public static final int SCENE_VOICE_CHAT = 2;
+    public static final int SCENE_FACE_CAPTURE_CHAT = 3;
 
     public static final int SCENE_ID_META_1_0 = 15;
     public static final int SCENE_ID_META_1_1_VOICE_DRIVER = 24;

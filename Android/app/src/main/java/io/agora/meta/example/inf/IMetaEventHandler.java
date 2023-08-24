@@ -79,7 +79,7 @@ public interface IMetaEventHandler extends IMetaServiceEventHandler, IMetaSceneE
     }
 
     @Override
-    default void onUserStateChanged(String uid, int state) {
+    default void onRemoteUserStateChanged(String uid, int state, byte[] extraInfo) {
 
     }
 }
