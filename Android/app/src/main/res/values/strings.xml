@@ -24,4 +24,6 @@
     <string name="agora_io">Agora.io</string>
     <string name="voice_driver_channel">频道语音驱动</string>
     <string name="voice_driver_local">本地语音驱动</string>
+    <string name="add_view">+View</string>
+    <string name="remove_view">-View</string>
 </resources>

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import io.agora.meta.MetaSceneOptions;
@@ -50,6 +51,8 @@ public class VoiceChatActivity extends BaseGameActivity {
     private TextureView mAddAvatarTextureView;
 
     private boolean mVoiceDriverByChannel;
+
+    private int mCurFakeUid = 1000;
 
     private final ObservableBoolean isEnterScene = new ObservableBoolean(false);
     private final Observable.OnPropertyChangedCallback callback =
@@ -151,6 +154,26 @@ public class VoiceChatActivity extends BaseGameActivity {
             updateViewMode();
         });
 
+        RxView.clicks(binding.addViewBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            int curUid = mCurFakeUid++;
+            String[] avatars = new String[] {
+              "mina", "kda", "huamulan", "boy", "girl"
+            };
+            String extraInfo = "{\"avatar\":\"" + avatars[curUid % avatars.length] + "\"}";
+            addLocalTextureView(curUid, extraInfo.getBytes());
+        });
+
+        RxView.clicks(binding.removeViewBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
+            if (mAllSurfaceViewList.size() <= 1) {
+                return;
+            }
+            try {
+                int delIndex = new Random().nextInt(mAllSurfaceViewList.size() - 1) + 1;
+                MetaContext.getInstance().removeSceneView((TextureView) mAllSurfaceViewList.get(delIndex).getView());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         RxView.clicks(binding.playLocalAudioBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
             if (null != mAudioFileReader) {
@@ -323,19 +346,20 @@ public class VoiceChatActivity extends BaseGameActivity {
                 @Override
                 public void run() {
                     try {
-                        int index = 0;
+                        // int index = 0;
                         Iterator<SurfaceViewInfo> iterator = mAllSurfaceViewList.iterator();
                         while (iterator.hasNext()) {
                             SurfaceViewInfo surfaceViewInfo = iterator.next();
                             if (Integer.parseInt(uid) == surfaceViewInfo.getUid()) {
-                                iterator.remove();
+                                MetaContext.getInstance().removeSceneView((TextureView) surfaceViewInfo.getView());
+                                // iterator.remove();
                                 break;
                             }
-                            index++;
+                            // index++;
                         }
-                        if (null != mAllViewAdapter) {
-                            mAllViewAdapter.notifyItemRemoved(index);
-                        }
+//                        if (null != mAllViewAdapter) {
+//                            mAllViewAdapter.notifyItemRemoved(index);
+//                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
