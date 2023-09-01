@@ -224,7 +224,7 @@ public class BaseGameActivity extends Activity implements IMetaEventHandler, IRt
     }
 
     protected void updateViewMode() {
-        Log.i(TAG, "updateViewMode: ");
+        Log.i(TAG, "updateViewMode: " + mViewMode);
         UnityMessage message = new UnityMessage();
         message.setKey("setCamera");
         JSONObject valueJson = new JSONObject();

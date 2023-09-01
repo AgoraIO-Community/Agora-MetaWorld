@@ -253,7 +253,6 @@ public class VoiceChatActivity extends BaseGameActivity {
     }
 
     private void resetSceneState() {
-        mViewMode = 1;
     }
 
 
@@ -271,8 +270,9 @@ public class VoiceChatActivity extends BaseGameActivity {
             }
             isEnterScene.set(true);
 
+            mViewMode = 1;
             updateViewMode();
-            MetaContext.getInstance().updateVoiceChatRole();
+            // MetaContext.getInstance().updateVoiceChatRole();
 
             if (MetaConstants.SCENE_FACE_CAPTURE_CHAT == MetaContext.getInstance().getCurrentScene()) {
                 MetaContext.getInstance().enableVideo();

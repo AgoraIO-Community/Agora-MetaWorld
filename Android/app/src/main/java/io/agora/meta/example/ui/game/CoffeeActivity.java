@@ -40,6 +40,7 @@ import io.agora.meta.example.models.RoleInfo;
 import io.agora.meta.example.models.SurfaceViewInfo;
 import io.agora.meta.example.utils.KeyCenter;
 import io.agora.meta.example.R;
+import io.agora.meta.example.utils.MetaConstants;
 import io.agora.rtc2.Constants;
 import io.agora.rtc2.RtcEngine;
 import io.agora.rtc2.video.IVideoFrameObserver;
@@ -397,6 +398,16 @@ public class CoffeeActivity extends BaseGameActivity {
         if (MetaContext.getInstance().isInScene()) {
             MetaContext.getInstance().pauseMedia();
         }
+    }
+
+    @Override
+    public void onJoinChannelSuccess(String channel, int uid, int elapsed) {
+        super.onJoinChannelSuccess(channel, uid, elapsed);
+        MetaSceneOptions options = new MetaSceneOptions();
+        options.mMotionCaptureType = MetaSceneOptions.MotionCaptureType.MOTION_CAPTURE_TYPE_FACE_CAPTURE;
+        options.mPublishBlendShape = false;
+        options.mAutoSubscribeBlendShape = false;
+        MetaContext.getInstance().updateSceneOptions(options);
     }
 
     @Override

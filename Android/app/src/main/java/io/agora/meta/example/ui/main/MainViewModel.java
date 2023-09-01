@@ -104,6 +104,10 @@ public class MainViewModel extends ViewModel implements IMetaEventHandler {
             } else if (MetaConstants.SCENE_DRESS == MetaContext.getInstance().getCurrentScene()) {
                 mRemoteVisible = false;
                 mSyncPosition = false;
+            } else if (MetaConstants.SCENE_FACE_CAPTURE_CHAT == MetaContext.getInstance().getCurrentScene() ||
+                MetaConstants.SCENE_VOICE_CHAT == MetaContext.getInstance().getCurrentScene()) {
+                mRemoteVisible = false;
+                mSyncPosition = true;
             }
         }}, new MetaUserInfo() {{
             mUserId = KeyCenter.RTM_UID;
