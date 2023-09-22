@@ -48,8 +48,6 @@ public class VoiceChatActivity extends BaseGameActivity {
 
     private boolean mIsExit;
 
-    private TextureView mAddAvatarTextureView;
-
     private boolean mVoiceDriverByChannel;
 
     private int mCurFakeUid = 1000;
@@ -424,12 +422,12 @@ public class VoiceChatActivity extends BaseGameActivity {
         String avatarName = jsonObject.getString("avatar");
 
 
-        mAddAvatarTextureView = new TextureView(this);
-        mAddAvatarTextureView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+        TextureView avatarView = new TextureView(this);
+        avatarView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(@NonNull SurfaceTexture surface, int width, int height) {
                 Log.i(TAG, "localTextureView onSurfaceTextureAvailable surface=" + surface);
-                addLocalAvatarView(mAddAvatarTextureView,
+                addLocalAvatarView(avatarView,
                         mTextureView.getMeasuredWidth(), mTextureView.getMeasuredHeight(),
                         uid,
                         avatarName);
@@ -451,7 +449,7 @@ public class VoiceChatActivity extends BaseGameActivity {
 
             }
         });
-        mAllSurfaceViewList.add(new SurfaceViewInfo(mAddAvatarTextureView, uid));
+        mAllSurfaceViewList.add(new SurfaceViewInfo(avatarView, uid));
         if (null != mAllViewAdapter) {
             mAllViewAdapter.notifyItemInserted(mAllSurfaceViewList.size() - 1);
             binding.rvAllView.scrollToPosition(mAllSurfaceViewList.size() - 1);
