@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="io.agora.meta.example.ui.game.CoffeeActivity">
+
+
+    <TextView
+        android:id="@+id/room_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/uid_color"
+        android:textSize="13sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/exit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/exit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_name_tv" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/zoom_avatar_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/zoom_avatar_setting"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/room_name_tv" />
+
+    <Button
+        android:id="@+id/voice_driver_switch_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/voice_driver_local"
+        app:layout_constraintStart_toEndOf="@id/zoom_avatar_bt"
+        app:layout_constraintTop_toBottomOf="@id/room_name_tv" />
+
+    <Button
+        android:id="@+id/play_local_audio_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/play_local_audio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/zoom_avatar_bt" />
+
+    <Button
+        android:id="@+id/stop_local_audio_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/stop_local_audio"
+        app:layout_constraintStart_toEndOf="@id/play_local_audio_bt"
+        app:layout_constraintTop_toBottomOf="@id/zoom_avatar_bt" />
+
+    <Button
+        android:id="@+id/add_view_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/add_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/play_local_audio_bt" />
+
+    <Button
+        android:id="@+id/remove_view_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="@string/remove_view"
+        app:layout_constraintStart_toEndOf="@id/add_view_bt"
+        app:layout_constraintTop_toBottomOf="@id/play_local_audio_bt" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_all_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_view_bt" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="room_name_tv,voice_driver_switch_bt,exit_btn,zoom_avatar_bt,play_local_audio_bt,stop_local_audio_bt,rv_all_view" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/face_capture_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="room_name_tv,exit_btn,zoom_avatar_bt,rv_all_view" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

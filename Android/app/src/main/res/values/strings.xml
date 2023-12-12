@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AgoraMetaExample</string>
+    <string name="app_name">AgoraMetaExample_1.2</string>
     <string name="hide_local_view">隐藏本地视角</string>
     <string name="show_local_view">显示本地视角</string>
     <string name="hide_remote_view">隐藏远端视角</string>
@@ -7,6 +7,7 @@
     <string name="uid_label">uid:%1$d</string>
     <string name="cancel">取消</string>
     <string name="save">保存</string>
+    <string name="exit">退出</string>
     <string name="dress_setting">换装</string>
     <string name="face_setting">捏脸</string>
     <string name="zoom_avatar_setting">缩放avatar</string>
@@ -15,5 +16,14 @@
     <string name="btn_switch_remote_preview_camera">切换远端显示摄像头</string>
     <string name="play_local_audio">播放本地音频</string>
     <string name="stop_local_audio">停止本地音频</string>
-
+    <string name="input_nickname">请输入昵称</string>
+    <string name="input_room_name">请输入房间名称</string>
+    <string name="select_model">请选择avatar</string>
+    <string name="select_scene">请选择场景</string>
+    <string name="enter">进入</string>
+    <string name="agora_io">Agora.io</string>
+    <string name="voice_driver_channel">频道语音驱动</string>
+    <string name="voice_driver_local">本地语音驱动</string>
+    <string name="add_view">+View</string>
+    <string name="remove_view">-View</string>
 </resources>

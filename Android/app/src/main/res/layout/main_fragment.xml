@@ -13,7 +13,7 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="io.agora.meta.example_voice_driver.ui.main.MainFragment">
+        tools:context="io.agora.meta.example.ui.main.MainFragment">
 
         <TextView
             android:id="@+id/title"
@@ -52,7 +52,7 @@
             android:background="@drawable/ic_edittext_background"
             android:drawableStart="@mipmap/user_fill"
             android:drawablePadding="14dp"
-            android:hint="请输入昵称"
+            android:hint="@string/input_nickname"
             android:maxLength="10"
             android:paddingHorizontal="30dp"
             android:singleLine="true"
@@ -63,31 +63,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/avatar" />
 
-        <TextView
-            android:id="@+id/tips"
-            android:layout_width="wrap_content"
-            android:layout_height="17dp"
-            android:layout_marginStart="58dp"
-            android:layout_marginTop="3dp"
-            android:text="请输入2-10个字符"
-            android:textColor="#ffff6969"
-            android:textSize="12sp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/nickname"
-            app:layout_constraintTop_toBottomOf="@+id/nickname" />
-
         <EditText
-            android:id="@+id/sex"
+            android:id="@+id/room_name"
             android:layout_width="275dp"
             android:layout_height="54dp"
             android:layout_marginTop="27dp"
             android:background="@drawable/ic_edittext_background"
-            android:drawableStart="@mipmap/user_star_fill"
-            android:drawableEnd="@mipmap/arrow_down"
+            android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:drawableStart="@mipmap/user_fill"
             android:drawablePadding="14dp"
-            android:editable="false"
-            android:hint="请选择性别"
+            android:hint="@string/input_room_name"
+            android:maxLength="10"
             android:paddingHorizontal="30dp"
+            android:singleLine="true"
             android:textColor="#ffa18bb0"
             android:textColorHint="#ffa18bb0"
             android:textSize="15sp"
@@ -95,8 +83,28 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
+
+        <EditText
+            android:id="@+id/avatar_model"
+            android:layout_width="275dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="27dp"
+            android:background="@drawable/ic_edittext_background"
+            android:drawableStart="@mipmap/user_star_fill"
+            android:drawableEnd="@mipmap/arrow_down"
+            android:drawablePadding="14dp"
+            android:hint="@string/select_model"
+            android:inputType="none"
+            android:paddingHorizontal="30dp"
+            android:textColor="#ffa18bb0"
+            android:textColorHint="#ffa18bb0"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/room_name" />
+
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/avatar_model_spinner"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:alpha="0"
@@ -104,10 +112,43 @@
             android:dropDownVerticalOffset="62dp"
             android:popupBackground="@drawable/ic_spinner_dropdown_background"
             android:spinnerMode="dropdown"
-            app:layout_constraintBottom_toBottomOf="@+id/sex"
-            app:layout_constraintEnd_toEndOf="@+id/sex"
-            app:layout_constraintStart_toStartOf="@+id/sex"
-            app:layout_constraintTop_toTopOf="@+id/sex" />
+            app:layout_constraintBottom_toBottomOf="@+id/avatar_model"
+            app:layout_constraintEnd_toEndOf="@+id/avatar_model"
+            app:layout_constraintStart_toStartOf="@+id/avatar_model"
+            app:layout_constraintTop_toTopOf="@+id/avatar_model" />
+
+        <EditText
+            android:id="@+id/scene"
+            android:layout_width="275dp"
+            android:layout_height="54dp"
+            android:layout_marginTop="27dp"
+            android:background="@drawable/ic_edittext_background"
+            android:drawableStart="@mipmap/user_star_fill"
+            android:drawableEnd="@mipmap/arrow_down"
+            android:drawablePadding="14dp"
+            android:hint="@string/select_scene"
+            android:inputType="none"
+            android:paddingHorizontal="30dp"
+            android:textColor="#ffa18bb0"
+            android:textColorHint="#ffa18bb0"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/avatar_model" />
+
+        <Spinner
+            android:id="@+id/scene_spinner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:alpha="0"
+            android:dropDownWidth="275dp"
+            android:dropDownVerticalOffset="62dp"
+            android:popupBackground="@drawable/ic_spinner_dropdown_background"
+            android:spinnerMode="dropdown"
+            app:layout_constraintBottom_toBottomOf="@+id/scene"
+            app:layout_constraintEnd_toEndOf="@+id/scene"
+            app:layout_constraintStart_toStartOf="@+id/scene"
+            app:layout_constraintTop_toTopOf="@+id/scene" />
 
         <ImageButton
             android:id="@+id/enter"
@@ -118,7 +159,7 @@
             android:src="@mipmap/enter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinner" />
+            app:layout_constraintTop_toBottomOf="@id/scene_spinner" />
 
         <TextView
             android:id="@+id/enter_tip"
@@ -126,7 +167,7 @@
             android:layout_height="25dp"
             android:layout_marginTop="10dp"
             android:alpha="0.41"
-            android:text="进入"
+            android:text="@string/enter"
             android:textColor="#d9f9f9f9"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -140,7 +181,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="10dp"
             android:alpha="0.51"
-            android:text="Agora.io"
+            android:text="@string/agora_io"
             android:textColor="#d9ffffff"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
