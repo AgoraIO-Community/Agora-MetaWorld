@@ -12,6 +12,7 @@ import Foundation
     @objc static let APP_ID: String = <#APP_ID#>
     @objc static let certificate: String = <#certificate#>
     @objc static let SCENE_ID = 1
+    @objc static var CHANNEL_ID: String = "MetaDemoTest"
     
     @objc static var RTC_UID: UInt {
         let key = "RTC_UID"
