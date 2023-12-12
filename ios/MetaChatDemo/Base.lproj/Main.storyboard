@@ -1345,6 +1345,34 @@
                                     <action selector="changeViewMode:" destination="cqu-SK-y4U" eventType="touchUpInside" id="mjm-Rq-EH0"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XW6-Uf-g36">
+                                <rect key="frame" x="279" y="317" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="Avv-oz-Bzg"/>
+                                    <constraint firstAttribute="height" constant="35" id="Xjp-jd-KIG"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="start"/>
+                                <connections>
+                                    <action selector="pushAudio:" destination="cqu-SK-y4U" eventType="touchUpInside" id="cr3-PZ-6fs"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pKX-HF-Viw">
+                                <rect key="frame" x="279" y="360" width="80" height="35"/>
+                                <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="v68-1g-bcv"/>
+                                    <constraint firstAttribute="height" constant="35" id="vrf-5U-XgU"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="gray" title="stop"/>
+                                <connections>
+                                    <action selector="stopPushAudio:" destination="cqu-SK-y4U" eventType="touchUpInside" id="AJb-q0-ei6"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="GxO-iP-H1G"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -1352,6 +1380,7 @@
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="hbA-9T-22y" secondAttribute="trailing" constant="120" id="1pW-x1-tNw"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="mez-jP-OER" secondAttribute="trailing" constant="11" id="689-Un-CBI"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="cao-5a-01r" secondAttribute="trailing" constant="16" id="6ok-1v-BLu"/>
+                            <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="pKX-HF-Viw" secondAttribute="trailing" constant="16" id="99K-og-He8"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="XGu-gV-95P" secondAttribute="trailing" id="Agn-rL-1vb"/>
                             <constraint firstItem="nEc-f2-QIO" firstAttribute="leading" secondItem="Q0S-rm-lxb" secondAttribute="trailing" constant="26.333333333333258" id="BgF-1H-yqz"/>
                             <constraint firstItem="hbA-9T-22y" firstAttribute="leading" secondItem="XQB-Gj-a4F" secondAttribute="trailing" constant="21" id="Dsr-vR-WHe"/>
@@ -1359,6 +1388,7 @@
                             <constraint firstItem="ARO-VQ-dTE" firstAttribute="centerX" secondItem="riK-nH-01w" secondAttribute="centerX" id="G8N-6s-TZI"/>
                             <constraint firstItem="K8a-cn-rGm" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="25" id="Khn-qM-csd"/>
                             <constraint firstItem="mez-jP-OER" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="82" id="LDp-UP-8D6"/>
+                            <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="XW6-Uf-g36" secondAttribute="trailing" constant="16" id="Nfl-Va-8v2"/>
                             <constraint firstItem="Sp2-OA-YVr" firstAttribute="centerY" secondItem="riK-nH-01w" secondAttribute="centerY" id="Q0r-Ic-tQH"/>
                             <constraint firstItem="XGu-gV-95P" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="21" id="Q4u-Rm-rae"/>
                             <constraint firstItem="6pP-6q-iVJ" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="224" id="QiN-oB-wXD"/>
@@ -1374,6 +1404,7 @@
                             <constraint firstItem="XWD-KH-ANa" firstAttribute="leading" secondItem="GxO-iP-H1G" secondAttribute="leading" constant="24" id="dWS-Hp-plq"/>
                             <constraint firstItem="p2F-YB-cdW" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="181" id="dbq-Ou-bta"/>
                             <constraint firstItem="ARO-VQ-dTE" firstAttribute="centerY" secondItem="riK-nH-01w" secondAttribute="centerY" id="h5k-Ux-yIc"/>
+                            <constraint firstItem="XW6-Uf-g36" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="267" id="hBc-gE-YbV"/>
                             <constraint firstItem="hBW-xQ-aH9" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="26" id="j1w-b8-lZ5"/>
                             <constraint firstItem="BoX-nc-3L3" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="82" id="j4o-El-AmD"/>
                             <constraint firstItem="Sp2-OA-YVr" firstAttribute="centerX" secondItem="riK-nH-01w" secondAttribute="centerX" id="jLx-Wa-pRH"/>
@@ -1381,6 +1412,7 @@
                             <constraint firstItem="hBW-xQ-aH9" firstAttribute="leading" secondItem="GxO-iP-H1G" secondAttribute="leading" constant="37" id="k4h-aS-guh"/>
                             <constraint firstItem="XQB-Gj-a4F" firstAttribute="centerY" secondItem="hBW-xQ-aH9" secondAttribute="centerY" id="lLf-bd-FTn"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="bottom" secondItem="Q0S-rm-lxb" secondAttribute="bottom" id="pon-Dp-oCn"/>
+                            <constraint firstItem="pKX-HF-Viw" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="310" id="rm7-br-pKt"/>
                             <constraint firstItem="SqB-vc-uPF" firstAttribute="leading" secondItem="P4h-vr-gEz" secondAttribute="trailing" constant="-6" id="tM9-45-14J"/>
                             <constraint firstItem="RRN-Sl-36O" firstAttribute="top" secondItem="GxO-iP-H1G" secondAttribute="top" constant="21" id="uyv-nt-jWA"/>
                             <constraint firstItem="GxO-iP-H1G" firstAttribute="trailing" secondItem="p2F-YB-cdW" secondAttribute="trailing" constant="69" id="vVR-5w-l4D"/>

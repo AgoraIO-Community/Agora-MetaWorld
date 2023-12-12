@@ -19,4 +19,5 @@
 #import "GuideAlertViewController.h"
 #import "KTVConsoleManager.h"
 #import "UIViewController+Extension.h"
+#import "AVAudioFileReader.h"
 #import <AgoraRtcKit/AgoraMetaServiceKit.h>
