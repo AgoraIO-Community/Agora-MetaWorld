@@ -20,7 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProvider;
@@ -34,17 +33,16 @@ import java.util.concurrent.TimeUnit;
 
 import coil.ImageLoaders;
 import coil.request.ImageRequest;
+import io.agora.meta.example.R;
+import io.agora.meta.example.adapter.SpinnerAdapter;
 import io.agora.meta.example.databinding.MainFragmentBinding;
 import io.agora.meta.example.dialog.CustomDialog;
+import io.agora.meta.example.meta.MetaContext;
+import io.agora.meta.example.ui.game.CoffeeActivity;
 import io.agora.meta.example.ui.game.DressActivity;
 import io.agora.meta.example.ui.game.VoiceChatActivity;
 import io.agora.meta.example.utils.DressAndFaceDataUtils;
-import io.agora.meta.example.meta.MetaContext;
-import io.agora.meta.example.R;
-import io.agora.meta.example.adapter.SpinnerAdapter;
-import io.agora.meta.example.ui.game.CoffeeActivity;
 import io.agora.meta.example.utils.MetaConstants;
-import io.agora.rtc2.Constants;
 
 public class MainFragment extends Fragment {
     private static final String TAG = MainFragment.class.getSimpleName();
@@ -104,7 +102,8 @@ public class MainFragment extends Fragment {
 
         //防止多次频繁点击异常处理
         RxView.clicks(binding.enter).throttleFirst(1, TimeUnit.SECONDS).subscribe(o -> {
-            if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene()) {
+            if (MetaConstants.SCENE_COFFEE == MetaContext.getInstance().getCurrentScene() ||
+                    MetaConstants.SCENE_FACE_CAPTURE_CHAT == MetaContext.getInstance().getCurrentScene()) {
                 if (checkCameraPermission()) {
                     enter();
                 }

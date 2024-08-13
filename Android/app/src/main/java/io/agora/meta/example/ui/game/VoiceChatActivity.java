@@ -14,7 +14,6 @@ import androidx.databinding.Observable;
 import androidx.databinding.ObservableBoolean;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.jakewharton.rxbinding2.view.RxView;
 
@@ -154,8 +153,8 @@ public class VoiceChatActivity extends BaseGameActivity {
 
         RxView.clicks(binding.addViewBt).throttleFirst(200, TimeUnit.MILLISECONDS).subscribe(o -> {
             int curUid = mCurFakeUid++;
-            String[] avatars = new String[] {
-              "mina", "kda", "huamulan", "boy", "girl"
+            String[] avatars = new String[]{
+                    "mina", "kda", "huamulan", "boy", "girl"
             };
             String extraInfo = "{\"avatar\":\"" + avatars[curUid % avatars.length] + "\"}";
             addLocalTextureView(curUid, extraInfo.getBytes());

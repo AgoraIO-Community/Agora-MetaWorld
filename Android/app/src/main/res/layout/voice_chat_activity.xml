@@ -13,6 +13,7 @@
         android:id="@+id/room_name_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:textColor="@color/uid_color"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -102,12 +103,12 @@
         android:id="@+id/group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="room_name_tv,voice_driver_switch_bt,exit_btn,zoom_avatar_bt,play_local_audio_bt,stop_local_audio_bt,rv_all_view" />
+        app:constraint_referenced_ids="room_name_tv,voice_driver_switch_bt,exit_btn,zoom_avatar_bt,play_local_audio_bt,stop_local_audio_bt,rv_all_view,add_view_bt,remove_view_bt" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/face_capture_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="room_name_tv,exit_btn,zoom_avatar_bt,rv_all_view" />
+        app:constraint_referenced_ids="room_name_tv,exit_btn,zoom_avatar_bt,rv_all_view,add_view_bt,remove_view_bt" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
